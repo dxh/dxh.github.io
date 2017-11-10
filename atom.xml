@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Code 詩人</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://dengxh.com/"/>
+  <updated>2017-11-10T07:01:39.442Z</updated>
+  <id>http://dengxh.com/</id>
+  
+  <author>
+    <name>Joker_酒哥</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>利用Maven插件高效去除SNAPSHOT</title>
+    <link href="http://dengxh.com/2017/11/09/Technologies/Maven/%E5%88%A9%E7%94%A8Maven%E6%8F%92%E4%BB%B6%E9%AB%98%E6%95%88%E5%8E%BB%E9%99%A4SNAPSHOT/"/>
+    <id>http://dengxh.com/2017/11/09/Technologies/Maven/利用Maven插件高效去除SNAPSHOT/</id>
+    <published>2017-11-09T13:20:43.236Z</published>
+    <updated>2017-11-10T07:01:39.442Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>公司质量保障团队近期在Push各技术团队在线上应用中禁止使用SNAPSHOT，因此各个技术团队均开始修改完善。不同人员对Maven学习了解程度不同，有些同事修改起来效率较低，因此我将自己所使用的方法和工具在公司内网BBS进行分享，供大家参考借鉴。</p><a id="more"></a><h1 id="SNAPSHOT出现场景"><a href="#SNAPSHOT出现场景" class="headerlink" title="SNAPSHOT出现场景"></a>SNAPSHOT出现场景</h1><ol><li>对外提供了SNAPSHOT</li><li>依赖三方SNAPSHOT</li></ol><h2 id="对外提供服务由SNAPSHOT改为RELEASE"><a href="#对外提供服务由SNAPSHOT改为RELEASE" class="headerlink" title="对外提供服务由SNAPSHOT改为RELEASE"></a>对外提供服务由SNAPSHOT改为RELEASE</h2><p>一般在开发测试阶段，需要经常变动代码，所以使用SNAPSHOT是合理的，但是线上对外提供的服务必须是稳定的版本，一般以RELEASE包提供。此处涉及修改版本号。我们的项目一般是以一个Project和多个Module的形式组织，Project与Module存在父子关系。如果手动一个个修改版本号，比较容易出错。Maven提供了插件：Versions，用于管理版本。</p><p>设置新版本号<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:set -DnewVersion=1.0.1-RELEASE</span><br></pre></td></tr></table></figure></p><p>确认提交新版本号<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:commit</span><br></pre></td></tr></table></figure></p><p>撤消版本号变更<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:revert</span><br></pre></td></tr></table></figure></p><h2 id="发现并去除SNAPSHOT依赖"><a href="#发现并去除SNAPSHOT依赖" class="headerlink" title="发现并去除SNAPSHOT依赖"></a>发现并去除SNAPSHOT依赖</h2><h3 id="发现SNAPSHOT依赖"><a href="#发现SNAPSHOT依赖" class="headerlink" title="发现SNAPSHOT依赖"></a>发现SNAPSHOT依赖</h3><p>一般我们的项目会有很多三方依赖，而他们自身亦可能有很多依赖，如果通过人工逐个去判断是否存在SNAPSHOT依赖，几乎是不可能的事。Maven提供了插件：dependency，用于管理依赖。为了发现SNAPSHOT依赖，可以通过以下两种方式：</p><p>方式一：通过dependency:list</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mvn dependency:list | grep -i snapshot</span><br><span class="line"></span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br></pre></td></tr></table></figure><p>这种方式会筛选出当前项目所有的SNAPSHOT依赖，但是问题很明显，我们很难判断是哪里依赖了这些SNAPSHOT。因此，我倾向采用第二方式。</p><p>方式二：通过dependency:tree</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mvn dependency:tree -Dincludes=:::*-SNAPSHOT</span><br><span class="line"></span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br><span class="line">[INFO] </span><br><span class="line">[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ pay_pcs_impl ---</span><br><span class="line">[INFO] com.xxx.service:pay_pcs_impl:jar:1.0.1-RELEASE</span><br><span class="line">[INFO] +- com.sample.service:pay_pcs_service:jar:1.0.1-RELEASE:compile</span><br><span class="line">[INFO] |  +- com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO] |  \- com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO] \- com.sample:pay-common:jar:1.0.1.1:compile</span><br><span class="line">[INFO]  \- com.sample.sentry:sentry-client:jar:2.1.15:compile</span><br><span class="line">[INFO]    \- com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br></pre></td></tr></table></figure><p>通过dependency:tree的方式，可以清晰明了的看到依赖的层次关系，从而快速的定位到SNAPSHOT依赖点。如上述：pay_pcs_service –&gt; pay_common –&gt; sentry-client –&gt; flatbuffers-java。</p><h3 id="去除SNAPSHOT依赖"><a href="#去除SNAPSHOT依赖" class="headerlink" title="去除SNAPSHOT依赖"></a>去除SNAPSHOT依赖</h3><p>通过2.2.1的方式发现SNAPSHOT依赖后，便可根据结果去除相应的SNAPSHOT依赖。去除的方式归根结底是变更依赖的版本，同样有多种方式。我主要采用两种方式。</p><p>方式一：利用Maven Versions插件</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:use-releases</span><br><span class="line">mvn versions:use-next-releases</span><br><span class="line">mvn versions:use-latest-releases</span><br></pre></td></tr></table></figure><p>该方式可批量的将SNAPSHOT替换成相应的RELEASE版本。</p><p><strong><em>注：某些服务提供方发布版本不合规范，所以请注意结合git的变更等，判断所变更的RELEASE是否正确。比如我在使用过程中遇到某一个依赖，同一版本号，SNAPSHOT和RELEASE代码出入较大，导致编译失败。经排查改用其他版本号才正常。</em></strong></p><p>方式二：人工逐个变更依赖的版本号<br>通过发现SNAPSHOT方式二发现的依赖，层次关系已经十分明确。在数量不多的情况下，保险起见，人工逐个核实确认新的RELEASE版本号。可以借助以下方法获取依赖是否有更新</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:display-dependency-updates</span><br></pre></td></tr></table></figure><h1 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h1><ol><li>zsh:no matches found: -Dincludes=:::<em>-SNAPSHOT，该问题是由于zsh对通配符的解析，简单的解决方法是给参数加上引号：mvn dependency:tree -Dincludes=”:::</em>-SNAPSHOT”</li></ol><h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol><li><a href="http://www.mojohaus.org/versions-maven-plugin/usage.html" target="_blank" rel="external">http://www.mojohaus.org/versions-maven-plugin/usage.html</a></li><li><a href="https://maven.apache.org/plugins/maven-dependency-plugin/usage.html" target="_blank" rel="external">https://maven.apache.org/plugins/maven-dependency-plugin/usage.html</a></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;公司质量保障团队近期在Push各技术团队在线上应用中禁止使用SNAPSHOT，因此各个技术团队均开始修改完善。不同人员对Maven学习了解程度不同，有些同事修改起来效率较低，因此我将自己所使用的方法和工具在公司内网BBS进行分享，供大家参考借鉴。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Sublime Text 编辑 Evernote（印象笔记）</title>
+    <link href="http://dengxh.com/2014/10/23/Tools/Sublime-Text-%E7%BC%96%E8%BE%91-Evernote%EF%BC%88%E5%8D%B0%E8%B1%A1%E7%AC%94%E8%AE%B0%EF%BC%89/"/>
+    <id>http://dengxh.com/2014/10/23/Tools/Sublime-Text-编辑-Evernote（印象笔记）/</id>
+    <published>2014-10-23T11:02:41.000Z</published>
+    <updated>2017-11-09T13:27:56.545Z</updated>
+    
+    <content type="html"><![CDATA[<p>跨平台的Evernote（印象笔记）十分好用，是我进行知识管理、笔记记录的主要工具，美中不足的是原生的编辑功能实在太弱。对于文章内容多样化、排版复杂的笔记体验较差。幸运的事有3件：</p><ol><li>Evernote（印象笔记）提供了API，供第三方应用管理笔记。</li><li>这世界上有<code>markdown</code>这样舒服的标记语言。</li><li>神器<code>Sublime Text</code></li></ol><a id="more"></a><p>受益于上述三件幸运的事，使得我们可以十分方便的在<code>Sublime Text</code>中，利用<code>markdown</code>编辑修改<code>Evernote（印象笔记）</code>中的笔记。废话不多说，下面进入正题。</p><p>首先你要习惯使用<code>Sublime Text</code>，如果还不习惯，那么我强烈推荐你花点时间了解一下，对它的评价我只用两个字：”神器”！具体可参考文章：<a href="http://dengxh.com/2014/01/18/SublimeText/">Sublime Text</a>。</p><p>打开<code>Sublime Text</code>之后，<code>cmd</code> + <code>shift</code> + <code>P</code>打开<code>Package Control</code>，输入<code>install</code>，跳出插件库，然后输入<code>Evernote</code>安装<code>Evernote</code>插件。该插件的介绍和详细的使用说明请参考：<a href="https://sublime.wbond.net/packages/Evernote" target="_blank" rel="external">插件介绍</a>。</p><p>插件安装完成之后，第一次使用时需要进行授权认证。步骤如下：</p><ol><li>打开<code>Package Control</code>，输入<code>send to evernote</code>，在窗口底部会弹出一个小窗口，窗口中的内容为一个带<code>token</code>的链接。该<code>token</code>后面用到。</li><li>将链接复制到浏览器并访问，登录授权后，会有一个<code>NoteStore URL</code>。印象笔记用户，直接用浏览器访问链接：<a href="https://app.yinxiang.com/api/DeveloperToken.action" target="_blank" rel="external">https://app.yinxiang.com/api/DeveloperToken.action</a></li><li>打开<code>Sublime Text</code>，打开<code>Preferences</code> &gt; <code>Package Settings</code> &gt; <code>Evernote</code> &gt; <code>Settings User</code>，将步骤2和步骤3中的<code>token</code>和<code>NoteStore URL</code>复制为对应属性值。保存之后便可以开始使用了。</li></ol><p>按上述方法创建完成之后，便可以非常方便的使用<code>Evernote（印象笔记）</code>了，而且笔记对应的目录和tag都可以自动提示。详细的功能和使用方法还是参考：<a href="https://sublime.wbond.net/packages/Evernote" target="_blank" rel="external">插件介绍</a>。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;跨平台的Evernote（印象笔记）十分好用，是我进行知识管理、笔记记录的主要工具，美中不足的是原生的编辑功能实在太弱。对于文章内容多样化、排版复杂的笔记体验较差。幸运的事有3件：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Evernote（印象笔记）提供了API，供第三方应用管理笔记。&lt;/li&gt;
+&lt;li&gt;这世界上有&lt;code&gt;markdown&lt;/code&gt;这样舒服的标记语言。&lt;/li&gt;
+&lt;li&gt;神器&lt;code&gt;Sublime Text&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+      <category term="Tools" scheme="http://dengxh.com/categories/Tools/"/>
+    
+    
+      <category term="SublimeText" scheme="http://dengxh.com/tags/SublimeText/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Apache 安装笔记</title>
+    <link href="http://dengxh.com/2014/10/19/Technologies/Maintenance/Apache-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/"/>
+    <id>http://dengxh.com/2014/10/19/Technologies/Maintenance/Apache-安装教程/</id>
+    <published>2014-10-19T13:22:09.000Z</published>
+    <updated>2017-11-10T07:01:53.036Z</updated>
+    
+    <content type="html"><![CDATA[<p>CentOS 6.5 官方支持的Apache版本为<code>Apache/2.2.15 (Unix)</code>，如果要安装最新版本的Apache，则可以通过源码编译安装的方式实现。本文以CentOS 6.5为例，记录源码编译安装Apache的方法。主要步骤如下所述：</p><a id="more"></a><h1 id="环境要求"><a href="#环境要求" class="headerlink" title="环境要求"></a>环境要求</h1><blockquote><p>The following requirements exist for building Apache httpd:</p><ul><li>APR and APR-Util</li><li>Perl-Compatible Regular Expressions Library (PCRE)</li><li>Disk Space</li><li>ANSI-C Compiler and Build System</li><li>Accurate time keeping</li><li>Perl 5 [OPTIONAL]</li></ul></blockquote><p>根据<a href="http://httpd.apache.org/docs/2.4/install.html" target="_blank" rel="external">官网教程</a>，通过源码编译安装需要一些基础环境，比如：APR、PCRE、C编译器等。</p><p>APR、APR-Util我之前已经根据<a href="http://apr.apache.org/" target="_blank" rel="external">APR官网文档</a>通过源码编译安装的方式进行安装，简述如下：</p><ol><li>下载APR、APR-Util的源代码并解压</li><li>分别进入解压后的目录，两者均使用默认的<code>./configure</code></li><li>make &amp;&amp; sudo make install</li></ol><p>通过上述步骤安装之后，APR、APR-Util被安装至目录：<code>/usr/local/apr/</code>，如下所示：</p><pre><code>/usr/local/apr/bin/├── apr-1-config└── apu-1-config</code></pre><p>PCRE我之前使用了<code>yum</code>进行了安装</p><pre><code>$ sudo yum -y install pcre-devel</code></pre><h1 id="编译、安装"><a href="#编译、安装" class="headerlink" title="编译、安装"></a>编译、安装</h1><p>下载解压Apache源代码之后，使用 <code>./configure --help</code>可以查看编译选项，如果没有指定<code>--prefix</code>选项，默认安装目录为<code>/usr/local/apache2</code>，我使用了缺省值。为了使用APR, APR-Util、PCRE，需要使用<code>--with-apr</code>、<code>--with-apr-util</code>、<code>--with-pcre</code>。命令如下所示：</p><pre><code>$ ./configure --with-apr=/usr/local/apr/bin/apr-1-config \    --with-apr-util=/usr/local/apr/bin/apu-1-config \    --with-pcre=/usr/bin/pcre$ make &amp;&amp; sudo make install</code></pre><p>Apache官网教程使用的是<code>--with-included-apr</code>，我没有尝试，原文如下所述：</p><blockquote><p>APR and APR-Util<br>Make sure you have APR and APR-Util already installed on your system. If you don’t, or prefer to not use the system-provided versions, download the latest versions of both APR and APR-Util from Apache APR, unpack them into ./srclib/apr and ./srclib/apr-util (be sure the directory names do not have version numbers; for example, the APR distribution must be under ./srclib/apr/) and use ./configure’s –with-included-apr option. On some platforms, you may have to install the corresponding -dev packages to allow httpd to build against your installed copy of APR and APR-Util.</p></blockquote><h1 id="测试是否安装成功"><a href="#测试是否安装成功" class="headerlink" title="测试是否安装成功"></a>测试是否安装成功</h1><p>启动Apache：</p><pre><code>$ sudo /usr/local/apache2/bin/httpd -k start</code></pre><p>打开浏览器，访问localhost，如果页面显示<code>It works!</code>，则安装Apache成功。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;CentOS 6.5 官方支持的Apache版本为&lt;code&gt;Apache/2.2.15 (Unix)&lt;/code&gt;，如果要安装最新版本的Apache，则可以通过源码编译安装的方式实现。本文以CentOS 6.5为例，记录源码编译安装Apache的方法。主要步骤如下所述：&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Technologies" scheme="http://dengxh.com/categories/Technologies/"/>
+    
+      <category term="Maintenance" scheme="http://dengxh.com/categories/Technologies/Maintenance/"/>
+    
+    
+      <category term="Apache" scheme="http://dengxh.com/tags/Apache/"/>
+    
+      <category term="运维" scheme="http://dengxh.com/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>vsfptd 搭建FTP服务器简明教程</title>
+    <link href="http://dengxh.com/2014/10/15/Technologies/Maintenance/vsfptd%20%E6%90%AD%E5%BB%BAFTP%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/"/>
+    <id>http://dengxh.com/2014/10/15/Technologies/Maintenance/vsfptd 搭建FTP服务器简明教程/</id>
+    <published>2014-10-15T11:01:01.000Z</published>
+    <updated>2017-11-10T07:02:02.809Z</updated>
+    
+    <content type="html"><![CDATA[<p>FTP服务器在当前工作、生活环境中，有时依然十分有用。在Linux服务器上搭建FTP服务器，首选 vsftptd (very secure FTP daemon) 应用。</p><a id="more"></a><p>下文以Centos 6.5为例，介绍如何快速搭建一个可用的FTP服务器。</p><h1 id="安装-vsftpd"><a href="#安装-vsftpd" class="headerlink" title="安装 vsftpd"></a>安装 vsftpd</h1><pre><code># 安装sudo yum -y install vsftpd# 启动sudo service vsftpd start# 设置为开机启动sudo chkconfig vsftpd on</code></pre><h1 id="创建FTP用户"><a href="#创建FTP用户" class="headerlink" title="创建FTP用户"></a>创建FTP用户</h1><pre><code># 增加一个ftp用户组sudo groupadd ftpgroup# 创建一个ftp用户，并配置目录sudo useradd -g ftpgroup -d /ftp/ftpuser -M ftpuser# 设置用户密码sudo passwd ftpuser# 创建相应目录sudo mkdir /ftpsudo mkdir /ftp/ftpuser# 修改目录权限sudo chmod 777 /ftp/ftpuser</code></pre><h1 id="配置-vsftpd"><a href="#配置-vsftpd" class="headerlink" title="配置 vsftpd"></a>配置 vsftpd</h1><p>Centos 6.5 安装完 vsftpd 之后，配置文件目录如下所示：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/etc/vsftpd/</span><br><span class="line">├── ftpusers                # 禁止使用vsftpd的用户列表文件</span><br><span class="line">├── user_list               # userlist_deny=YES/NO，禁止/允许用户使用vsftpd</span><br><span class="line">├── vsftpd.conf             # 主配置文件</span><br><span class="line">└── vsftpd_conf_migrate.sh</span><br></pre></td></tr></table></figure><p>主配置文件为 <code>vsftpd.conf</code>，通过阅读配置文件，可以配置参数以满足特殊需求，也可直接使用缺省值。出于安全性、实用性等方面的考虑，不建议使用缺省值。详细的参数配置教程可参考更专业的资料，下面仅简单介绍一些常用的设置。</p><h2 id="vsftpd-配置说明"><a href="#vsftpd-配置说明" class="headerlink" title="vsftpd 配置说明"></a>vsftpd 配置说明</h2><p><strong><em>注：</em></strong> 修改配置文件之前记得备份</p><pre><code># Allow anonymous FTP? (Beware - allowed by default if you comment this out).# anonymous_enable=YESanonymous_enable=NO # 不允许匿名用户# Uncomment this to allow local users to log in.local_enable=YES# Uncomment this to enable any form of FTP write command.write_enable=YES## If you want, you can arrange for uploaded anonymous files to be owned by# a different user. Note! Using &quot;root&quot; for uploaded files is not# recommended!#chown_uploads=YES#chown_username=whoeverchown_uploads=NO # 禁止上传文件更改宿主userlist_enable=YES # 配合userlist_deny=YES/NO，禁止/允许user_list文件中的用户使用vsftpd</code></pre><h1 id="重启-vsftpd"><a href="#重启-vsftpd" class="headerlink" title="重启 vsftpd"></a>重启 vsftpd</h1><p>重启 vsftpd 使配置之后的选项生效：</p><pre><code>sudo service vsftpd restart</code></pre><h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul><li><a href="http://www.cnblogs.com/taoweiji/p/3821924.html" target="_blank" rel="external">Ubuntu下vsftpd配置实例，超级简单，高度可用</a></li><li><a href="http://segmentfault.com/blog/tony/1190000000438443" target="_blank" rel="external">我见过最好的vsftpd配置教程</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;FTP服务器在当前工作、生活环境中，有时依然十分有用。在Linux服务器上搭建FTP服务器，首选 vsftptd (very secure FTP daemon) 应用。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Technologies" scheme="http://dengxh.com/categories/Technologies/"/>
+    
+      <category term="Maintenance" scheme="http://dengxh.com/categories/Technologies/Maintenance/"/>
+    
+    
+      <category term="ftp" scheme="http://dengxh.com/tags/ftp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>通过网盘同步Sublime Text设置</title>
+    <link href="http://dengxh.com/2014/09/29/Tools/%E9%80%9A%E8%BF%87%E7%BD%91%E7%9B%98%E5%90%8C%E6%AD%A5Sublime-Text%E8%AE%BE%E7%BD%AE/"/>
+    <id>http://dengxh.com/2014/09/29/Tools/通过网盘同步Sublime-Text设置/</id>
+    <published>2014-09-29T12:32:36.000Z</published>
+    <updated>2017-11-09T13:27:39.352Z</updated>
+    
+    <content type="html"><![CDATA[<p>Sublime Text的配置信息和插件都存放在<code>Packages</code>目录下，只要通过网盘在不同电脑间同步该目录，便可以实现在不同电脑间使用同一套Sublime Text的配置。</p><a id="more"></a><p>具体步骤如下：</p><ol><li>关闭Sublime Text</li><li>将Sublime Text的<code>Packages</code>目录（<code>~/Library/Application Support/Sublime Text 3/Packages）</code>移至网盘的同步目录（<code>~/OneDrive/MyWorkbench/MyApps/SublimeText/Packages</code>）。</li><li>执行命令：<code>ln -s ~/OneDrive/MyWorkbench/MyApps/SublimeText/Packages ~/Library/Application Support/Sublime Text 3/Packages</code></li><li>Done :)</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Sublime Text的配置信息和插件都存放在&lt;code&gt;Packages&lt;/code&gt;目录下，只要通过网盘在不同电脑间同步该目录，便可以实现在不同电脑间使用同一套Sublime Text的配置。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Tools" scheme="http://dengxh.com/categories/Tools/"/>
+    
+    
+      <category term="SublimeText" scheme="http://dengxh.com/tags/SublimeText/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Maven快速入门</title>
+    <link href="http://dengxh.com/2014/09/13/Technologies/Maven/Maven%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/"/>
+    <id>http://dengxh.com/2014/09/13/Technologies/Maven/Maven快速入门/</id>
+    <published>2014-09-13T02:38:07.000Z</published>
+    <updated>2017-11-10T07:01:34.524Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Maven-简介"><a href="#Maven-简介" class="headerlink" title="Maven 简介"></a>Maven 简介</h1><p>Maven是一个Java项目管理工具，可以简化项目构建、管理项目依赖、生成报告等。具体介绍参考官网<a href="http://maven.apache.org/what-is-maven.html" target="_blank" rel="external">what-is-maven</a></p><a id="more"></a><h1 id="Maven-安装教程"><a href="#Maven-安装教程" class="headerlink" title="Maven 安装教程"></a>Maven 安装教程</h1><p>Maven的安装非常简单，只要2个步骤：</p><ol><li>下载Maven</li><li>解压至某个目录（eg：<code>/usr/local/apache-maven/</code>），并设置环境变量</li></ol><p>各个平台具体安装教程参考官网<a href="http://maven.apache.org/download.cgi#Installation" target="_blank" rel="external">Installation</a></p><p><em>注：</em> Maven安装成功后，会在<code>~/.m2/repository</code>生成一个本地仓库，后续在使用 Maven 构建项目时，如果依赖的包在该仓库中不存在，则先下载相应的依赖包至该仓库。</p><h1 id="Maven-使用教程"><a href="#Maven-使用教程" class="headerlink" title="Maven 使用教程"></a>Maven 使用教程</h1><p>Maven 基于项目对象模型（POM），具有标准的文件目录结构，通过文件<code>pom.xml</code>的配置来管理整个 Maven 项目。</p><h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>Maven 项目目录结构可以按约定手工创建，也可通过 Maven 命令自动创建。最简单的目录结构如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">my-app</span><br><span class="line">|-- pom.xml</span><br><span class="line">`-- src</span><br><span class="line">    |-- main</span><br><span class="line">    |   `-- java</span><br><span class="line">    |       `-- com</span><br><span class="line">    |           `-- mycompany</span><br><span class="line">    |               `-- app</span><br><span class="line">    |                   `-- App.java</span><br><span class="line">    `-- test</span><br><span class="line">        `-- java</span><br><span class="line">            `-- com</span><br><span class="line">                `-- mycompany</span><br><span class="line">                    `-- app</span><br><span class="line">                        `-- AppTest.java</span><br></pre></td></tr></table></figure></p><p>创建 Maven 项目的命令如下所示：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mvn archetype:generate \</span><br><span class="line">     -DgroupId=com.mycompany.app \</span><br><span class="line">     -DartifactId=my-app \</span><br><span class="line">     -DarchetypeArtifactId=maven-archetype-quickstart \</span><br><span class="line">     -DinteractiveMode=false</span><br></pre></td></tr></table></figure><h2 id="POM"><a href="#POM" class="headerlink" title="POM"></a>POM</h2><p>通过 Maven 命令创建项目时，会根据命令参数自动生成<code>pom.xml</code>文件。根据上述命令生成的<code>pom.xml</code>文件如下所示：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line"></span><br><span class="line">  &lt;groupId&gt;com.mycompany.app&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;my-app&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line">  &lt;packaging&gt;jar&lt;/packaging&gt;</span><br><span class="line"></span><br><span class="line">  &lt;name&gt;Maven Quick Start Archetype&lt;/name&gt;</span><br><span class="line">  &lt;url&gt;http://maven.apache.org&lt;/url&gt;</span><br><span class="line"></span><br><span class="line">  &lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;junit&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;junit&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;4.8.2&lt;/version&gt;</span><br><span class="line">      &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">  &lt;/dependencies&gt;</span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure><p><code>pom.xml</code>常用设置：</p><ul><li>project（必填） - This is the top-level element in all Maven pom.xml files.</li><li>modelVersion（必填） - 所使用的POM版本号</li><li>groupId（必填）- 项目创建者的唯一标识，通常用逆置的域名（eg: <code>io.github.dxh</code>）。</li><li>artifactId（必填）- 项目的生成产品，命名通常为：<artifactid>-<version>.<extension></extension></version></artifactid></li><li>version（必填）- 项目版本号，推荐使用语义化的版本号</li><li>packaging（可选） - 项目生成产品的包类型（eg: jar、war, etc.)，默认为<code>jar</code>。</li></ul><h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><p>Maven 构建项目整个生命周期由多个阶段构成：</p><ol><li>validate - 检查项目和必要的信息是否正确</li><li>compile - 编译</li><li>test - 利用单元测试框架测试编译后的代码</li><li>package - 打包，如打包成:jar</li><li>integration-test - 与整个项目集成测试</li><li>verify - 验证包是否可用并且达到质量标准</li><li>install - 将包部署至本地库，可作为本地其它项目的依赖</li><li>deploy - 将最终产品部署至远程仓库，供别的开发人员和项目使用</li></ol><p>除了上述阶段之外，还有2个比较常用的生命周期：</p><ol><li>clean - cleans up artifacts created by prior builds</li><li>site - generates site documentation for this project</li></ol><p>每个阶段对应一个 Maven 命令，并且命令是按顺序执行的。比如执行<code>mvn package</code>，则命令<code>validate</code>、<code>compile</code>、<code>test</code>将自动被有序执行。</p><h1 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h1><p>通过短暂的半天了解与使用之后，基本的体会是：对于小项目，可能还是直接使用JDK中自带的工具或者IDE的集成工具更为快速简单。对于大项目，特别是存在各种依赖的项目，使用 Maven 将会大大降低项目构建的复杂度。但是，目前初步有个担忧，对于超级大的项目，<code>pom.xml</code>的维护是不是成为一个问题？传说中，已经有一新的工具流行起来了，它叫<a href="http://www.gradle.org/" target="_blank" rel="external">Gradle</a>.</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Maven-简介&quot;&gt;&lt;a href=&quot;#Maven-简介&quot; class=&quot;headerlink&quot; title=&quot;Maven 简介&quot;&gt;&lt;/a&gt;Maven 简介&lt;/h1&gt;&lt;p&gt;Maven是一个Java项目管理工具，可以简化项目构建、管理项目依赖、生成报告等。具体介绍参考官网&lt;a href=&quot;http://maven.apache.org/what-is-maven.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;what-is-maven&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Maven" scheme="http://dengxh.com/tags/Maven/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>REST</title>
+    <link href="http://dengxh.com/2014/09/13/Technologies/Architecture/REST/"/>
+    <id>http://dengxh.com/2014/09/13/Technologies/Architecture/REST/</id>
+    <published>2014-09-13T02:31:59.000Z</published>
+    <updated>2017-11-10T06:56:44.692Z</updated>
+    
+    <content type="html"><![CDATA[<p><code>REST</code>(Representational State Transfer)是一种软件架构风格，基于HTTP、URI、XML等技术与协议，为网络应用的设计与开发降低复杂性、提高伸缩性，已经普遍取代了基于SOAP和WSDL。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;code&gt;REST&lt;/code&gt;(Representational State Transfer)是一种软件架构风格，基于HTTP、URI、XML等技术与协议，为网络应用的设计与开发降低复杂性、提高伸缩性，已经普遍取代了基于SOAP和WSDL。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+      <category term="Technologies" scheme="http://dengxh.com/categories/Technologies/"/>
+    
+      <category term="Architecture" scheme="http://dengxh.com/categories/Technologies/Architecture/"/>
+    
+    
+      <category term="REST" scheme="http://dengxh.com/tags/REST/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>语义化版本号格式</title>
+    <link href="http://dengxh.com/2014/09/11/Technologies/%E8%A7%84%E8%8C%83/%E8%AF%AD%E4%B9%89%E5%8C%96%E7%89%88%E6%9C%AC%E5%8F%B7%E6%A0%BC%E5%BC%8F/"/>
+    <id>http://dengxh.com/2014/09/11/Technologies/规范/语义化版本号格式/</id>
+    <published>2014-09-11T14:36:00.000Z</published>
+    <updated>2017-11-10T07:02:47.839Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>在软件管理的领域里存在着被称作“依赖地狱”的死亡之谷，系统规模越大，加入的套件越多，你就越有可能在未来的某一天发现自己已深陷绝望之中。</p></blockquote><a id="more"></a><p>一个项目随着生命周期会不断的变更，在变更过程中，通常采用版本号作为标识。一个良好的版本号格式将为项目管理带来极大的好处。</p><p>所谓语义化的版本号格式，简单描述如下：</p><p><code>版本格式：主版本号.次版本号.修订号</code></p><p>版本号递增规则如下：</p><ul><li>主版本号：当你做了不兼容的API 修改，</li><li>次版本号：当你做了向下兼容的功能性新增，</li><li>修订号：当你做了向下兼容的问题修正。</li></ul><p>先行版本号及版本编译信息可以加到“主版本号.次版本号.修订号”的后面，作为延伸。</p><p>更为详细和全面的介绍请参考：<a href="http://semver.org/lang/zh-CN/" target="_blank" rel="external">http://semver.org/lang/zh-CN/</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;在软件管理的领域里存在着被称作“依赖地狱”的死亡之谷，系统规模越大，加入的套件越多，你就越有可能在未来的某一天发现自己已深陷绝望之中。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="Technologies" scheme="http://dengxh.com/categories/Technologies/"/>
+    
+      <category term="Maintenance" scheme="http://dengxh.com/categories/Technologies/Maintenance/"/>
+    
+    
+      <category term="VCS" scheme="http://dengxh.com/tags/VCS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Vagrant安装配置笔记</title>
+    <link href="http://dengxh.com/2014/08/23/Technologies/Maintenance/vagrant%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%AC%94%E8%AE%B0/"/>
+    <id>http://dengxh.com/2014/08/23/Technologies/Maintenance/vagrant安装配置笔记/</id>
+    <published>2014-08-23T14:53:06.000Z</published>
+    <updated>2017-11-10T07:01:57.956Z</updated>
+    
+    <content type="html"><![CDATA[<p>在学习编程的过程中，往往需要配置相应的开发环境。印象中最为头疼的一件事是辛辛苦苦配置了一套开发环境，却由于电脑更换、系统重装等种种原因，导致需要全部重新配置一套。特别是几个小伙伴一起合作开发项目时，为了确保每个人的开发环境一致，需要为多台电脑进行配置。项目没开搞，开发环境就搞死人了。</p><p>不过，自从知道有<code>Vagrant</code>这玩意之后，以前让我头疼的这些事就一去不复返了。<code>Vagrant</code>是什么？简言之，它是一件基于虚拟机，实现开发环境<code>一次配置，到处使用</code>的神器，更为难得的是资源占用非常低，这让我那台老爷笔记本<code>HP520</code>也出现了第二春。废话不多说，下面简单记一下<code>Vagrant</code>的安装配置过程。细节可以参考<a href="https://docs.vagrantup.com/v2/getting-started/index.html" target="_blank" rel="external">官方文档</a></p><a id="more"></a><h1 id="安装虚拟机"><a href="#安装虚拟机" class="headerlink" title="安装虚拟机"></a>安装虚拟机</h1><p>Vagrant主要基于虚拟机实现<code>一次配置，到处使用</code>的功能。常见的虚拟机都支持，比如VMware、VituralBox等。选择一个自己喜欢的安装就行。</p><h1 id="安装Vagrant"><a href="#安装Vagrant" class="headerlink" title="安装Vagrant"></a>安装Vagrant</h1><p>根据官网[Download]页面，选择相应平台的Vagrant下载安装。</p><h1 id="添加Box"><a href="#添加Box" class="headerlink" title="添加Box"></a>添加<code>Box</code></h1><p>Vagrant中的<code>Box</code>概念可以简单理解为一个包，这个包可以是一个纯净的完整的操作系统，也可以是已经配置的开发环境的操作系统，当然也可以是仅仅是为了某些需求而精简的操作系统。</p><p><code>Box</code>有很多，你自己也可以生成。刚开始使用，可以在网站<a href="https://vagrantcloud.com/" target="_blank" rel="external">vagrantcloud</a>找一个适合你的, 比如我使用的是<code>chef/centos-6.5</code>。如果你的网络非常好（<code>非常好</code>是指网速够快，又不被GFW)。那么，你可以通过以下命令直接添加<code>Box</code>：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant box add chef/centos-6.5</span><br></pre></td></tr></table></figure><p>不过，我的网速不好，所以我是先下载<code>Box</code>，然后在本地<code>add</code>。<code>Box</code>的下载地址即可以通过执行上面那条命令在终端显示，也可以Google出来。我下载到<code>~/Downloads/virtualbox.box</code>, 那么添加<code>Box</code>的命令是：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant box add chef/centos-6.5 ~/Downloads/virtualbox.box</span><br></pre></td></tr></table></figure><h1 id="初始化开发环境"><a href="#初始化开发环境" class="headerlink" title="初始化开发环境"></a>初始化开发环境</h1><p>创建一个开发目录，比如<code>~/myDevEnv</code>，那么，执行以下命令实现开发环境的初始化：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~/myDevEnv</span><br><span class="line"><span class="meta">$</span> vagrant init chef/centos-6.5</span><br></pre></td></tr></table></figure><p>如果你的网络非常好，那么，添加<code>Box</code>和初始化开发环境可以简单的一条命令就可以了：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant init chef/centos-6.5</span><br></pre></td></tr></table></figure><h1 id="启动开发环境"><a href="#启动开发环境" class="headerlink" title="启动开发环境"></a>启动开发环境</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant up</span><br></pre></td></tr></table></figure><h1 id="登录开发环境"><a href="#登录开发环境" class="headerlink" title="登录开发环境"></a>登录开发环境</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant ssh</span><br></pre></td></tr></table></figure><h1 id="配置开发环境"><a href="#配置开发环境" class="headerlink" title="配置开发环境"></a>配置开发环境</h1><p>在初始化开发环境之后，会在目录下生成一个文件：<code>Vagrantfile</code>，该文件是<code>Vagrant</code>的配置文件，下面对几个配置选项做简单说明：</p><ul><li><code>config.vm.box = &quot;chef/centos-6.5&quot;</code>: 简言之，这就是指你的<code>Box</code>的别名，如果你有多个<code>Box</code>，那么可以通过该选项指定使用哪一个<code>Box</code>。</li><li><code>config.vm.synced_folder  &quot;~/Sites&quot;, &quot;/var/www/html&quot;</code>:同步目录，第一个目录是主机目录，第二个目录是虚拟机目录。通过该选项，你可以在主机使用你喜欢的开发工具修改代码，而不需要通过ssh登录虚拟机使用vim修改代码。</li><li><code>config.vm.network :forwarded_port, guest: 80, host: 8080</code>:端口转发，通过该选项，访问主机8080端口的请求都将指向虚拟机的80端口。</li></ul><h1 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h1><p>暂时就写这些废话了，官网文档写得比较清晰易懂，可以尽情参考。下一篇记一下Vagrant搭建LAMP开发环境。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在学习编程的过程中，往往需要配置相应的开发环境。印象中最为头疼的一件事是辛辛苦苦配置了一套开发环境，却由于电脑更换、系统重装等种种原因，导致需要全部重新配置一套。特别是几个小伙伴一起合作开发项目时，为了确保每个人的开发环境一致，需要为多台电脑进行配置。项目没开搞，开发环境就搞死人了。&lt;/p&gt;
+&lt;p&gt;不过，自从知道有&lt;code&gt;Vagrant&lt;/code&gt;这玩意之后，以前让我头疼的这些事就一去不复返了。&lt;code&gt;Vagrant&lt;/code&gt;是什么？简言之，它是一件基于虚拟机，实现开发环境&lt;code&gt;一次配置，到处使用&lt;/code&gt;的神器，更为难得的是资源占用非常低，这让我那台老爷笔记本&lt;code&gt;HP520&lt;/code&gt;也出现了第二春。废话不多说，下面简单记一下&lt;code&gt;Vagrant&lt;/code&gt;的安装配置过程。细节可以参考&lt;a href=&quot;https://docs.vagrantup.com/v2/getting-started/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;官方文档&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Tools" scheme="http://dengxh.com/categories/Tools/"/>
+    
+    
+      <category term="Vagrant" scheme="http://dengxh.com/tags/Vagrant/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Homebrew</title>
+    <link href="http://dengxh.com/2014/02/15/Tools/Homebrew/"/>
+    <id>http://dengxh.com/2014/02/15/Tools/Homebrew/</id>
+    <published>2014-02-15T12:26:27.000Z</published>
+    <updated>2017-11-09T13:28:02.919Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><a href="http://brew.sh/index.html" target="_blank" rel="external">Homebrew</a>是Mac OS X下类似于Linux中apt-get、<br>yum的一个软件包管理工具。通过Homebrew就可以在Mac OS X中非常方便地安装一<br>些Apple没有提供的工具，如:wget等。</p><a id="more"></a><h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><pre><code>ruby -e &quot;$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)&quot;</code></pre><h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">brew [info | home | options ] [FORMULA...]</span><br><span class="line">brew install FORMULA...</span><br><span class="line">brew uninstall FORMULA...</span><br><span class="line">brew search [foo]</span><br><span class="line">brew list [FORMULA...]</span><br><span class="line">brew update</span><br><span class="line">brew upgrade [FORMULA...]</span><br><span class="line">brew pin/unpin [FORMULA...]</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;http://brew.sh/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Homebrew&lt;/a&gt;是Mac OS X下类似于Linux中apt-get、&lt;br&gt;yum的一个软件包管理工具。通过Homebrew就可以在Mac OS X中非常方便地安装一&lt;br&gt;些Apple没有提供的工具，如:wget等。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Tools" scheme="http://dengxh.com/categories/Tools/"/>
+    
+    
+      <category term="Homebrew" scheme="http://dengxh.com/tags/Homebrew/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SublimeText</title>
+    <link href="http://dengxh.com/2014/01/18/Tools/SublimeText/"/>
+    <id>http://dengxh.com/2014/01/18/Tools/SublimeText/</id>
+    <published>2014-01-18T12:19:36.000Z</published>
+    <updated>2017-11-09T13:27:51.962Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Sublime Text是一款优秀的文本编辑器，支持Windows、Mac OS X、Linux平台，通过配置文件和插件可以实现很多强大的功能。具体特性可以参考<a href="http://www.sublimetext.com/" target="_blank" rel="external">官网</a>。相对Emacs、Vim等神级编辑器而言，Sublime Text门槛更低，对于没有时间与精力深入研究神级编辑器的童鞋来说，真乃居家旅行必备！其吸引我的特性主要为：</p><ul><li>跨平台：由于生活和工作的需要，我经常需要同时使用Windows、Mac OS X和Linux三大平台，跨平台的Sublime Text给我带来了极大的便利。</li><li>可定制：可以通过配置文件进行个性化配置，如：颜色主题、缩进方式、编码等。让人惊喜的是其配置方式比Vim简单得多！多！多！</li><li>插件：通过丰富的插件可以实现超乎想象的功能，如：语法检查、格式化、版本控制等。</li><li>快：Sublime Text使用时的那种流畅会带来非常愉悦的快感，你懂的～</li></ul><a id="more"></a><h1 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h1><p>本章节以Mac OS X平台为例，简单介绍Sublime Text的使用方法，以此作为自己的笔记，并希望能够帮助初次接触Sublime Text的童鞋快速入门。Sublime Text主要使用技巧在于：</p><ol><li>熟悉配置文件</li><li>熟悉插件</li><li>熟悉快捷键</li></ol><h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>与通常软件的配置不同，Sublime Text的配置并不是基于GUI界面，而是使用JSON格式的文本配置方式，初次接触的童鞋可能会不习惯，有一种无从下手的感觉。不过只要不被吓住，耐心地把玩几遍，便可依葫芦画瓢地进行配置了。</p><p>安装好Sublime Text后，通过点击<code>Sublime Text</code> –&gt; <code>Preferences</code>可以发现Sublime Text的配置文件主要可以分为两类：</p><ul><li>Default：该配置文件保存了Sublime Text可供配置的属性及其默认值，英文过得去的童鞋可以通过该文件快速地了解Sublime Text的特性及其配置方式。</li><li>User：用户如果需要进行个性化配置，通常不是直接修改Default中的默认配置，而是参考Default的配置方式，在User中进行配置。User中的值会覆盖Default中的值。比如设置行的结尾采用Unix方式，并且设置字体大小为16，配置方式如下：</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;default_line_ending&quot;: &quot;unix&quot;,</span><br><span class="line">    &quot;font_size&quot;: 16</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p>第一次对插件有概念是Firefox刚火起来的时候，真心佩服这种利用插件实现功能扩展的思路。Sublime Text也可通过插件实现功能扩展。类似Vim，Sublime Text可以通过手动下载安装插件包，但是这种管理插件的方式是一件非常头疼的事。Vim有<code>Vundle</code>，幸运的是Sublime Text有<code>Package Control</code>，利用Package Control可以方便地实现插件的管理，包括安装、卸载、更新等。Package Control更多特性可以参考<a href="https://sublime.wbond.net/" target="_blank" rel="external">官网</a>。</p><p>安装Package Control只要一条命令即可，具体参考<a href="https://sublime.wbond.net/installation" target="_blank" rel="external">官方安装教程</a></p><p>Package Control安装完成后，<code>Shift + Cmd + P</code>打开Command Palette，输入<code>package control</code>便会罗列出Package Control的常用功能，如：</p><ul><li>install：安装插件。<ol><li>打开Command Palette，输入<code>install</code>，回车，Package Control便会加载插件库。</li><li>搜索需要的插件名字，找到插件后，回车，稍等片刻，插件便可安装成功。</li></ol></li><li>remove：卸载插件。<ol><li>打开Command Palette，输入<code>remove</code>，回车，Package Control便会罗列已安装的插件库。</li><li>移动光标至要卸载的插件，回车，稍等片刻，插件便可卸载成功。</li></ol></li><li>list：罗列已安装的插件。</li><li>upgrade：更新插件。会尝试更新所有已安装的插件。</li><li>其它功能用到再摸索。</li></ul><p><strong><em>注：</em></strong></p><blockquote><p>Package Control官网罗列了新出的、流行的、推荐的插件，需要的童鞋根据需求自行取舍。<br>插件安装完成后，可以通过<code>Preferences</code> –&gt; <code>Package Settings</code>，找到对应的插件的默认配置文件和快捷键，从而了解插件的使用方法。</p></blockquote><h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><p>熟悉快捷键可以极大地提高效率，个人认为，入门时只需了解一些基本的常用的快捷键即可，成精后再考虑耍帅。下表简单地罗列了一些常用快捷键。</p><table><thead><tr><th>快捷键(Mac OS X)</th><th>说明</th></tr></thead><tbody><tr><td>Shift + Cmd + P</td><td>打开command palette</td></tr><tr><td>Ctrl + `</td><td>打开console</td></tr><tr><td>Ctrl + G</td><td>跳转到指定行</td></tr><tr><td>Cmd + P</td><td>搜索文件</td></tr><tr><td>Cmd + R</td><td>搜索类的方法、文章的章节等</td></tr><tr><td>Cmd + D</td><td>选中单词</td></tr><tr><td>Cmd + L</td><td>选中行，继续按可继续选中下一行</td></tr><tr><td>Cmd + Shift + Enter</td><td>在当前行上面插入新行</td></tr><tr><td>Cmd + X</td><td>删除当前行</td></tr><tr><td>Cmd + /</td><td>注释/取消注释当前行</td></tr><tr><td>Cmd + K, Cmd + B</td><td>打开/关闭侧边栏</td></tr><tr><td>…</td><td>其它特更新</td></tr></tbody></table><h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><p>如果需要在Terminal中使用Sublime Text，可以使用ln命令，由于不同版本具体命令有区别，建议参考官方文档，如：<a href="http://www.sublimetext.com/docs/3/osx_command_line.html" target="_blank" rel="external">Sublime Text 3的文档</a></p><p>熟悉一个工具最好的途径是：</p><blockquote><p>Just Do It !</p></blockquote><p>遇到问题最好的解决方法是：</p><blockquote><p>Just Google It !</p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h1&gt;&lt;p&gt;Sublime Text是一款优秀的文本编辑器，支持Windows、Mac OS X、Linux平台，通过配置文件和插件可以实现很多强大的功能。具体特性可以参考&lt;a href=&quot;http://www.sublimetext.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;官网&lt;/a&gt;。相对Emacs、Vim等神级编辑器而言，Sublime Text门槛更低，对于没有时间与精力深入研究神级编辑器的童鞋来说，真乃居家旅行必备！其吸引我的特性主要为：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;跨平台：由于生活和工作的需要，我经常需要同时使用Windows、Mac OS X和Linux三大平台，跨平台的Sublime Text给我带来了极大的便利。&lt;/li&gt;
+&lt;li&gt;可定制：可以通过配置文件进行个性化配置，如：颜色主题、缩进方式、编码等。让人惊喜的是其配置方式比Vim简单得多！多！多！&lt;/li&gt;
+&lt;li&gt;插件：通过丰富的插件可以实现超乎想象的功能，如：语法检查、格式化、版本控制等。&lt;/li&gt;
+&lt;li&gt;快：Sublime Text使用时的那种流畅会带来非常愉悦的快感，你懂的～&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="Tools" scheme="http://dengxh.com/categories/Tools/"/>
+    
+    
+      <category term="SublimeText" scheme="http://dengxh.com/tags/SublimeText/"/>
+    
+  </entry>
+  
+</feed>
