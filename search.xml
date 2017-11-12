@@ -6,6 +6,51 @@
     <content type="text"><![CDATA[前言公司质量保障团队近期在Push各技术团队在线上应用中禁止使用SNAPSHOT，因此各个技术团队均开始修改完善。不同人员对Maven学习了解程度不同，有些同事修改起来效率较低，因此我将自己所使用的方法和工具在公司内网BBS进行分享，供大家参考借鉴。 SNAPSHOT出现场景 对外提供了SNAPSHOT 依赖三方SNAPSHOT 对外提供服务由SNAPSHOT改为RELEASE一般在开发测试阶段，需要经常变动代码，所以使用SNAPSHOT是合理的，但是线上对外提供的服务必须是稳定的版本，一般以RELEASE包提供。此处涉及修改版本号。我们的项目一般是以一个Project和多个Module的形式组织，Project与Module存在父子关系。如果手动一个个修改版本号，比较容易出错。Maven提供了插件：Versions，用于管理版本。 设置新版本号1mvn versions:set -DnewVersion=1.0.1-RELEASE 确认提交新版本号1mvn versions:commit 撤消版本号变更1mvn versions:revert 发现并去除SNAPSHOT依赖发现SNAPSHOT依赖一般我们的项目会有很多三方依赖，而他们自身亦可能有很多依赖，如果通过人工逐个去判断是否存在SNAPSHOT依赖，几乎是不可能的事。Maven提供了插件：dependency，用于管理依赖。为了发现SNAPSHOT依赖，可以通过以下两种方式： 方式一：通过dependency:list 12345678910111213141516mvn dependency:list | grep -i snapshot[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile 这种方式会筛选出当前项目所有的SNAPSHOT依赖，但是问题很明显，我们很难判断是哪里依赖了这些SNAPSHOT。因此，我倾向采用第二方式。 方式二：通过dependency:tree 123456789101112mvn dependency:tree -Dincludes=:::*-SNAPSHOT[INFO] ------------------------------------------------------------------------[INFO] [INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ pay_pcs_impl ---[INFO] com.xxx.service:pay_pcs_impl:jar:1.0.1-RELEASE[INFO] +- com.sample.service:pay_pcs_service:jar:1.0.1-RELEASE:compile[INFO] | +- com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] | \- com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] \- com.sample:pay-common:jar:1.0.1.1:compile[INFO] \- com.sample.sentry:sentry-client:jar:2.1.15:compile[INFO] \- com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile 通过dependency:tree的方式，可以清晰明了的看到依赖的层次关系，从而快速的定位到SNAPSHOT依赖点。如上述：pay_pcs_service –&gt; pay_common –&gt; sentry-client –&gt; flatbuffers-java。 去除SNAPSHOT依赖通过2.2.1的方式发现SNAPSHOT依赖后，便可根据结果去除相应的SNAPSHOT依赖。去除的方式归根结底是变更依赖的版本，同样有多种方式。我主要采用两种方式。 方式一：利用Maven Versions插件 123mvn versions:use-releasesmvn versions:use-next-releasesmvn versions:use-latest-releases 该方式可批量的将SNAPSHOT替换成相应的RELEASE版本。 注：某些服务提供方发布版本不合规范，所以请注意结合git的变更等，判断所变更的RELEASE是否正确。比如我在使用过程中遇到某一个依赖，同一版本号，SNAPSHOT和RELEASE代码出入较大，导致编译失败。经排查改用其他版本号才正常。 方式二：人工逐个变更依赖的版本号通过发现SNAPSHOT方式二发现的依赖，层次关系已经十分明确。在数量不多的情况下，保险起见，人工逐个核实确认新的RELEASE版本号。可以借助以下方法获取依赖是否有更新 1mvn versions:display-dependency-updates FAQ zsh:no matches found: -Dincludes=:::-SNAPSHOT，该问题是由于zsh对通配符的解析，简单的解决方法是给参数加上引号：mvn dependency:tree -Dincludes=”:::-SNAPSHOT” 参考文献 http://www.mojohaus.org/versions-maven-plugin/usage.html https://maven.apache.org/plugins/maven-dependency-plugin/usage.html]]></content>
   </entry>
   <entry>
+    <title><![CDATA[沪C提档转浙A流程]]></title>
+    <url>%2F2017%2F02%2F04%2F%E6%B2%AAC%E6%8F%90%E6%A1%A3%E8%BD%AC%E6%B5%99A%E6%B5%81%E7%A8%8B%2F</url>
+    <content type="text"><![CDATA[由于杭州限牌，因此不得不先上沪C牌照，今年好不容易摇到浙A牌照，但却不知道如何操作，网上搜了一大堆也不清不楚，因此进行整理记录，也希望能帮到网友们。 整体流程分为两大步： 沪C提档 杭州上浙A牌]]></content>
+      <tags>
+        <tag>Life</tag>
+        <tag>Car</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[【GitTips】merge指定分支的指定文件]]></title>
+    <url>%2F2015%2F03%2F05%2FTechnologies%2F%E3%80%90GitTips%E3%80%91merge%E6%8C%87%E5%AE%9A%E5%88%86%E6%94%AF%E7%9A%84%E6%8C%87%E5%AE%9A%E6%96%87%E4%BB%B6%2F</url>
+    <content type="text"><![CDATA[1234$ git branch* master twitter_integration$ git checkout twitter_integration app/models/avatar.rbd b/migrate/20090223104419]]></content>
+      <tags>
+        <tag>Git</tag>
+        <tag>Tips</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[【GitTips】非SSH免密提交]]></title>
+    <url>%2F2015%2F01%2F12%2FTechnologies%2F%E3%80%90GitTips%E3%80%91%E9%9D%9ESSH%E5%85%8D%E5%AF%86%E6%8F%90%E4%BA%A4%2F</url>
+    <content type="text"><![CDATA[1$ git config credential.helper store]]></content>
+      <tags>
+        <tag>Git</tag>
+        <tag>Tips</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[【GitTips】撤消操作]]></title>
+    <url>%2F2015%2F01%2F12%2FTechnologies%2F%E3%80%90GitTips%E3%80%91%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C%2F</url>
+    <content type="text"><![CDATA[撤消 add1$ git rm --cached &lt;file&gt; 撤消 commit1$ git reset --hard &lt;commit id&gt; # 将 HEAD 移至 &lt;commit id&gt; 注意，–hard 将目录中所有文件中的修改 撤消 push12$ git reset --hard &lt;commit id&gt; # 撤消commit$ git push origin HEAD --force # 强制提交到远程版本库，从而删除之前提交的数据]]></content>
+      <tags>
+        <tag>Git</tag>
+        <tag>Tips</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[【GitTips】修改远程仓库的URL]]></title>
+    <url>%2F2015%2F01%2F02%2FTechnologies%2F%E3%80%90GitTips%E3%80%91%E4%BF%AE%E6%94%B9%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%9A%84URL%2F</url>
+    <content type="text"><![CDATA[1$ git remote set-url origin https://github.com/dxh/dxh.github.io.git]]></content>
+      <tags>
+        <tag>Git</tag>
+        <tag>Tips</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Sublime Text 编辑 Evernote（印象笔记）]]></title>
     <url>%2F2014%2F10%2F23%2FTools%2FSublime-Text-%E7%BC%96%E8%BE%91-Evernote%EF%BC%88%E5%8D%B0%E8%B1%A1%E7%AC%94%E8%AE%B0%EF%BC%89%2F</url>
     <content type="text"><![CDATA[跨平台的Evernote（印象笔记）十分好用，是我进行知识管理、笔记记录的主要工具，美中不足的是原生的编辑功能实在太弱。对于文章内容多样化、排版复杂的笔记体验较差。幸运的事有3件： Evernote（印象笔记）提供了API，供第三方应用管理笔记。 这世界上有markdown这样舒服的标记语言。 神器Sublime Text 受益于上述三件幸运的事，使得我们可以十分方便的在Sublime Text中，利用markdown编辑修改Evernote（印象笔记）中的笔记。废话不多说，下面进入正题。 首先你要习惯使用Sublime Text，如果还不习惯，那么我强烈推荐你花点时间了解一下，对它的评价我只用两个字：”神器”！具体可参考文章：Sublime Text。 打开Sublime Text之后，cmd + shift + P打开Package Control，输入install，跳出插件库，然后输入Evernote安装Evernote插件。该插件的介绍和详细的使用说明请参考：插件介绍。 插件安装完成之后，第一次使用时需要进行授权认证。步骤如下： 打开Package Control，输入send to evernote，在窗口底部会弹出一个小窗口，窗口中的内容为一个带token的链接。该token后面用到。 将链接复制到浏览器并访问，登录授权后，会有一个NoteStore URL。印象笔记用户，直接用浏览器访问链接：https://app.yinxiang.com/api/DeveloperToken.action 打开Sublime Text，打开Preferences &gt; Package Settings &gt; Evernote &gt; Settings User，将步骤2和步骤3中的token和NoteStore URL复制为对应属性值。保存之后便可以开始使用了。 按上述方法创建完成之后，便可以非常方便的使用Evernote（印象笔记）了，而且笔记对应的目录和tag都可以自动提示。详细的功能和使用方法还是参考：插件介绍。]]></content>

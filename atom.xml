@@ -35,6 +35,136 @@
   </entry>
   
   <entry>
+    <title>沪C提档转浙A流程</title>
+    <link href="https://dengxh.com/2017/02/04/%E6%B2%AAC%E6%8F%90%E6%A1%A3%E8%BD%AC%E6%B5%99A%E6%B5%81%E7%A8%8B/"/>
+    <id>https://dengxh.com/2017/02/04/沪C提档转浙A流程/</id>
+    <published>2017-02-04T15:37:16.000Z</published>
+    <updated>2017-11-12T15:41:27.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>由于杭州限牌，因此不得不先上沪C牌照，今年好不容易摇到浙A牌照，但却不知道如何操作，网上搜了一大堆也不清不楚，因此进行整理记录，也希望能帮到网友们。</p><p>整体流程分为两大步：</p><ol><li>沪C提档</li><li>杭州上浙A牌</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;由于杭州限牌，因此不得不先上沪C牌照，今年好不容易摇到浙A牌照，但却不知道如何操作，网上搜了一大堆也不清不楚，因此进行整理记录，也希望能帮到网友们。&lt;/p&gt;
+&lt;p&gt;整体流程分为两大步：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;沪C提档&lt;/li&gt;
+&lt;li&gt;杭州上浙A牌&lt;/li&gt;
+&lt;/ol&gt;
+      
+    
+    </summary>
+    
+    
+      <category term="Life" scheme="https://dengxh.com/tags/Life/"/>
+    
+      <category term="Car" scheme="https://dengxh.com/tags/Car/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【GitTips】merge指定分支的指定文件</title>
+    <link href="https://dengxh.com/2015/03/05/Technologies/%E3%80%90GitTips%E3%80%91merge%E6%8C%87%E5%AE%9A%E5%88%86%E6%94%AF%E7%9A%84%E6%8C%87%E5%AE%9A%E6%96%87%E4%BB%B6/"/>
+    <id>https://dengxh.com/2015/03/05/Technologies/【GitTips】merge指定分支的指定文件/</id>
+    <published>2015-03-05T14:51:31.000Z</published>
+    <updated>2017-11-12T15:14:44.423Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git branch</span><br><span class="line">* master</span><br><span class="line">  twitter_integration</span><br><span class="line">$ git checkout twitter_integration app/models/avatar.rbd b/migrate/20090223104419</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=
+      
+    
+    </summary>
+    
+    
+      <category term="Git" scheme="https://dengxh.com/tags/Git/"/>
+    
+      <category term="Tips" scheme="https://dengxh.com/tags/Tips/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【GitTips】非SSH免密提交</title>
+    <link href="https://dengxh.com/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E9%9D%9ESSH%E5%85%8D%E5%AF%86%E6%8F%90%E4%BA%A4/"/>
+    <id>https://dengxh.com/2015/01/12/Technologies/【GitTips】非SSH免密提交/</id>
+    <published>2015-01-12T14:51:31.000Z</published>
+    <updated>2017-11-12T15:14:56.809Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config credential.helper store</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span clas
+      
+    
+    </summary>
+    
+    
+      <category term="Git" scheme="https://dengxh.com/tags/Git/"/>
+    
+      <category term="Tips" scheme="https://dengxh.com/tags/Tips/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【GitTips】撤消操作</title>
+    <link href="https://dengxh.com/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C/"/>
+    <id>https://dengxh.com/2015/01/12/Technologies/【GitTips】撤消操作/</id>
+    <published>2015-01-12T14:51:31.000Z</published>
+    <updated>2017-11-12T15:15:24.190Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="撤消-add"><a href="#撤消-add" class="headerlink" title="撤消 add"></a>撤消 add</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm --cached &lt;file&gt;</span><br></pre></td></tr></table></figure><h1 id="撤消-commit"><a href="#撤消-commit" class="headerlink" title="撤消 commit"></a>撤消 commit</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard &lt;commit id&gt; <span class="comment"># 将 HEAD 移至 &lt;commit id&gt;</span></span><br></pre></td></tr></table></figure><p>注意，–hard 将目录中所有文件中的修改</p><h1 id="撤消-push"><a href="#撤消-push" class="headerlink" title="撤消 push"></a>撤消 push</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard &lt;commit id&gt; <span class="comment"># 撤消commit</span></span><br><span class="line">$ git push origin HEAD --force <span class="comment"># 强制提交到远程版本库，从而删除之前提交的数据</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;撤消-add&quot;&gt;&lt;a href=&quot;#撤消-add&quot; class=&quot;headerlink&quot; title=&quot;撤消 add&quot;&gt;&lt;/a&gt;撤消 add&lt;/h1&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutt
+      
+    
+    </summary>
+    
+    
+      <category term="Git" scheme="https://dengxh.com/tags/Git/"/>
+    
+      <category term="Tips" scheme="https://dengxh.com/tags/Tips/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【GitTips】修改远程仓库的URL</title>
+    <link href="https://dengxh.com/2015/01/02/Technologies/%E3%80%90GitTips%E3%80%91%E4%BF%AE%E6%94%B9%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%9A%84URL/"/>
+    <id>https://dengxh.com/2015/01/02/Technologies/【GitTips】修改远程仓库的URL/</id>
+    <published>2015-01-02T14:51:31.000Z</published>
+    <updated>2017-11-12T15:15:27.000Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote <span class="built_in">set</span>-url origin https://github.com/dxh/dxh.github.io.git</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span clas
+      
+    
+    </summary>
+    
+    
+      <category term="Git" scheme="https://dengxh.com/tags/Git/"/>
+    
+      <category term="Tips" scheme="https://dengxh.com/tags/Tips/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Sublime Text 编辑 Evernote（印象笔记）</title>
     <link href="https://dengxh.com/2014/10/23/Tools/Sublime-Text-%E7%BC%96%E8%BE%91-Evernote%EF%BC%88%E5%8D%B0%E8%B1%A1%E7%AC%94%E8%AE%B0%EF%BC%89/"/>
     <id>https://dengxh.com/2014/10/23/Tools/Sublime-Text-编辑-Evernote（印象笔记）/</id>
