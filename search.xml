@@ -2,28 +2,21 @@
 <search>
   <entry>
     <title><![CDATA[利用Maven插件高效去除SNAPSHOT]]></title>
-    <url>%2F2017%2F11%2F09%2FTechnologies%2FMaven%2F%E5%88%A9%E7%94%A8Maven%E6%8F%92%E4%BB%B6%E9%AB%98%E6%95%88%E5%8E%BB%E9%99%A4SNAPSHOT%2F</url>
+    <url>%2F2017%2F11%2F09%2FTechnologies%2F%E5%88%A9%E7%94%A8Maven%E6%8F%92%E4%BB%B6%E9%AB%98%E6%95%88%E5%8E%BB%E9%99%A4SNAPSHOT%2F</url>
     <content type="text"><![CDATA[前言公司质量保障团队近期在Push各技术团队在线上应用中禁止使用SNAPSHOT，因此各个技术团队均开始修改完善。不同人员对Maven学习了解程度不同，有些同事修改起来效率较低，因此我将自己所使用的方法和工具在公司内网BBS进行分享，供大家参考借鉴。 SNAPSHOT出现场景 对外提供了SNAPSHOT 依赖三方SNAPSHOT 对外提供服务由SNAPSHOT改为RELEASE一般在开发测试阶段，需要经常变动代码，所以使用SNAPSHOT是合理的，但是线上对外提供的服务必须是稳定的版本，一般以RELEASE包提供。此处涉及修改版本号。我们的项目一般是以一个Project和多个Module的形式组织，Project与Module存在父子关系。如果手动一个个修改版本号，比较容易出错。Maven提供了插件：Versions，用于管理版本。 设置新版本号1mvn versions:set -DnewVersion=1.0.1-RELEASE 确认提交新版本号1mvn versions:commit 撤消版本号变更1mvn versions:revert 发现并去除SNAPSHOT依赖发现SNAPSHOT依赖一般我们的项目会有很多三方依赖，而他们自身亦可能有很多依赖，如果通过人工逐个去判断是否存在SNAPSHOT依赖，几乎是不可能的事。Maven提供了插件：dependency，用于管理依赖。为了发现SNAPSHOT依赖，可以通过以下两种方式： 方式一：通过dependency:list 12345678910111213141516mvn dependency:list | grep -i snapshot[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile 这种方式会筛选出当前项目所有的SNAPSHOT依赖，但是问题很明显，我们很难判断是哪里依赖了这些SNAPSHOT。因此，我倾向采用第二方式。 方式二：通过dependency:tree 123456789101112mvn dependency:tree -Dincludes=:::*-SNAPSHOT[INFO] ------------------------------------------------------------------------[INFO] [INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ pay_pcs_impl ---[INFO] com.xxx.service:pay_pcs_impl:jar:1.0.1-RELEASE[INFO] +- com.sample.service:pay_pcs_service:jar:1.0.1-RELEASE:compile[INFO] | +- com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] | \- com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] \- com.sample:pay-common:jar:1.0.1.1:compile[INFO] \- com.sample.sentry:sentry-client:jar:2.1.15:compile[INFO] \- com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile 通过dependency:tree的方式，可以清晰明了的看到依赖的层次关系，从而快速的定位到SNAPSHOT依赖点。如上述：pay_pcs_service –&gt; pay_common –&gt; sentry-client –&gt; flatbuffers-java。 去除SNAPSHOT依赖通过2.2.1的方式发现SNAPSHOT依赖后，便可根据结果去除相应的SNAPSHOT依赖。去除的方式归根结底是变更依赖的版本，同样有多种方式。我主要采用两种方式。 方式一：利用Maven Versions插件 123mvn versions:use-releasesmvn versions:use-next-releasesmvn versions:use-latest-releases 该方式可批量的将SNAPSHOT替换成相应的RELEASE版本。 注：某些服务提供方发布版本不合规范，所以请注意结合git的变更等，判断所变更的RELEASE是否正确。比如我在使用过程中遇到某一个依赖，同一版本号，SNAPSHOT和RELEASE代码出入较大，导致编译失败。经排查改用其他版本号才正常。 方式二：人工逐个变更依赖的版本号通过发现SNAPSHOT方式二发现的依赖，层次关系已经十分明确。在数量不多的情况下，保险起见，人工逐个核实确认新的RELEASE版本号。可以借助以下方法获取依赖是否有更新 1mvn versions:display-dependency-updates FAQ zsh:no matches found: -Dincludes=:::-SNAPSHOT，该问题是由于zsh对通配符的解析，简单的解决方法是给参数加上引号：mvn dependency:tree -Dincludes=”:::-SNAPSHOT” 参考文献 http://www.mojohaus.org/versions-maven-plugin/usage.html https://maven.apache.org/plugins/maven-dependency-plugin/usage.html]]></content>
   </entry>
   <entry>
     <title><![CDATA[Sublime Text 编辑 Evernote（印象笔记）]]></title>
     <url>%2F2014%2F10%2F23%2FTools%2FSublime-Text-%E7%BC%96%E8%BE%91-Evernote%EF%BC%88%E5%8D%B0%E8%B1%A1%E7%AC%94%E8%AE%B0%EF%BC%89%2F</url>
     <content type="text"><![CDATA[跨平台的Evernote（印象笔记）十分好用，是我进行知识管理、笔记记录的主要工具，美中不足的是原生的编辑功能实在太弱。对于文章内容多样化、排版复杂的笔记体验较差。幸运的事有3件： Evernote（印象笔记）提供了API，供第三方应用管理笔记。 这世界上有markdown这样舒服的标记语言。 神器Sublime Text 受益于上述三件幸运的事，使得我们可以十分方便的在Sublime Text中，利用markdown编辑修改Evernote（印象笔记）中的笔记。废话不多说，下面进入正题。 首先你要习惯使用Sublime Text，如果还不习惯，那么我强烈推荐你花点时间了解一下，对它的评价我只用两个字：”神器”！具体可参考文章：Sublime Text。 打开Sublime Text之后，cmd + shift + P打开Package Control，输入install，跳出插件库，然后输入Evernote安装Evernote插件。该插件的介绍和详细的使用说明请参考：插件介绍。 插件安装完成之后，第一次使用时需要进行授权认证。步骤如下： 打开Package Control，输入send to evernote，在窗口底部会弹出一个小窗口，窗口中的内容为一个带token的链接。该token后面用到。 将链接复制到浏览器并访问，登录授权后，会有一个NoteStore URL。印象笔记用户，直接用浏览器访问链接：https://app.yinxiang.com/api/DeveloperToken.action 打开Sublime Text，打开Preferences &gt; Package Settings &gt; Evernote &gt; Settings User，将步骤2和步骤3中的token和NoteStore URL复制为对应属性值。保存之后便可以开始使用了。 按上述方法创建完成之后，便可以非常方便的使用Evernote（印象笔记）了，而且笔记对应的目录和tag都可以自动提示。详细的功能和使用方法还是参考：插件介绍。]]></content>
-      <categories>
-        <category>Tools</category>
-      </categories>
       <tags>
         <tag>SublimeText</tag>
       </tags>
   </entry>
   <entry>
     <title><![CDATA[Apache 安装笔记]]></title>
-    <url>%2F2014%2F10%2F19%2FTechnologies%2FMaintenance%2FApache-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B%2F</url>
+    <url>%2F2014%2F10%2F19%2FTechnologies%2FApache-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B%2F</url>
     <content type="text"><![CDATA[CentOS 6.5 官方支持的Apache版本为Apache/2.2.15 (Unix)，如果要安装最新版本的Apache，则可以通过源码编译安装的方式实现。本文以CentOS 6.5为例，记录源码编译安装Apache的方法。主要步骤如下所述： 环境要求The following requirements exist for building Apache httpd: APR and APR-Util Perl-Compatible Regular Expressions Library (PCRE) Disk Space ANSI-C Compiler and Build System Accurate time keeping Perl 5 [OPTIONAL] 根据官网教程，通过源码编译安装需要一些基础环境，比如：APR、PCRE、C编译器等。 APR、APR-Util我之前已经根据APR官网文档通过源码编译安装的方式进行安装，简述如下： 下载APR、APR-Util的源代码并解压 分别进入解压后的目录，两者均使用默认的./configure make &amp;&amp; sudo make install 通过上述步骤安装之后，APR、APR-Util被安装至目录：/usr/local/apr/，如下所示： /usr/local/apr/bin/ ├── apr-1-config └── apu-1-config PCRE我之前使用了yum进行了安装 $ sudo yum -y install pcre-devel 编译、安装下载解压Apache源代码之后，使用 ./configure --help可以查看编译选项，如果没有指定--prefix选项，默认安装目录为/usr/local/apache2，我使用了缺省值。为了使用APR, APR-Util、PCRE，需要使用--with-apr、--with-apr-util、--with-pcre。命令如下所示： $ ./configure --with-apr=/usr/local/apr/bin/apr-1-config \ --with-apr-util=/usr/local/apr/bin/apu-1-config \ --with-pcre=/usr/bin/pcre $ make &amp;&amp; sudo make install Apache官网教程使用的是--with-included-apr，我没有尝试，原文如下所述： APR and APR-UtilMake sure you have APR and APR-Util already installed on your system. If you don’t, or prefer to not use the system-provided versions, download the latest versions of both APR and APR-Util from Apache APR, unpack them into ./srclib/apr and ./srclib/apr-util (be sure the directory names do not have version numbers; for example, the APR distribution must be under ./srclib/apr/) and use ./configure’s –with-included-apr option. On some platforms, you may have to install the corresponding -dev packages to allow httpd to build against your installed copy of APR and APR-Util. 测试是否安装成功启动Apache： $ sudo /usr/local/apache2/bin/httpd -k start 打开浏览器，访问localhost，如果页面显示It works!，则安装Apache成功。]]></content>
-      <categories>
-        <category>Technologies</category>
-        <category>Maintenance</category>
-      </categories>
       <tags>
         <tag>Apache</tag>
         <tag>运维</tag>
@@ -31,12 +24,8 @@
   </entry>
   <entry>
     <title><![CDATA[vsfptd 搭建FTP服务器简明教程]]></title>
-    <url>%2F2014%2F10%2F15%2FTechnologies%2FMaintenance%2Fvsfptd%20%E6%90%AD%E5%BB%BAFTP%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B%2F</url>
+    <url>%2F2014%2F10%2F15%2FTechnologies%2Fvsfptd%20%E6%90%AD%E5%BB%BAFTP%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B%2F</url>
     <content type="text"><![CDATA[FTP服务器在当前工作、生活环境中，有时依然十分有用。在Linux服务器上搭建FTP服务器，首选 vsftptd (very secure FTP daemon) 应用。 下文以Centos 6.5为例，介绍如何快速搭建一个可用的FTP服务器。 安装 vsftpd# 安装 sudo yum -y install vsftpd # 启动 sudo service vsftpd start # 设置为开机启动 sudo chkconfig vsftpd on 创建FTP用户# 增加一个ftp用户组 sudo groupadd ftpgroup # 创建一个ftp用户，并配置目录 sudo useradd -g ftpgroup -d /ftp/ftpuser -M ftpuser # 设置用户密码 sudo passwd ftpuser # 创建相应目录 sudo mkdir /ftp sudo mkdir /ftp/ftpuser # 修改目录权限 sudo chmod 777 /ftp/ftpuser 配置 vsftpdCentos 6.5 安装完 vsftpd 之后，配置文件目录如下所示： 12345/etc/vsftpd/├── ftpusers # 禁止使用vsftpd的用户列表文件├── user_list # userlist_deny=YES/NO，禁止/允许用户使用vsftpd├── vsftpd.conf # 主配置文件└── vsftpd_conf_migrate.sh 主配置文件为 vsftpd.conf，通过阅读配置文件，可以配置参数以满足特殊需求，也可直接使用缺省值。出于安全性、实用性等方面的考虑，不建议使用缺省值。详细的参数配置教程可参考更专业的资料，下面仅简单介绍一些常用的设置。 vsftpd 配置说明注： 修改配置文件之前记得备份 # Allow anonymous FTP? (Beware - allowed by default if you comment this out). # anonymous_enable=YES anonymous_enable=NO # 不允许匿名用户 # Uncomment this to allow local users to log in. local_enable=YES # Uncomment this to enable any form of FTP write command. write_enable=YES # # If you want, you can arrange for uploaded anonymous files to be owned by # a different user. Note! Using &quot;root&quot; for uploaded files is not # recommended! #chown_uploads=YES #chown_username=whoever chown_uploads=NO # 禁止上传文件更改宿主 userlist_enable=YES # 配合userlist_deny=YES/NO，禁止/允许user_list文件中的用户使用vsftpd 重启 vsftpd重启 vsftpd 使配置之后的选项生效： sudo service vsftpd restart 参考文献 Ubuntu下vsftpd配置实例，超级简单，高度可用 我见过最好的vsftpd配置教程]]></content>
-      <categories>
-        <category>Technologies</category>
-        <category>Maintenance</category>
-      </categories>
       <tags>
         <tag>ftp</tag>
       </tags>
@@ -45,16 +34,13 @@
     <title><![CDATA[通过网盘同步Sublime Text设置]]></title>
     <url>%2F2014%2F09%2F29%2FTools%2F%E9%80%9A%E8%BF%87%E7%BD%91%E7%9B%98%E5%90%8C%E6%AD%A5Sublime-Text%E8%AE%BE%E7%BD%AE%2F</url>
     <content type="text"><![CDATA[Sublime Text的配置信息和插件都存放在Packages目录下，只要通过网盘在不同电脑间同步该目录，便可以实现在不同电脑间使用同一套Sublime Text的配置。 具体步骤如下： 关闭Sublime Text 将Sublime Text的Packages目录（~/Library/Application Support/Sublime Text 3/Packages）移至网盘的同步目录（~/OneDrive/MyWorkbench/MyApps/SublimeText/Packages）。 执行命令：ln -s ~/OneDrive/MyWorkbench/MyApps/SublimeText/Packages ~/Library/Application Support/Sublime Text 3/Packages Done :)]]></content>
-      <categories>
-        <category>Tools</category>
-      </categories>
       <tags>
         <tag>SublimeText</tag>
       </tags>
   </entry>
   <entry>
     <title><![CDATA[Maven快速入门]]></title>
-    <url>%2F2014%2F09%2F13%2FTechnologies%2FMaven%2FMaven%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%2F</url>
+    <url>%2F2014%2F09%2F13%2FTechnologies%2FMaven%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%2F</url>
     <content type="text"><![CDATA[Maven 简介Maven是一个Java项目管理工具，可以简化项目构建、管理项目依赖、生成报告等。具体介绍参考官网what-is-maven Maven 安装教程Maven的安装非常简单，只要2个步骤： 下载Maven 解压至某个目录（eg：/usr/local/apache-maven/），并设置环境变量 各个平台具体安装教程参考官网Installation 注： Maven安装成功后，会在~/.m2/repository生成一个本地仓库，后续在使用 Maven 构建项目时，如果依赖的包在该仓库中不存在，则先下载相应的依赖包至该仓库。 Maven 使用教程Maven 基于项目对象模型（POM），具有标准的文件目录结构，通过文件pom.xml的配置来管理整个 Maven 项目。 目录结构Maven 项目目录结构可以按约定手工创建，也可通过 Maven 命令自动创建。最简单的目录结构如下所示：123456789101112131415my-app|-- pom.xml`-- src |-- main | `-- java | `-- com | `-- mycompany | `-- app | `-- App.java `-- test `-- java `-- com `-- mycompany `-- app `-- AppTest.java 创建 Maven 项目的命令如下所示： 12345mvn archetype:generate \ -DgroupId=com.mycompany.app \ -DartifactId=my-app \ -DarchetypeArtifactId=maven-archetype-quickstart \ -DinteractiveMode=false POM通过 Maven 命令创建项目时，会根据命令参数自动生成pom.xml文件。根据上述命令生成的pom.xml文件如下所示： 123456789101112131415161718192021&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt; &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt; &lt;groupId&gt;com.mycompany.app&lt;/groupId&gt; &lt;artifactId&gt;my-app&lt;/artifactId&gt; &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt; &lt;packaging&gt;jar&lt;/packaging&gt; &lt;name&gt;Maven Quick Start Archetype&lt;/name&gt; &lt;url&gt;http://maven.apache.org&lt;/url&gt; &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;junit&lt;/groupId&gt; &lt;artifactId&gt;junit&lt;/artifactId&gt; &lt;version&gt;4.8.2&lt;/version&gt; &lt;scope&gt;test&lt;/scope&gt; &lt;/dependency&gt; &lt;/dependencies&gt;&lt;/project&gt; pom.xml常用设置： project（必填） - This is the top-level element in all Maven pom.xml files. modelVersion（必填） - 所使用的POM版本号 groupId（必填）- 项目创建者的唯一标识，通常用逆置的域名（eg: io.github.dxh）。 artifactId（必填）- 项目的生成产品，命名通常为：-. version（必填）- 项目版本号，推荐使用语义化的版本号 packaging（可选） - 项目生成产品的包类型（eg: jar、war, etc.)，默认为jar。 生命周期Maven 构建项目整个生命周期由多个阶段构成： validate - 检查项目和必要的信息是否正确 compile - 编译 test - 利用单元测试框架测试编译后的代码 package - 打包，如打包成:jar integration-test - 与整个项目集成测试 verify - 验证包是否可用并且达到质量标准 install - 将包部署至本地库，可作为本地其它项目的依赖 deploy - 将最终产品部署至远程仓库，供别的开发人员和项目使用 除了上述阶段之外，还有2个比较常用的生命周期： clean - cleans up artifacts created by prior builds site - generates site documentation for this project 每个阶段对应一个 Maven 命令，并且命令是按顺序执行的。比如执行mvn package，则命令validate、compile、test将自动被有序执行。 结束语通过短暂的半天了解与使用之后，基本的体会是：对于小项目，可能还是直接使用JDK中自带的工具或者IDE的集成工具更为快速简单。对于大项目，特别是存在各种依赖的项目，使用 Maven 将会大大降低项目构建的复杂度。但是，目前初步有个担忧，对于超级大的项目，pom.xml的维护是不是成为一个问题？传说中，已经有一新的工具流行起来了，它叫Gradle.]]></content>
       <tags>
         <tag>Maven</tag>
@@ -62,35 +48,24 @@
   </entry>
   <entry>
     <title><![CDATA[REST]]></title>
-    <url>%2F2014%2F09%2F13%2FTechnologies%2FArchitecture%2FREST%2F</url>
+    <url>%2F2014%2F09%2F13%2FTechnologies%2FREST%2F</url>
     <content type="text"><![CDATA[REST(Representational State Transfer)是一种软件架构风格，基于HTTP、URI、XML等技术与协议，为网络应用的设计与开发降低复杂性、提高伸缩性，已经普遍取代了基于SOAP和WSDL。]]></content>
-      <categories>
-        <category>Technologies</category>
-        <category>Architecture</category>
-      </categories>
       <tags>
         <tag>REST</tag>
       </tags>
   </entry>
   <entry>
     <title><![CDATA[语义化版本号格式]]></title>
-    <url>%2F2014%2F09%2F11%2FTechnologies%2F%E8%A7%84%E8%8C%83%2F%E8%AF%AD%E4%B9%89%E5%8C%96%E7%89%88%E6%9C%AC%E5%8F%B7%E6%A0%BC%E5%BC%8F%2F</url>
+    <url>%2F2014%2F09%2F11%2FTechnologies%2F%E8%AF%AD%E4%B9%89%E5%8C%96%E7%89%88%E6%9C%AC%E5%8F%B7%E6%A0%BC%E5%BC%8F%2F</url>
     <content type="text"><![CDATA[在软件管理的领域里存在着被称作“依赖地狱”的死亡之谷，系统规模越大，加入的套件越多，你就越有可能在未来的某一天发现自己已深陷绝望之中。 一个项目随着生命周期会不断的变更，在变更过程中，通常采用版本号作为标识。一个良好的版本号格式将为项目管理带来极大的好处。 所谓语义化的版本号格式，简单描述如下： 版本格式：主版本号.次版本号.修订号 版本号递增规则如下： 主版本号：当你做了不兼容的API 修改， 次版本号：当你做了向下兼容的功能性新增， 修订号：当你做了向下兼容的问题修正。 先行版本号及版本编译信息可以加到“主版本号.次版本号.修订号”的后面，作为延伸。 更为详细和全面的介绍请参考：http://semver.org/lang/zh-CN/]]></content>
-      <categories>
-        <category>Technologies</category>
-        <category>Maintenance</category>
-      </categories>
       <tags>
         <tag>VCS</tag>
       </tags>
   </entry>
   <entry>
     <title><![CDATA[Vagrant安装配置笔记]]></title>
-    <url>%2F2014%2F08%2F23%2FTechnologies%2FMaintenance%2Fvagrant%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%AC%94%E8%AE%B0%2F</url>
+    <url>%2F2014%2F08%2F23%2FTechnologies%2Fvagrant%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%AC%94%E8%AE%B0%2F</url>
     <content type="text"><![CDATA[在学习编程的过程中，往往需要配置相应的开发环境。印象中最为头疼的一件事是辛辛苦苦配置了一套开发环境，却由于电脑更换、系统重装等种种原因，导致需要全部重新配置一套。特别是几个小伙伴一起合作开发项目时，为了确保每个人的开发环境一致，需要为多台电脑进行配置。项目没开搞，开发环境就搞死人了。 不过，自从知道有Vagrant这玩意之后，以前让我头疼的这些事就一去不复返了。Vagrant是什么？简言之，它是一件基于虚拟机，实现开发环境一次配置，到处使用的神器，更为难得的是资源占用非常低，这让我那台老爷笔记本HP520也出现了第二春。废话不多说，下面简单记一下Vagrant的安装配置过程。细节可以参考官方文档 安装虚拟机Vagrant主要基于虚拟机实现一次配置，到处使用的功能。常见的虚拟机都支持，比如VMware、VituralBox等。选择一个自己喜欢的安装就行。 安装Vagrant根据官网[Download]页面，选择相应平台的Vagrant下载安装。 添加BoxVagrant中的Box概念可以简单理解为一个包，这个包可以是一个纯净的完整的操作系统，也可以是已经配置的开发环境的操作系统，当然也可以是仅仅是为了某些需求而精简的操作系统。 Box有很多，你自己也可以生成。刚开始使用，可以在网站vagrantcloud找一个适合你的, 比如我使用的是chef/centos-6.5。如果你的网络非常好（非常好是指网速够快，又不被GFW)。那么，你可以通过以下命令直接添加Box： 1$ vagrant box add chef/centos-6.5 不过，我的网速不好，所以我是先下载Box，然后在本地add。Box的下载地址即可以通过执行上面那条命令在终端显示，也可以Google出来。我下载到~/Downloads/virtualbox.box, 那么添加Box的命令是： 1$ vagrant box add chef/centos-6.5 ~/Downloads/virtualbox.box 初始化开发环境创建一个开发目录，比如~/myDevEnv，那么，执行以下命令实现开发环境的初始化： 12$ cd ~/myDevEnv$ vagrant init chef/centos-6.5 如果你的网络非常好，那么，添加Box和初始化开发环境可以简单的一条命令就可以了： 1$ vagrant init chef/centos-6.5 启动开发环境1$ vagrant up 登录开发环境1$ vagrant ssh 配置开发环境在初始化开发环境之后，会在目录下生成一个文件：Vagrantfile，该文件是Vagrant的配置文件，下面对几个配置选项做简单说明： config.vm.box = &quot;chef/centos-6.5&quot;: 简言之，这就是指你的Box的别名，如果你有多个Box，那么可以通过该选项指定使用哪一个Box。 config.vm.synced_folder &quot;~/Sites&quot;, &quot;/var/www/html&quot;:同步目录，第一个目录是主机目录，第二个目录是虚拟机目录。通过该选项，你可以在主机使用你喜欢的开发工具修改代码，而不需要通过ssh登录虚拟机使用vim修改代码。 config.vm.network :forwarded_port, guest: 80, host: 8080:端口转发，通过该选项，访问主机8080端口的请求都将指向虚拟机的80端口。 结束语暂时就写这些废话了，官网文档写得比较清晰易懂，可以尽情参考。下一篇记一下Vagrant搭建LAMP开发环境。]]></content>
-      <categories>
-        <category>Tools</category>
-      </categories>
       <tags>
         <tag>Vagrant</tag>
       </tags>
@@ -99,9 +74,6 @@
     <title><![CDATA[Homebrew]]></title>
     <url>%2F2014%2F02%2F15%2FTools%2FHomebrew%2F</url>
     <content type="text"><![CDATA[简介Homebrew是Mac OS X下类似于Linux中apt-get、yum的一个软件包管理工具。通过Homebrew就可以在Mac OS X中非常方便地安装一些Apple没有提供的工具，如:wget等。 安装ruby -e &quot;$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)&quot; 常用命令12345678brew [info | home | options ] [FORMULA...]brew install FORMULA...brew uninstall FORMULA...brew search [foo]brew list [FORMULA...]brew updatebrew upgrade [FORMULA...]brew pin/unpin [FORMULA...]]]></content>
-      <categories>
-        <category>Tools</category>
-      </categories>
       <tags>
         <tag>Homebrew</tag>
       </tags>
@@ -110,9 +82,6 @@
     <title><![CDATA[SublimeText]]></title>
     <url>%2F2014%2F01%2F18%2FTools%2FSublimeText%2F</url>
     <content type="text"><![CDATA[简介Sublime Text是一款优秀的文本编辑器，支持Windows、Mac OS X、Linux平台，通过配置文件和插件可以实现很多强大的功能。具体特性可以参考官网。相对Emacs、Vim等神级编辑器而言，Sublime Text门槛更低，对于没有时间与精力深入研究神级编辑器的童鞋来说，真乃居家旅行必备！其吸引我的特性主要为： 跨平台：由于生活和工作的需要，我经常需要同时使用Windows、Mac OS X和Linux三大平台，跨平台的Sublime Text给我带来了极大的便利。 可定制：可以通过配置文件进行个性化配置，如：颜色主题、缩进方式、编码等。让人惊喜的是其配置方式比Vim简单得多！多！多！ 插件：通过丰富的插件可以实现超乎想象的功能，如：语法检查、格式化、版本控制等。 快：Sublime Text使用时的那种流畅会带来非常愉悦的快感，你懂的～ Quick Start本章节以Mac OS X平台为例，简单介绍Sublime Text的使用方法，以此作为自己的笔记，并希望能够帮助初次接触Sublime Text的童鞋快速入门。Sublime Text主要使用技巧在于： 熟悉配置文件 熟悉插件 熟悉快捷键 配置文件与通常软件的配置不同，Sublime Text的配置并不是基于GUI界面，而是使用JSON格式的文本配置方式，初次接触的童鞋可能会不习惯，有一种无从下手的感觉。不过只要不被吓住，耐心地把玩几遍，便可依葫芦画瓢地进行配置了。 安装好Sublime Text后，通过点击Sublime Text –&gt; Preferences可以发现Sublime Text的配置文件主要可以分为两类： Default：该配置文件保存了Sublime Text可供配置的属性及其默认值，英文过得去的童鞋可以通过该文件快速地了解Sublime Text的特性及其配置方式。 User：用户如果需要进行个性化配置，通常不是直接修改Default中的默认配置，而是参考Default的配置方式，在User中进行配置。User中的值会覆盖Default中的值。比如设置行的结尾采用Unix方式，并且设置字体大小为16，配置方式如下： 1234&#123; &quot;default_line_ending&quot;: &quot;unix&quot;, &quot;font_size&quot;: 16&#125; 插件第一次对插件有概念是Firefox刚火起来的时候，真心佩服这种利用插件实现功能扩展的思路。Sublime Text也可通过插件实现功能扩展。类似Vim，Sublime Text可以通过手动下载安装插件包，但是这种管理插件的方式是一件非常头疼的事。Vim有Vundle，幸运的是Sublime Text有Package Control，利用Package Control可以方便地实现插件的管理，包括安装、卸载、更新等。Package Control更多特性可以参考官网。 安装Package Control只要一条命令即可，具体参考官方安装教程 Package Control安装完成后，Shift + Cmd + P打开Command Palette，输入package control便会罗列出Package Control的常用功能，如： install：安装插件。 打开Command Palette，输入install，回车，Package Control便会加载插件库。 搜索需要的插件名字，找到插件后，回车，稍等片刻，插件便可安装成功。 remove：卸载插件。 打开Command Palette，输入remove，回车，Package Control便会罗列已安装的插件库。 移动光标至要卸载的插件，回车，稍等片刻，插件便可卸载成功。 list：罗列已安装的插件。 upgrade：更新插件。会尝试更新所有已安装的插件。 其它功能用到再摸索。 注： Package Control官网罗列了新出的、流行的、推荐的插件，需要的童鞋根据需求自行取舍。插件安装完成后，可以通过Preferences –&gt; Package Settings，找到对应的插件的默认配置文件和快捷键，从而了解插件的使用方法。 快捷键熟悉快捷键可以极大地提高效率，个人认为，入门时只需了解一些基本的常用的快捷键即可，成精后再考虑耍帅。下表简单地罗列了一些常用快捷键。 快捷键(Mac OS X) 说明 Shift + Cmd + P 打开command palette Ctrl + ` 打开console Ctrl + G 跳转到指定行 Cmd + P 搜索文件 Cmd + R 搜索类的方法、文章的章节等 Cmd + D 选中单词 Cmd + L 选中行，继续按可继续选中下一行 Cmd + Shift + Enter 在当前行上面插入新行 Cmd + X 删除当前行 Cmd + / 注释/取消注释当前行 Cmd + K, Cmd + B 打开/关闭侧边栏 … 其它特更新 补充如果需要在Terminal中使用Sublime Text，可以使用ln命令，由于不同版本具体命令有区别，建议参考官方文档，如：Sublime Text 3的文档 熟悉一个工具最好的途径是： Just Do It ! 遇到问题最好的解决方法是： Just Google It !]]></content>
-      <categories>
-        <category>Tools</category>
-      </categories>
       <tags>
         <tag>SublimeText</tag>
       </tags>

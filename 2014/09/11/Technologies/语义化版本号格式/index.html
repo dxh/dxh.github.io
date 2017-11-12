@@ -70,7 +70,7 @@
 
 
 
-  <meta name="keywords" content="Java,Programming,互联网,电商,金融,支付,清算,对账" />
+  <meta name="keywords" content="VCS," />
 
 
 
@@ -83,13 +83,18 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Code 詩人">
-<meta property="og:url" content="http://dengxh.com/categories/Technologies/Architecture/index.html">
+<meta name="description" content="在软件管理的领域里存在着被称作“依赖地狱”的死亡之谷，系统规模越大，加入的套件越多，你就越有可能在未来的某一天发现自己已深陷绝望之中。">
+<meta name="keywords" content="VCS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="语义化版本号格式">
+<meta property="og:url" content="https://dengxh.com/2014/09/11/Technologies/语义化版本号格式/index.html">
 <meta property="og:site_name" content="Code 詩人">
+<meta property="og:description" content="在软件管理的领域里存在着被称作“依赖地狱”的死亡之谷，系统规模越大，加入的套件越多，你就越有可能在未来的某一天发现自己已深陷绝望之中。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-10T07:50:13.547Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Code 詩人">
+<meta name="twitter:title" content="语义化版本号格式">
+<meta name="twitter:description" content="在软件管理的领域里存在着被称作“依赖地狱”的死亡之谷，系统规模越大，加入的套件越多，你就越有可能在未来的某一天发现自己已深陷绝望之中。">
 
 
 
@@ -119,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://dengxh.com/categories/Technologies/Architecture/"/>
+  <link rel="canonical" href="https://dengxh.com/2014/09/11/Technologies/语义化版本号格式/"/>
 
 
 
 
 
-  <title>分类: Architecture | Code 詩人</title>
+  <title>语义化版本号格式 | Code 詩人</title>
   
 
 
@@ -153,7 +158,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -271,55 +276,165 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block category">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Architecture<small>分类</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://dengxh.com/2014/09/11/Technologies/语义化版本号格式/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Joker_酒哥">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code 詩人">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2014/09/13/Technologies/Architecture/REST/" itemprop="url">
-              
-                <span itemprop="name">REST</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">语义化版本号格式</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2014-09-13T10:31:59+08:00"
-              content="2014-09-13" >
-          09-13
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-09-11T22:36:00+08:00">
+                2014-09-11
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>在软件管理的领域里存在着被称作“依赖地狱”的死亡之谷，系统规模越大，加入的套件越多，你就越有可能在未来的某一天发现自己已深陷绝望之中。</p>
+</blockquote>
+<a id="more"></a>
+<p>一个项目随着生命周期会不断的变更，在变更过程中，通常采用版本号作为标识。一个良好的版本号格式将为项目管理带来极大的好处。</p>
+<p>所谓语义化的版本号格式，简单描述如下：</p>
+<p><code>版本格式：主版本号.次版本号.修订号</code></p>
+<p>版本号递增规则如下：</p>
+<ul>
+<li>主版本号：当你做了不兼容的API 修改，</li>
+<li>次版本号：当你做了向下兼容的功能性新增，</li>
+<li>修订号：当你做了向下兼容的问题修正。</li>
+</ul>
+<p>先行版本号及版本编译信息可以加到“主版本号.次版本号.修订号”的后面，作为延伸。</p>
+<p>更为详细和全面的介绍请参考：<a href="http://semver.org/lang/zh-CN/" target="_blank" rel="external">http://semver.org/lang/zh-CN/</a></p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/VCS/" rel="tag"># VCS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/08/23/Technologies/vagrant安装配置笔记/" rel="next" title="Vagrant安装配置笔记">
+                <i class="fa fa-chevron-left"></i> Vagrant安装配置笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/09/13/Technologies/REST/" rel="prev" title="REST">
+                REST <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -327,6 +442,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTc3My84MzM3"></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -353,7 +477,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://7s1rnl.com1.z0.glb.clouddn.com/gravar.jpg"
+                src="/images/avatar.jpg"
                 alt="Joker_酒哥" />
             
               <p class="site-author-name" itemprop="name">Joker_酒哥</p>
@@ -373,15 +497,6 @@
               </div>
             
 
-            
-              
-              
-              <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
-                  <span class="site-state-item-name">分类</span>
-                </a>
-              </div>
             
 
             
@@ -422,7 +537,7 @@
                 </span>
               
                 <span class="links-of-author-item">
-                  <a href="http://weibo.com/survivordeng" target="_blank" title="微博">
+                  <a href="https://weibo.com/survivordeng" target="_blank" title="微博">
                     
                       <i class="fa fa-fw fa-weibo"></i>微博</a>
                 </span>
@@ -574,6 +689,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
 
   
 
@@ -602,6 +721,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
