@@ -91,7 +91,7 @@
 <meta property="og:site_name" content="Code 詩人">
 <meta property="og:description" content="在学习编程的过程中，往往需要配置相应的开发环境。印象中最为头疼的一件事是辛辛苦苦配置了一套开发环境，却由于电脑更换、系统重装等种种原因，导致需要全部重新配置一套。特别是几个小伙伴一起合作开发项目时，为了确保每个人的开发环境一致，需要为多台电脑进行配置。项目没开搞，开发环境就搞死人了。 不过，自从知道有Vagrant这玩意之后，以前让我头疼的这些事就一去不复返了。Vagrant是什么？简言之，它是一">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-10T07:50:23.028Z">
+<meta property="og:updated_time" content="2017-11-10T07:50:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vagrant安装配置笔记">
 <meta name="twitter:description" content="在学习编程的过程中，往往需要配置相应的开发环境。印象中最为头疼的一件事是辛辛苦苦配置了一套开发环境，却由于电脑更换、系统重装等种种原因，导致需要全部重新配置一套。特别是几个小伙伴一起合作开发项目时，为了确保每个人的开发环境一致，需要为多台电脑进行配置。项目没开搞，开发环境就搞死人了。 不过，自从知道有Vagrant这玩意之后，以前让我头疼的这些事就一去不复返了。Vagrant是什么？简言之，它是一">
@@ -364,15 +364,15 @@
 <h1 id="安装Vagrant"><a href="#安装Vagrant" class="headerlink" title="安装Vagrant"></a>安装Vagrant</h1><p>根据官网[Download]页面，选择相应平台的Vagrant下载安装。</p>
 <h1 id="添加Box"><a href="#添加Box" class="headerlink" title="添加Box"></a>添加<code>Box</code></h1><p>Vagrant中的<code>Box</code>概念可以简单理解为一个包，这个包可以是一个纯净的完整的操作系统，也可以是已经配置的开发环境的操作系统，当然也可以是仅仅是为了某些需求而精简的操作系统。</p>
 <p><code>Box</code>有很多，你自己也可以生成。刚开始使用，可以在网站<a href="https://vagrantcloud.com/" target="_blank" rel="external">vagrantcloud</a>找一个适合你的, 比如我使用的是<code>chef/centos-6.5</code>。如果你的网络非常好（<code>非常好</code>是指网速够快，又不被GFW)。那么，你可以通过以下命令直接添加<code>Box</code>：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vagrant box add chef/centos-6.5</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant box add chef/centos-6.5</span><br></pre></td></tr></table></figure>
 <p>不过，我的网速不好，所以我是先下载<code>Box</code>，然后在本地<code>add</code>。<code>Box</code>的下载地址即可以通过执行上面那条命令在终端显示，也可以Google出来。我下载到<code>~/Downloads/virtualbox.box</code>, 那么添加<code>Box</code>的命令是：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vagrant box add chef/centos-6.5 ~/Downloads/virtualbox.box</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant box add chef/centos-6.5 ~/Downloads/virtualbox.box</span><br></pre></td></tr></table></figure>
 <h1 id="初始化开发环境"><a href="#初始化开发环境" class="headerlink" title="初始化开发环境"></a>初始化开发环境</h1><p>创建一个开发目录，比如<code>~/myDevEnv</code>，那么，执行以下命令实现开发环境的初始化：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ~/myDevEnv</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vagrant init chef/centos-6.5</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~/myDevEnv</span><br><span class="line"><span class="meta">$</span> vagrant init chef/centos-6.5</span><br></pre></td></tr></table></figure>
 <p>如果你的网络非常好，那么，添加<code>Box</code>和初始化开发环境可以简单的一条命令就可以了：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vagrant init chef/centos-6.5</span></span><br></pre></td></tr></table></figure>
-<h1 id="启动开发环境"><a href="#启动开发环境" class="headerlink" title="启动开发环境"></a>启动开发环境</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vagrant up</span></span><br></pre></td></tr></table></figure>
-<h1 id="登录开发环境"><a href="#登录开发环境" class="headerlink" title="登录开发环境"></a>登录开发环境</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vagrant ssh</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant init chef/centos-6.5</span><br></pre></td></tr></table></figure>
+<h1 id="启动开发环境"><a href="#启动开发环境" class="headerlink" title="启动开发环境"></a>启动开发环境</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant up</span><br></pre></td></tr></table></figure>
+<h1 id="登录开发环境"><a href="#登录开发环境" class="headerlink" title="登录开发环境"></a>登录开发环境</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant ssh</span><br></pre></td></tr></table></figure>
 <h1 id="配置开发环境"><a href="#配置开发环境" class="headerlink" title="配置开发环境"></a>配置开发环境</h1><p>在初始化开发环境之后，会在目录下生成一个文件：<code>Vagrantfile</code>，该文件是<code>Vagrant</code>的配置文件，下面对几个配置选项做简单说明：</p>
 <ul>
 <li><code>config.vm.box = &quot;chef/centos-6.5&quot;</code>: 简言之，这就是指你的<code>Box</code>的别名，如果你有多个<code>Box</code>，那么可以通过该选项指定使用哪一个<code>Box</code>。</li>
@@ -508,7 +508,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -521,7 +521,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -603,7 +603,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2017</span>
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -775,8 +775,8 @@
 
 
 
-<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+
 
 
 
