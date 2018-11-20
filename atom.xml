@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://dengxh.com/"/>
-  <updated>2018-05-22T16:36:21.000Z</updated>
+  <updated>2018-07-12T14:53:02.309Z</updated>
   <id>https://dengxh.com/</id>
   
   <author>
@@ -17,13 +17,440 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title></title>
+    <link href="https://dengxh.com/2018/07/12/Technologies/%E5%88%A9%E7%94%A8Maven%E6%8F%92%E4%BB%B6%E9%AB%98%E6%95%88%E5%8E%BB%E9%99%A4SNAPSHOT/"/>
+    <id>https://dengxh.com/2018/07/12/Technologies/利用Maven插件高效去除SNAPSHOT/</id>
+    <published>2018-07-12T14:51:52.083Z</published>
+    <updated>2018-07-12T14:53:02.309Z</updated>
+    
+    <content type="html"><![CDATA[<!DOCTYPE html><html><head><title>利用Maven插件高效去除SNAPSHOT.md</title><meta http-equiv="Content-type" content="text/html;charset=UTF-8"><style>/*--------------------------------------------------------------------------------------------- *  Copyright (c) Microsoft Corporation. All rights reserved. *  Licensed under the MIT License. See License.txt in the project root for license information. *--------------------------------------------------------------------------------------------*/body {font-family: "Segoe WPC", "Segoe UI", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback";font-size: 14px;padding: 0 12px;line-height: 22px;word-wrap: break-word;}#code-csp-warning {position: fixed;top: 0;right: 0;color: white;margin: 16px;text-align: center;font-size: 12px;font-family: sans-serif;background-color:#444444;cursor: pointer;padding: 6px;box-shadow: 1px 1px 1px rgba(0,0,0,.25);}#code-csp-warning:hover {text-decoration: none;background-color:#007acc;box-shadow: 2px 2px 2px rgba(0,0,0,.25);}body.scrollBeyondLastLine {margin-bottom: calc(100vh - 22px);}body.showEditorSelection .code-line {position: relative;}body.showEditorSelection .code-active-line:before,body.showEditorSelection .code-line:hover:before {content: "";display: block;position: absolute;top: 0;left: -12px;height: 100%;}body.showEditorSelection li.code-active-line:before,body.showEditorSelection li.code-line:hover:before {left: -30px;}.vscode-light.showEditorSelection .code-active-line:before {border-left: 3px solid rgba(0, 0, 0, 0.15);}.vscode-light.showEditorSelection .code-line:hover:before {border-left: 3px solid rgba(0, 0, 0, 0.40);}.vscode-dark.showEditorSelection .code-active-line:before {border-left: 3px solid rgba(255, 255, 255, 0.4);}.vscode-dark.showEditorSelection .code-line:hover:before {border-left: 3px solid rgba(255, 255, 255, 0.60);}.vscode-high-contrast.showEditorSelection .code-active-line:before {border-left: 3px solid rgba(255, 160, 0, 0.7);}.vscode-high-contrast.showEditorSelection .code-line:hover:before {border-left: 3px solid rgba(255, 160, 0, 1);}img {max-width: 100%;max-height: 100%;}a {color: #4080D0;text-decoration: none;}a:focus,input:focus,select:focus,textarea:focus {outline: 1px solid -webkit-focus-ring-color;outline-offset: -1px;}hr {border: 0;height: 2px;border-bottom: 2px solid;}h1 {padding-bottom: 0.3em;line-height: 1.2;border-bottom-width: 1px;border-bottom-style: solid;}h1, h2, h3 {font-weight: normal;}h1 code,h2 code,h3 code,h4 code,h5 code,h6 code {font-size: inherit;line-height: auto;}a:hover {color: #4080D0;text-decoration: underline;}table {border-collapse: collapse;}table > thead > tr > th {text-align: left;border-bottom: 1px solid;}table > thead > tr > th,table > thead > tr > td,table > tbody > tr > th,table > tbody > tr > td {padding: 5px 10px;}table > tbody > tr + tr > td {border-top: 1px solid;}blockquote {margin: 0 7px 0 5px;padding: 0 16px 0 10px;border-left: 5px solid;}code {font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";font-size: 14px;line-height: 19px;}body.wordWrap pre {white-space: pre-wrap;}.mac code {font-size: 12px;line-height: 18px;}pre:not(.hljs),pre.hljs code > div {padding: 16px;border-radius: 3px;overflow: auto;}/** Theming */.vscode-light,.vscode-light pre code {color: rgb(30, 30, 30);}.vscode-dark,.vscode-dark pre code {color: #DDD;}.vscode-high-contrast,.vscode-high-contrast pre code {color: white;}.vscode-light code {color: #A31515;}.vscode-dark code {color: #D7BA7D;}.vscode-light pre:not(.hljs),.vscode-light code > div {background-color: rgba(220, 220, 220, 0.4);}.vscode-dark pre:not(.hljs),.vscode-dark code > div {background-color: rgba(10, 10, 10, 0.4);}.vscode-high-contrast pre:not(.hljs),.vscode-high-contrast code > div {background-color: rgb(0, 0, 0);}.vscode-high-contrast h1 {border-color: rgb(0, 0, 0);}.vscode-light table > thead > tr > th {border-color: rgba(0, 0, 0, 0.69);}.vscode-dark table > thead > tr > th {border-color: rgba(255, 255, 255, 0.69);}.vscode-light h1,.vscode-light hr,.vscode-light table > tbody > tr + tr > td {border-color: rgba(0, 0, 0, 0.18);}.vscode-dark h1,.vscode-dark hr,.vscode-dark table > tbody > tr + tr > td {border-color: rgba(255, 255, 255, 0.18);}.vscode-light blockquote,.vscode-dark blockquote {background: rgba(127, 127, 127, 0.1);border-color: rgba(0, 122, 204, 0.5);}.vscode-high-contrast blockquote {background: transparent;border-color: #fff;}</style><style>/* Tomorrow Theme *//* http://jmblog.github.com/color-themes-for-google-code-highlightjs *//* Original theme - https://github.com/chriskempson/tomorrow-theme *//* Tomorrow Comment */.hljs-comment,.hljs-quote {color: #8e908c;}/* Tomorrow Red */.hljs-variable,.hljs-template-variable,.hljs-tag,.hljs-name,.hljs-selector-id,.hljs-selector-class,.hljs-regexp,.hljs-deletion {color: #c82829;}/* Tomorrow Orange */.hljs-number,.hljs-built_in,.hljs-builtin-name,.hljs-literal,.hljs-type,.hljs-params,.hljs-meta,.hljs-link {color: #f5871f;}/* Tomorrow Yellow */.hljs-attribute {color: #eab700;}/* Tomorrow Green */.hljs-string,.hljs-symbol,.hljs-bullet,.hljs-addition {color: #718c00;}/* Tomorrow Blue */.hljs-title,.hljs-section {color: #4271ae;}/* Tomorrow Purple */.hljs-keyword,.hljs-selector-tag {color: #8959a8;}.hljs {display: block;overflow-x: auto;color: #4d4d4c;padding: 0.5em;}.hljs-emphasis {font-style: italic;}.hljs-strong {font-weight: bold;}</style><style>/* * Markdown PDF CSS */ body {font-family:  "Meiryo", "Segoe WPC", "Segoe UI", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback";}pre {background-color: #f8f8f8;border: 1px solid #cccccc;border-radius: 3px;overflow-x: auto;white-space: pre-wrap;overflow-wrap: break-word;}pre:not(.hljs) {padding: 23px;line-height: 19px;}blockquote {background: rgba(127, 127, 127, 0.1);border-color: rgba(0, 122, 204, 0.5);}.emoji {height: 1.4em;}/* for inline code */:not(pre):not(.hljs) > code {color: #C9AE75; /* Change the old color so it seems less like an error */font-size: inherit;}/* Page Break : use <div class="page"/> to insert page break-------------------------------------------------------- */.page {page-break-after: always;}</style></head><body><h2 id="title-%E5%88%A9%E7%94%A8maven%E6%8F%92%E4%BB%B6%E9%AB%98%E6%95%88%E5%8E%BB%E9%99%A4snapshotdate-2017-2-7-2102tags-maven">title: 利用Maven插件高效去除SNAPSHOTDate: 2017-2-7 21:02Tags: Maven</h2><!-- TOC --><ul><li><a href="#1-%E5%89%8D%E8%A8%80">1. 前言</a></li><li><a href="#2-snapshot%E5%87%BA%E7%8E%B0%E5%9C%BA%E6%99%AF">2. SNAPSHOT出现场景</a><ul><li><a href="#21-%E5%AF%B9%E5%A4%96%E6%8F%90%E4%BE%9B%E6%9C%8D%E5%8A%A1%E7%94%B1snapshot%E6%94%B9%E4%B8%BArelease">2.1. 对外提供服务由SNAPSHOT改为RELEASE</a></li><li><a href="#22-%E5%8F%91%E7%8E%B0%E5%B9%B6%E5%8E%BB%E9%99%A4snapshot%E4%BE%9D%E8%B5%96">2.2. 发现并去除SNAPSHOT依赖</a><ul><li><a href="#221-%E5%8F%91%E7%8E%B0snapshot%E4%BE%9D%E8%B5%96">2.2.1. 发现SNAPSHOT依赖</a></li><li><a href="#222-%E5%8E%BB%E9%99%A4snapshot%E4%BE%9D%E8%B5%96">2.2.2. 去除SNAPSHOT依赖</a></li></ul></li></ul></li><li><a href="#3-faq">3. FAQ</a></li><li><a href="#4-%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE">4. 参考文献</a></li></ul><!-- /TOC --><h1 id="1-%E5%89%8D%E8%A8%80">1. 前言</h1><p>公司质量保障团队近期在Push各技术团队在线上应用中禁止使用SNAPSHOT，因此各个技术团队均开始修改完善。不同人员对Maven学习了解程度不同，有些同事修改起来效率较低，因此我将自己所使用的方法和工具在公司内网BBS进行分享，供大家参考借鉴。</p><a id="more"></a><h1 id="2-snapshot%E5%87%BA%E7%8E%B0%E5%9C%BA%E6%99%AF">2. SNAPSHOT出现场景</h1><ol><li>对外提供了SNAPSHOT</li><li>依赖三方SNAPSHOT</li></ol><h2 id="21-%E5%AF%B9%E5%A4%96%E6%8F%90%E4%BE%9B%E6%9C%8D%E5%8A%A1%E7%94%B1snapshot%E6%94%B9%E4%B8%BArelease">2.1. 对外提供服务由SNAPSHOT改为RELEASE</h2><p>一般在开发测试阶段，需要经常变动代码，所以使用SNAPSHOT是合理的，但是线上对外提供的服务必须是稳定的版本，一般以RELEASE包提供。此处涉及修改版本号。我们的项目一般是以一个Project和多个Module的形式组织，Project与Module存在父子关系。如果手动一个个修改版本号，比较容易出错。Maven提供了插件：Versions，用于管理版本。</p><p>设置新版本号</p><pre class="hljs"><code><div>mvn versions:set -DnewVersion=1.0.1-RELEASE</div></code></pre><p>确认提交新版本号</p><pre class="hljs"><code><div>mvn versions:commit</div></code></pre><p>撤消版本号变更</p><pre class="hljs"><code><div>mvn versions:revert</div></code></pre><h2 id="22-%E5%8F%91%E7%8E%B0%E5%B9%B6%E5%8E%BB%E9%99%A4snapshot%E4%BE%9D%E8%B5%96">2.2. 发现并去除SNAPSHOT依赖</h2><h3 id="221-%E5%8F%91%E7%8E%B0snapshot%E4%BE%9D%E8%B5%96">2.2.1. 发现SNAPSHOT依赖</h3><p>一般我们的项目会有很多三方依赖，而他们自身亦可能有很多依赖，如果通过人工逐个去判断是否存在SNAPSHOT依赖，几乎是不可能的事。Maven提供了插件：dependency，用于管理依赖。为了发现SNAPSHOT依赖，可以通过以下两种方式：</p><p>方式一：通过dependency:list</p><pre class="hljs"><code><div>mvn dependency:list | grep -i snapshot[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</div></code></pre><p>这种方式会筛选出当前项目所有的SNAPSHOT依赖，但是问题很明显，我们很难判断是哪里依赖了这些SNAPSHOT。因此，我倾向采用第二方式。</p><p>方式二：通过dependency:tree</p><pre class="hljs"><code><div>mvn dependency:tree -Dincludes=:::*-SNAPSHOT[INFO] ------------------------------------------------------------------------[INFO] [INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ pay_pcs_impl ---[INFO] com.xxx.service:pay_pcs_impl:jar:1.0.1-RELEASE[INFO] +- com.sample.service:pay_pcs_service:jar:1.0.1-RELEASE:compile[INFO] |  +- com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] |  \- com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] \- com.sample:pay-common:jar:1.0.1.1:compile[INFO]  \- com.sample.sentry:sentry-client:jar:2.1.15:compile[INFO]    \- com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</div></code></pre><p>通过dependency:tree的方式，可以清晰明了的看到依赖的层次关系，从而快速的定位到SNAPSHOT依赖点。如上述：pay_pcs_service --&gt; pay_common --&gt; sentry-client --&gt; flatbuffers-java。</p><h3 id="222-%E5%8E%BB%E9%99%A4snapshot%E4%BE%9D%E8%B5%96">2.2.2. 去除SNAPSHOT依赖</h3><p>通过2.2.1的方式发现SNAPSHOT依赖后，便可根据结果去除相应的SNAPSHOT依赖。去除的方式归根结底是变更依赖的版本，同样有多种方式。我主要采用两种方式。</p><p>方式一：利用Maven Versions插件</p><pre class="hljs"><code><div>mvn versions:use-releasesmvn versions:use-next-releasesmvn versions:use-latest-releases</div></code></pre><p>该方式可批量的将SNAPSHOT替换成相应的RELEASE版本。</p><p><em><strong>注：某些服务提供方发布版本不合规范，所以请注意结合git的变更等，判断所变更的RELEASE是否正确。比如我在使用过程中遇到某一个依赖，同一版本号，SNAPSHOT和RELEASE代码出入较大，导致编译失败。经排查改用其他版本号才正常。</strong></em></p><p>方式二：人工逐个变更依赖的版本号通过发现SNAPSHOT方式二发现的依赖，层次关系已经十分明确。在数量不多的情况下，保险起见，人工逐个核实确认新的RELEASE版本号。可以借助以下方法获取依赖是否有更新</p><pre class="hljs"><code><div>mvn versions:display-dependency-updates</div></code></pre><h1 id="3-faq">3. FAQ</h1><ol><li>zsh:no matches found: -Dincludes=:::<em>-SNAPSHOT，该问题是由于zsh对通配符的解析，简单的解决方法是给参数加上引号：mvn dependency:tree -Dincludes=&quot;:::</em>-SNAPSHOT&quot;</li></ol><h1 id="4-%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE">4. 参考文献</h1><ol><li>http://www.mojohaus.org/versions-maven-plugin/usage.html</li><li>https://maven.apache.org/plugins/maven-dependency-plugin/usage.html</li></ol></body></html>]]></content>
+    
+    <summary type="html">
+    
+      &lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;利用Maven插件高效去除SNAPSHOT.md&lt;/title&gt;
+&lt;meta http-equiv=&quot;Content-type&quot; content=&quot;text/html;charset=UTF-8&quot;&gt;
+
+&lt;style&gt;
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: &quot;Segoe WPC&quot;, &quot;Segoe UI&quot;, &quot;SFUIText-Light&quot;, &quot;HelveticaNeue-Light&quot;, sans-serif, &quot;Droid Sans Fallback&quot;;
+	font-size: 14px;
+	padding: 0 12px;
+	line-height: 22px;
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: &quot;&quot;;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	color: #4080D0;
+	text-decoration: none;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+	font-size: inherit;
+	line-height: auto;
+}
+
+a:hover {
+	color: #4080D0;
+	text-decoration: underline;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table &gt; thead &gt; tr &gt; th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table &gt; thead &gt; tr &gt; th,
+table &gt; thead &gt; tr &gt; td,
+table &gt; tbody &gt; tr &gt; th,
+table &gt; tbody &gt; tr &gt; td {
+	padding: 5px 10px;
+}
+
+table &gt; tbody &gt; tr + tr &gt; td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left: 5px solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;;
+	font-size: 14px;
+	line-height: 19px;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+.mac code {
+	font-size: 12px;
+	line-height: 18px;
+}
+
+pre:not(.hljs),
+pre.hljs code &gt; div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+/** Theming */
+
+.vscode-light,
+.vscode-light pre code {
+	color: rgb(30, 30, 30);
+}
+
+.vscode-dark,
+.vscode-dark pre code {
+	color: #DDD;
+}
+
+.vscode-high-contrast,
+.vscode-high-contrast pre code {
+	color: white;
+}
+
+.vscode-light code {
+	color: #A31515;
+}
+
+.vscode-dark code {
+	color: #D7BA7D;
+}
+
+.vscode-light pre:not(.hljs),
+.vscode-light code &gt; div {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre:not(.hljs),
+.vscode-dark code &gt; div {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre:not(.hljs),
+.vscode-high-contrast code &gt; div {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table &gt; thead &gt; tr &gt; th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table &gt; thead &gt; tr &gt; th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table &gt; tbody &gt; tr + tr &gt; td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table &gt; tbody &gt; tr + tr &gt; td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+.vscode-light blockquote,
+.vscode-dark blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.vscode-high-contrast blockquote {
+	background: transparent;
+	border-color: #fff;
+}
+&lt;/style&gt;
+
+&lt;style&gt;
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+&lt;/style&gt;
+
+&lt;style&gt;
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family:  &quot;Meiryo&quot;, &quot;Segoe WPC&quot;, &quot;Segoe UI&quot;, &quot;SFUIText-Light&quot;, &quot;HelveticaNeue-Light&quot;, sans-serif, &quot;Droid Sans Fallback&quot;;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) &gt; code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use &lt;div class=&quot;page&quot;/&gt; to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+&lt;/style&gt;
+
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2 id=&quot;title-%E5%88%A9%E7%94%A8maven%E6%8F%92%E4%BB%B6%E9%AB%98%E6%95%88%E5%8E%BB%E9%99%A4snapshotdate-2017-2-7-2102tags-maven&quot;&gt;title: 利用Maven插件高效去除SNAPSHOT
+Date: 2017-2-7 21:02
+Tags: Maven&lt;/h2&gt;
+&lt;!-- TOC --&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#1-%E5%89%8D%E8%A8%80&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#2-snapshot%E5%87%BA%E7%8E%B0%E5%9C%BA%E6%99%AF&quot;&gt;2. SNAPSHOT出现场景&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#21-%E5%AF%B9%E5%A4%96%E6%8F%90%E4%BE%9B%E6%9C%8D%E5%8A%A1%E7%94%B1snapshot%E6%94%B9%E4%B8%BArelease&quot;&gt;2.1. 对外提供服务由SNAPSHOT改为RELEASE&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#22-%E5%8F%91%E7%8E%B0%E5%B9%B6%E5%8E%BB%E9%99%A4snapshot%E4%BE%9D%E8%B5%96&quot;&gt;2.2. 发现并去除SNAPSHOT依赖&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#221-%E5%8F%91%E7%8E%B0snapshot%E4%BE%9D%E8%B5%96&quot;&gt;2.2.1. 发现SNAPSHOT依赖&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#222-%E5%8E%BB%E9%99%A4snapshot%E4%BE%9D%E8%B5%96&quot;&gt;2.2.2. 去除SNAPSHOT依赖&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#3-faq&quot;&gt;3. FAQ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#4-%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE&quot;&gt;4. 参考文献&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- /TOC --&gt;
+&lt;h1 id=&quot;1-%E5%89%8D%E8%A8%80&quot;&gt;1. 前言&lt;/h1&gt;
+&lt;p&gt;公司质量保障团队近期在Push各技术团队在线上应用中禁止使用SNAPSHOT，因此各个技术团队均开始修改完善。不同人员对Maven学习了解程度不同，有些同事修改起来效率较低，因此我将自己所使用的方法和工具在公司内网BBS进行分享，供大家参考借鉴。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>胖胖瘦身记-day16</title>
     <link href="https://dengxh.com/2018/05/22/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day16/"/>
     <id>https://dengxh.com/2018/05/22/Life/胖胖瘦身记-day16/</id>
     <published>2018-05-22T15:41:56.000Z</published>
-    <updated>2018-05-22T16:36:21.000Z</updated>
+    <updated>2018-11-20T00:03:37.605Z</updated>
     
-    <content type="html"><![CDATA[<p>坚持16天了（水份7天），最近因为家里出了点事，情绪较为不好，没有进行健身，周末和周一浪费了，还好也没啥心情吃饭，所以体重还是控制住了。</p><p>今日数据：<br>体重：74.20kg，相对上一次减轻了0.25kg，历史累计减了2.35kg，继续保持！</p><a id="more"></a><p>今日晚餐，还是吃草，带坚果的那种，似乎热量有点高，并且量有点大，没怎么吃晚。<br><img src="http://dengxhblog.qiniudn.com/20180522-晚餐.jpg" alt="20180522-晚餐"></p><p>今日跑步<br><img src="http://dengxhblog.qiniudn.com/20180522-跑步.jpg" alt="20180522-跑步"></p>]]></content>
+    <content type="html"><![CDATA[<p>坚持16天了（水份7天），最近因为家里出了点事，情绪较为不好，没有进行健身，周末和周一浪费了，还好也没啥心情吃饭，所以体重还是控制住了。</p><p>今日数据：<br>体重：74.20kg，相对上一次减轻了0.25kg，历史累计减了2.35kg，继续保持！</p><a id="more"></a><p>今日晚餐，还是吃草，带坚果的那种，似乎热量有点高，并且量有点大，没怎么吃晚。<br><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe76hv3vzj31440u0u10.jpg" alt="20180522-晚餐"></p><p>今日跑步<br><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fxe7ccx8uej31440u07wl.jpg" alt="20180522-跑步"></p>]]></content>
     
     <summary type="html">
     
@@ -42,9 +469,9 @@
     <link href="https://dengxh.com/2018/05/18/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day12/"/>
     <id>https://dengxh.com/2018/05/18/Life/胖胖瘦身记-day12/</id>
     <published>2018-05-18T08:59:34.000Z</published>
-    <updated>2018-05-23T09:17:15.909Z</updated>
+    <updated>2018-11-19T23:53:37.747Z</updated>
     
-    <content type="html"><![CDATA[<p>我滴妈呀，我滴妈呀，干啥呢！！！害我断了2天锻炼。</p><a id="more"></a><p>16号原本要约小龙虾，结果没约成。</p><p>17号原本不约小龙虾，结果一窝人。。。</p><p>今天的数据如下：</p><p>体重：74.45kg，相对上一次减了0.5kg，历史累计减了2.1kg。继续加油，小伙子！</p><p>17号晚上吃了6斤小龙虾，还有鱼头煲，然后乱七八糟的小菜，每个人都吃得撑撑的，然后临时起意去暴走，然后我的内裤磨破了。。。</p><p><img src="http://dengxhblog.qiniudn.com/20180517-晚餐.jpeg" alt="20180517-晚餐"></p><p>今天的晚饭，周六要睡懒觉，所以多吃点肉，hhh</p><p><img src="http://dengxhblog.qiniudn.com/20180518-晚餐.jpeg" alt="20180518-晚餐"></p><p>这个周五，虽然跑得少一点，不过，好得没有浪费，也算是跑了。继续坚持。</p><p><img src="http://dengxhblog.qiniudn.com/20180518-跑步.jpeg" alt="20180518-跑步"></p>]]></content>
+    <content type="html"><![CDATA[<p>我滴妈呀，我滴妈呀，干啥呢！！！害我断了2天锻炼。</p><a id="more"></a><p>16号原本要约小龙虾，结果没约成。</p><p>17号原本不约小龙虾，结果一窝人。。。</p><p>今天的数据如下：</p><p>体重：74.45kg，相对上一次减了0.5kg，历史累计减了2.1kg。继续加油，小伙子！</p><p>17号晚上吃了6斤小龙虾，还有鱼头煲，然后乱七八糟的小菜，每个人都吃得撑撑的，然后临时起意去暴走，然后我的内裤磨破了。。。</p><p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe71l82fkj31430u0dj5.jpg" alt="20180517-晚餐"></p><p>今天的晚饭，周六要睡懒觉，所以多吃点肉，hhh</p><p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe71se99aj31hc0u0td4.jpg" alt="20180518-晚餐"></p><p>这个周五，虽然跑得少一点，不过，好得没有浪费，也算是跑了。继续坚持。</p><p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe71zq4gqj31430u0wgf.jpg" alt="20180518-跑步"></p>]]></content>
     
     <summary type="html">
     
@@ -62,9 +489,9 @@
     <link href="https://dengxh.com/2018/05/15/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day9/"/>
     <id>https://dengxh.com/2018/05/15/Life/胖胖瘦身记-day9/</id>
     <published>2018-05-15T11:59:30.000Z</published>
-    <updated>2018-05-23T09:17:43.368Z</updated>
+    <updated>2018-11-19T23:53:02.536Z</updated>
     
-    <content type="html"><![CDATA[<p>今天破5进4啦~~</p><a id="more"></a><p>今日体重：74.95kg，相对前一天减少：0.4kg，历史累计减了1.6kg。</p><p>今天跑步一个激动，忘了拍跑步机上的数据，刚下来跑步机就被人抢来了，来不及拍，郁闷。。。只好拍一个老妈口中的虎背熊腰。</p><p>这天热的，真的很容易湿身呀，但是健身房的妹子咂还穿这么多呢？</p><p><img src="http://dengxhblog.qiniudn.com/20180515-跑步.jpeg" alt="20180515-跑步"></p><p>晚餐继续吃草，明天朋友约了吃小龙虾，真担心又反弹。原本计划一周最多吃一次小龙虾呀。这里周日吃了一顿，明天吃一顿，但是我还有两包料哎，忧伤~~~</p><p><img src="http://dengxhblog.qiniudn.com/20180515-晚餐.jpeg" alt="20180515-晚餐"></p>]]></content>
+    <content type="html"><![CDATA[<p>今天破5进4啦~~</p><a id="more"></a><p>今日体重：74.95kg，相对前一天减少：0.4kg，历史累计减了1.6kg。</p><p>今天跑步一个激动，忘了拍跑步机上的数据，刚下来跑步机就被人抢来了，来不及拍，郁闷。。。只好拍一个老妈口中的虎背熊腰。</p><p>这天热的，真的很容易湿身呀，但是健身房的妹子咂还穿这么多呢？</p><p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe716d0coj30u01hc76k.jpg" alt="20180515-跑步"></p><p>晚餐继续吃草，明天朋友约了吃小龙虾，真担心又反弹。原本计划一周最多吃一次小龙虾呀。这里周日吃了一顿，明天吃一顿，但是我还有两包料哎，忧伤~~~</p><p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe71chbakj31430u0juz.jpg" alt="20180515-晚餐"></p>]]></content>
     
     <summary type="html">
     
@@ -82,9 +509,9 @@
     <link href="https://dengxh.com/2018/05/14/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day8/"/>
     <id>https://dengxh.com/2018/05/14/Life/胖胖瘦身记-day8/</id>
     <published>2018-05-14T11:59:25.000Z</published>
-    <updated>2018-05-23T09:17:04.624Z</updated>
+    <updated>2018-11-20T00:02:52.899Z</updated>
     
-    <content type="html"><![CDATA[<p>好吧，day7浪掉了。day7晚饭烧了3斤小龙虾，喝了两碗面疙瘩粥，今天全体现在体重上了。</p><a id="more"></a><p>今日数据如下：</p><p>体重：75.35kg，相对上一次反弹0.35kg，历史累计减了1.2kg。哎，周末要是坚持一下，应该能破5进4的，掌嘴！！！</p><p>3斤小龙虾，直接拿锅吃，十三香口味的，自己一个个刷过去，再把头剪得干干净净，配上冰镇百事可乐，吃得那叫一个爽。哎，想想都流口水。（再掌嘴！！！）</p><p><img src="http://dengxhblog.qiniudn.com/20180513-晚餐.jpeg" alt="20180513-晚餐"></p><p>今天晚上有中间件团队的技术分享，因此下班后赶紧去运动，结果发现跑步机又没有了。哎，单车先骑骑。</p><p><img src="http://dengxhblog.qiniudn.com/20180514-单车.jpeg" alt="20180514-单车"></p><p>再跑跑<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">![20180514-跑步](http://dengxhblog.qiniudn.com/20180514-跑步.jpeg)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">一边听分享一边吃草</span><br></pre></td></tr></table></figure></p><p><img src="http://dengxhblog.qiniudn.com/20180514-晚餐.jpeg" alt="20180514-晚餐"></p>]]></content>
+    <content type="html"><![CDATA[<p>好吧，day7浪掉了。day7晚饭烧了3斤小龙虾，喝了两碗面疙瘩粥，今天全体现在体重上了。</p><a id="more"></a><p>今日数据如下：</p><p>体重：75.35kg，相对上一次反弹0.35kg，历史累计减了1.2kg。哎，周末要是坚持一下，应该能破5进4的，掌嘴！！！</p><p>3斤小龙虾，直接拿锅吃，十三香口味的，自己一个个刷过去，再把头剪得干干净净，配上冰镇百事可乐，吃得那叫一个爽。哎，想想都流口水。（再掌嘴！！！）</p><p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fxe7arkc3nj30u00u00vv.jpg" alt="20180513-晚餐"></p><p>今天晚上有中间件团队的技术分享，因此下班后赶紧去运动，结果发现跑步机又没有了。哎，单车先骑骑。</p><p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe70ayvpmj31430u0tci.jpg" alt="20180514-单车"></p><p>再跑跑~~</p><p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe70pie4jj31430u076r.jpg" alt="20180514-跑步"></p><p>一边听分享一边吃草~~~</p><p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe70xdbq0j30u0143gnr.jpg" alt="20180514-晚餐"></p>]]></content>
     
     <summary type="html">
     
@@ -102,9 +529,9 @@
     <link href="https://dengxh.com/2018/05/12/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day6/"/>
     <id>https://dengxh.com/2018/05/12/Life/胖胖瘦身记-day6/</id>
     <published>2018-05-12T11:59:19.000Z</published>
-    <updated>2018-05-23T09:17:00.853Z</updated>
+    <updated>2018-11-20T00:01:49.782Z</updated>
     
-    <content type="html"><![CDATA[<p>day6? 是的，周五果然魔性，虽然事前已经料到周五有可能会中断，虽然下班后仍然换好装备并且迈开了步子准备跑。但是，刚热身5分钟完毕，突然想起今天我的信用卡世纪联华可以五折，并且截止时间快到了！迫穷，赶紧换回装备杀向超市。</p><a id="more"></a><p>so，day5，事实上就这么中断了，为了激励自我，因此day5空缺。</p><p>因为周五这么一弄，今天没敢留到晚上去跑步，白天便杀向健身房开跑。可能是因为周末，可能是因为今天天气比较闷，因此今天跑步状态不是特别好，全身上下湿透。（后面朋友见到我，竟然说，咦，外面下大雨了？）</p><p>今天的数据如下：</p><p>体重：75.00kg，相对上一次减了0.25kg，历史累计减了1.55kg。</p><p>周末的健身房空无一人，包一扔，就开跑。</p><p><img src="http://dengxhblog.qiniudn.com/20180512-跑步1.jpeg" alt="20180512-跑步1"></p><p>原本想把周五的份补上，想想还是算了，担心过度，影响周日的跑步。</p><p><img src="http://dengxhblog.qiniudn.com/20180512-跑步2.jpeg" alt="20180512-跑步2"></p><p>跑后，根据Keep的指导进行跑后拉伸，其实不太知道拉伸是否有效果，但是大家都建议做下拉伸，那我就拉一下。</p><p><img src="http://dengxhblog.qiniudn.com/20180512-keep.jpeg" alt="20180512-keep"></p><p>周六晚餐有点浪，土豆丝、毛毛菜、大料炖肉，还有一杯可乐。。。老妈和丈母娘都惊呆了，减肥还吃这么肥的肉？其实有一点自己的考虑：想我这么一个吃货，不可能接下来的人生都只吃草，所以周末吃正常餐，但会控制一下量。即使减肥效果不是特别明显，但也要继续坚持。</p><p><img src="http://dengxhblog.qiniudn.com/20180512-晚餐1.jpeg" alt="20180512-晚餐1"></p><p><img src="http://dengxhblog.qiniudn.com/20180512-晚餐3.jpeg" alt="20180512-晚餐3"><br><img src="http://dengxhblog.qiniudn.com/20180512-晚餐2.jpeg" alt="20180512-晚餐2"></p><p>最近王者打得有点艰难，要赢都是逆袭局，逆袭不成就只能输了。</p><p><img src="http://dengxhblog.qiniudn.com/20180512-王者.jpeg" alt="20180512-王者"></p>]]></content>
+    <content type="html"><![CDATA[<p>day6? 是的，周五果然魔性，虽然事前已经料到周五有可能会中断，虽然下班后仍然换好装备并且迈开了步子准备跑。但是，刚热身5分钟完毕，突然想起今天我的信用卡世纪联华可以五折，并且截止时间快到了！迫穷，赶紧换回装备杀向超市。</p><a id="more"></a><p>so，day5，事实上就这么中断了，为了激励自我，因此day5空缺。</p><p>因为周五这么一弄，今天没敢留到晚上去跑步，白天便杀向健身房开跑。可能是因为周末，可能是因为今天天气比较闷，因此今天跑步状态不是特别好，全身上下湿透。（后面朋友见到我，竟然说，咦，外面下大雨了？）</p><p>今天的数据如下：</p><p>体重：75.00kg，相对上一次减了0.25kg，历史累计减了1.55kg。</p><p>周末的健身房空无一人，包一扔，就开跑。</p><p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe6z5xn1jj31430u041c.jpg" alt="20180512-跑步1"></p><p>原本想把周五的份补上，想想还是算了，担心过度，影响周日的跑步。</p><p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe7a8q29jj31430u0wgs.jpg" alt="20180512-跑步2"></p><p>跑后，根据Keep的指导进行跑后拉伸，其实不太知道拉伸是否有效果，但是大家都建议做下拉伸，那我就拉一下。</p><p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fxe6zgo3fbj30u01hcdhb.jpg" alt="20180512-keep"></p><p>周六晚餐有点浪，土豆丝、毛毛菜、大料炖肉，还有一杯可乐。。。老妈和丈母娘都惊呆了，减肥还吃这么肥的肉？其实有一点自己的考虑：想我这么一个吃货，不可能接下来的人生都只吃草，所以周末吃正常餐，但会控制一下量。即使减肥效果不是特别明显，但也要继续坚持。</p><p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe6zojfpoj30u00u040r.jpg" alt="20180512-晚餐1"></p><p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe6zt45yvj30u00u041c.jpg" alt="20180512-晚餐3"><br><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe6zz5y3vj30u00u0go3.jpg" alt="20180512-晚餐2"></p><p>最近王者打得有点艰难，要赢都是逆袭局，逆袭不成就只能输了。</p><p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe7ai5efnj30r40f6mze.jpg" alt="20180512-王者"></p>]]></content>
     
     <summary type="html">
     
@@ -122,9 +549,9 @@
     <link href="https://dengxh.com/2018/05/10/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day4/"/>
     <id>https://dengxh.com/2018/05/10/Life/胖胖瘦身记-day4/</id>
     <published>2018-05-10T11:59:16.000Z</published>
-    <updated>2018-05-23T09:19:03.955Z</updated>
+    <updated>2018-11-19T23:50:39.349Z</updated>
     
-    <content type="html"><![CDATA[<p>今天继续晚餐、王者、跑步、日记。</p><p>中午罪孽了，Melon想吃开封菜，so… 一个虾堡，一杯大可，半个蛋挞，半盒薯条，一个不小心就进我肚子里了。（希望明天体重没注意到，不会弹回去吧）</p><a id="more"></a><p>今天数据如下：</p><p>体重：75.25kg，相比前一天减了0.1kg（无视吧，大概饥饿的效果仅限于此，阿门）。历史累计减了1.3kg，希望运动的效果开始逐步体现吧。</p><p>我的晚餐，今天早上体重减少不明显，大概是昨天晚上的那个带紫薯的量太大，所以今天晚饭改吃只有一丢丢肉的。</p><p><img src="http://dengxhblog.qiniudn.com/20180510-晚餐1.jpeg" alt="20180510-晚餐1"></p><p>Melon的三文鱼沙拉，我没忍住偷吃了一片三文鱼，配合沙拉酱比蘸酱油和芥末好吃，真的。</p><p><img src="http://dengxhblog.qiniudn.com/20180510-晚餐2.jpeg" alt="20180510-晚餐2"></p><p>下班时和同事组队打了一把王者，同事太给力，轻松+愉快地就像麻将胡牌似的就把对方一把推掉。可是…</p><p>哎，后面自己打排位，没打多久，头像上就开始挂着MVP了，不用想啦，最终拿了MVP和金牌辅助，但还是输了，伤心。。。</p><p><img src="http://dengxhblog.qiniudn.com/20180510-王者.jpeg" alt="20180510-王者"></p><p>现在跑30分钟4公里，体能还可以的，除了一身汗，没感觉累。今天耳机落家里，没带耳机跑。然后不知道是不是因为今天复联3首映，跑步机竟然只有我一个人在用，所以时间感觉过得有点慢。不过，继续适应跑一段时间吧，不急着提升强度。</p><p>明天周五，是个关键时间点，要把持住！！！</p><p><img src="http://dengxhblog.qiniudn.com/20180510-跑步.jpeg" alt="20180510-跑步"></p>]]></content>
+    <content type="html"><![CDATA[<p>今天继续晚餐、王者、跑步、日记。</p><p>中午罪孽了，Melon想吃开封菜，so… 一个虾堡，一杯大可，半个蛋挞，半盒薯条，一个不小心就进我肚子里了。（希望明天体重没注意到，不会弹回去吧）</p><a id="more"></a><p>今天数据如下：</p><p>体重：75.25kg，相比前一天减了0.1kg（无视吧，大概饥饿的效果仅限于此，阿门）。历史累计减了1.3kg，希望运动的效果开始逐步体现吧。</p><p>我的晚餐，今天早上体重减少不明显，大概是昨天晚上的那个带紫薯的量太大，所以今天晚饭改吃只有一丢丢肉的。</p><p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe6ybq76ij30u014377g.jpg" alt="20180510-晚餐1"></p><p>Melon的三文鱼沙拉，我没忍住偷吃了一片三文鱼，配合沙拉酱比蘸酱油和芥末好吃，真的。</p><p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe6yhxc1gj30u014341l.jpg" alt="20180510-晚餐2"></p><p>下班时和同事组队打了一把王者，同事太给力，轻松+愉快地就像麻将胡牌似的就把对方一把推掉。可是…</p><p>哎，后面自己打排位，没打多久，头像上就开始挂着MVP了，不用想啦，最终拿了MVP和金牌辅助，但还是输了，伤心。。。</p><p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe6yot7r6j31hc0u0jtx.jpg" alt="20180510-王者"></p><p>现在跑30分钟4公里，体能还可以的，除了一身汗，没感觉累。今天耳机落家里，没带耳机跑。然后不知道是不是因为今天复联3首映，跑步机竟然只有我一个人在用，所以时间感觉过得有点慢。不过，继续适应跑一段时间吧，不急着提升强度。</p><p>明天周五，是个关键时间点，要把持住！！！</p><p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe6yuxplpj31430u0ach.jpg" alt="20180510-跑步"></p>]]></content>
     
     <summary type="html">
     
@@ -143,9 +570,9 @@
     <link href="https://dengxh.com/2018/05/09/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day3/"/>
     <id>https://dengxh.com/2018/05/09/Life/胖胖瘦身记-day3/</id>
     <published>2018-05-09T11:59:13.000Z</published>
-    <updated>2018-05-23T09:18:55.832Z</updated>
+    <updated>2018-11-20T00:00:56.326Z</updated>
     
-    <content type="html"><![CDATA[<p>鉴于下班时刻抢跑步机的人太多，调整下锻炼时间。如果无法下班前提前赶过去抢跑步机，那么，就先吃晚饭，打几盘王者再去好了（机智如我）。</p><a id="more"></a><p>今天数据如下：</p><p>体重：75.35，相比前一天，减了：0.45kg，历史累计减了：1.2kg</p><p>今天晚餐吃的是：经典凯撒沙拉，好多香肠，但是除了香肠，其他都挺好吃。在吃草的日子里，咬一口紫薯，幸福得哭出来~~</p><p><img src="http://dengxhblog.qiniudn.com/20180509-晚餐.jpeg" alt="20180509-晚餐"></p><p>就打了一把王者，赢得很快，拿了银牌辅助和MVP，有点意外。</p><p><img src="http://dengxhblog.qiniudn.com/20180509-王者.jpeg" alt="20180509-王者"></p><p>今天跑步前，腿是有点酸（拒绝）的，不过，通过快走5分钟后就没感觉了。一口气跑4公里，腰不酸腿不疼，吃嘛嘛香~~~</p><p><img src="http://dengxhblog.qiniudn.com/20180509-跑步.jpeg" alt="20180509-跑步"></p>]]></content>
+    <content type="html"><![CDATA[<p>鉴于下班时刻抢跑步机的人太多，调整下锻炼时间。如果无法下班前提前赶过去抢跑步机，那么，就先吃晚饭，打几盘王者再去好了（机智如我）。</p><a id="more"></a><p>今天数据如下：</p><p>体重：75.35，相比前一天，减了：0.45kg，历史累计减了：1.2kg</p><p>今天晚餐吃的是：经典凯撒沙拉，好多香肠，但是除了香肠，其他都挺好吃。在吃草的日子里，咬一口紫薯，幸福得哭出来~~</p><p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fxe6xqp3prj31430u076q.jpg" alt="20180509-晚餐"></p><p>就打了一把王者，赢得很快，拿了银牌辅助和MVP，有点意外。</p><p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe6xwu7ftj30r40f6wgp.jpg" alt="20180509-王者"></p><p>今天跑步前，腿是有点酸（拒绝）的，不过，通过快走5分钟后就没感觉了。一口气跑4公里，腰不酸腿不疼，吃嘛嘛香~~~</p><p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fxe79ki1akj31430u040x.jpg" alt="20180509-跑步"></p>]]></content>
     
     <summary type="html">
     
@@ -163,9 +590,9 @@
     <link href="https://dengxh.com/2018/05/08/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day2/"/>
     <id>https://dengxh.com/2018/05/08/Life/胖胖瘦身记-day2/</id>
     <published>2018-05-08T11:59:11.000Z</published>
-    <updated>2018-05-23T09:19:25.300Z</updated>
+    <updated>2018-11-20T00:00:27.883Z</updated>
     
-    <content type="html"><![CDATA[<p>单车热身5分钟还是蛮轻松的，但是在正式开始训练后，坡度会逐渐提升，当达到9时，已经非常累，汗直接可见的滴到地上。达到10后，基本踩不动了，需要站起来才勉强可以慢慢的踩动。</p><p>仅仅坚持了16分钟（不包含热身），第1次骑，的确有点意外的有挑战，继续努力吧！</p><a id="more"></a><p>今天数据如下：</p><p>体重：75.80kg （相比前一天，减了0.75kg，大概是饿出来的）</p><p><img src="http://dengxhblog.qiniudn.com/20180508-晚餐.jpeg" alt="20180508-晚餐"></p><p><img src="http://dengxhblog.qiniudn.com/20180508-单车.jpeg" alt="20180508-单车"></p>]]></content>
+    <content type="html"><![CDATA[<p>单车热身5分钟还是蛮轻松的，但是在正式开始训练后，坡度会逐渐提升，当达到9时，已经非常累，汗直接可见的滴到地上。达到10后，基本踩不动了，需要站起来才勉强可以慢慢的踩动。</p><p>仅仅坚持了16分钟（不包含热身），第1次骑，的确有点意外的有挑战，继续努力吧！</p><a id="more"></a><p>今天数据如下：</p><p>体重：75.80kg （相比前一天，减了0.75kg，大概是饿出来的）</p><p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe6xb81nbj31430u0tc5.jpg" alt="20180508-晚餐"></p><p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe79322hyj31430u0ado.jpg" alt="20180508-单车"></p>]]></content>
     
     <summary type="html">
     
@@ -184,9 +611,9 @@
     <link href="https://dengxh.com/2018/05/07/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day1/"/>
     <id>https://dengxh.com/2018/05/07/Life/胖胖瘦身记-day1/</id>
     <published>2018-05-07T11:36:49.000Z</published>
-    <updated>2018-05-23T09:19:27.831Z</updated>
+    <updated>2018-11-19T23:48:26.757Z</updated>
     
-    <content type="html"><![CDATA[<p>今年五一回老家，遇到的亲朋好友、父老乡亲们，个个都发出惊叹：</p><p>哟，华华啊，现在怎么这么胖了哦~~</p><p>咦，华华啊，胖得我都认不出来啦~~</p><p>哎，华华啊，你不能再胖下去了咧~~</p><a id="more"></a><p>我那叫一个郁闷，回到杭州后，赶紧用体脂秤好好测量了一下。呜呼哀哉~~，我滴娘，我的体重达到了历史巅峰——76.55kg，你敢信？</p><p>so，下定决心再次减肥。今日数据如下：</p><p>体重：76.55kg</p><p><img src="http://dengxhblog.qiniudn.com/20180507-跑步.jpeg" alt="20180507-跑步"></p><p><img src="http://dengxhblog.qiniudn.com/20180507-晚餐.jpeg" alt="20180507-晚餐"></p>]]></content>
+    <content type="html"><![CDATA[<p>今年五一回老家，遇到的亲朋好友、父老乡亲们，个个都发出惊叹：</p><p>哟，华华啊，现在怎么这么胖了哦~~</p><p>咦，华华啊，胖得我都认不出来啦~~</p><p>哎，华华啊，你不能再胖下去了咧~~</p><a id="more"></a><p>我那叫一个郁闷，回到杭州后，赶紧用体脂秤好好测量了一下。呜呼哀哉~~，我滴娘，我的体重达到了历史巅峰——76.55kg，你敢信？</p><p>so，下定决心再次减肥。今日数据如下：</p><p>体重：76.55kg</p><p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe6w4oz5fj31430u0gnz.jpg" alt="20180507-跑步"></p><p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe6wix9mvj31440u0u10.jpg" alt="20180507-晚餐"></p>]]></content>
     
     <summary type="html">
     
@@ -207,13 +634,29 @@
     <link href="https://dengxh.com/2017/11/09/Technologies/%E5%88%A9%E7%94%A8Maven%E6%8F%92%E4%BB%B6%E9%AB%98%E6%95%88%E5%8E%BB%E9%99%A4SNAPSHOT/"/>
     <id>https://dengxh.com/2017/11/09/Technologies/利用Maven插件高效去除SNAPSHOT/</id>
     <published>2017-11-09T13:20:43.236Z</published>
-    <updated>2017-11-10T07:47:43.138Z</updated>
+    <updated>2018-07-12T14:56:24.165Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>公司质量保障团队近期在Push各技术团队在线上应用中禁止使用SNAPSHOT，因此各个技术团队均开始修改完善。不同人员对Maven学习了解程度不同，有些同事修改起来效率较低，因此我将自己所使用的方法和工具在公司内网BBS进行分享，供大家参考借鉴。</p><a id="more"></a><h1 id="SNAPSHOT出现场景"><a href="#SNAPSHOT出现场景" class="headerlink" title="SNAPSHOT出现场景"></a>SNAPSHOT出现场景</h1><ol><li>对外提供了SNAPSHOT</li><li>依赖三方SNAPSHOT</li></ol><h2 id="对外提供服务由SNAPSHOT改为RELEASE"><a href="#对外提供服务由SNAPSHOT改为RELEASE" class="headerlink" title="对外提供服务由SNAPSHOT改为RELEASE"></a>对外提供服务由SNAPSHOT改为RELEASE</h2><p>一般在开发测试阶段，需要经常变动代码，所以使用SNAPSHOT是合理的，但是线上对外提供的服务必须是稳定的版本，一般以RELEASE包提供。此处涉及修改版本号。我们的项目一般是以一个Project和多个Module的形式组织，Project与Module存在父子关系。如果手动一个个修改版本号，比较容易出错。Maven提供了插件：Versions，用于管理版本。</p><p>设置新版本号<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:set -DnewVersion=1.0.1-RELEASE</span><br></pre></td></tr></table></figure></p><p>确认提交新版本号<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:commit</span><br></pre></td></tr></table></figure></p><p>撤消版本号变更<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:revert</span><br></pre></td></tr></table></figure></p><h2 id="发现并去除SNAPSHOT依赖"><a href="#发现并去除SNAPSHOT依赖" class="headerlink" title="发现并去除SNAPSHOT依赖"></a>发现并去除SNAPSHOT依赖</h2><h3 id="发现SNAPSHOT依赖"><a href="#发现SNAPSHOT依赖" class="headerlink" title="发现SNAPSHOT依赖"></a>发现SNAPSHOT依赖</h3><p>一般我们的项目会有很多三方依赖，而他们自身亦可能有很多依赖，如果通过人工逐个去判断是否存在SNAPSHOT依赖，几乎是不可能的事。Maven提供了插件：dependency，用于管理依赖。为了发现SNAPSHOT依赖，可以通过以下两种方式：</p><p>方式一：通过dependency:list</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mvn dependency:list | grep -i snapshot</span><br><span class="line"></span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br></pre></td></tr></table></figure><p>这种方式会筛选出当前项目所有的SNAPSHOT依赖，但是问题很明显，我们很难判断是哪里依赖了这些SNAPSHOT。因此，我倾向采用第二方式。</p><p>方式二：通过dependency:tree</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mvn dependency:tree -Dincludes=:::*-SNAPSHOT</span><br><span class="line"></span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br><span class="line">[INFO] </span><br><span class="line">[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ pay_pcs_impl ---</span><br><span class="line">[INFO] com.xxx.service:pay_pcs_impl:jar:1.0.1-RELEASE</span><br><span class="line">[INFO] +- com.sample.service:pay_pcs_service:jar:1.0.1-RELEASE:compile</span><br><span class="line">[INFO] |  +- com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO] |  \- com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO] \- com.sample:pay-common:jar:1.0.1.1:compile</span><br><span class="line">[INFO]  \- com.sample.sentry:sentry-client:jar:2.1.15:compile</span><br><span class="line">[INFO]    \- com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br></pre></td></tr></table></figure><p>通过dependency:tree的方式，可以清晰明了的看到依赖的层次关系，从而快速的定位到SNAPSHOT依赖点。如上述：pay_pcs_service –&gt; pay_common –&gt; sentry-client –&gt; flatbuffers-java。</p><h3 id="去除SNAPSHOT依赖"><a href="#去除SNAPSHOT依赖" class="headerlink" title="去除SNAPSHOT依赖"></a>去除SNAPSHOT依赖</h3><p>通过2.2.1的方式发现SNAPSHOT依赖后，便可根据结果去除相应的SNAPSHOT依赖。去除的方式归根结底是变更依赖的版本，同样有多种方式。我主要采用两种方式。</p><p>方式一：利用Maven Versions插件</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:use-releases</span><br><span class="line">mvn versions:use-next-releases</span><br><span class="line">mvn versions:use-latest-releases</span><br></pre></td></tr></table></figure><p>该方式可批量的将SNAPSHOT替换成相应的RELEASE版本。</p><p><strong><em>注：某些服务提供方发布版本不合规范，所以请注意结合git的变更等，判断所变更的RELEASE是否正确。比如我在使用过程中遇到某一个依赖，同一版本号，SNAPSHOT和RELEASE代码出入较大，导致编译失败。经排查改用其他版本号才正常。</em></strong></p><p>方式二：人工逐个变更依赖的版本号<br>通过发现SNAPSHOT方式二发现的依赖，层次关系已经十分明确。在数量不多的情况下，保险起见，人工逐个核实确认新的RELEASE版本号。可以借助以下方法获取依赖是否有更新</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:display-dependency-updates</span><br></pre></td></tr></table></figure><h1 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h1><ol><li>zsh:no matches found: -Dincludes=:::<em>-SNAPSHOT，该问题是由于zsh对通配符的解析，简单的解决方法是给参数加上引号：mvn dependency:tree -Dincludes=”:::</em>-SNAPSHOT”</li></ol><h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol><li><a href="http://www.mojohaus.org/versions-maven-plugin/usage.html" target="_blank" rel="external">http://www.mojohaus.org/versions-maven-plugin/usage.html</a></li><li><a href="https://maven.apache.org/plugins/maven-dependency-plugin/usage.html" target="_blank" rel="external">https://maven.apache.org/plugins/maven-dependency-plugin/usage.html</a></li></ol>]]></content>
+    <content type="html"><![CDATA[<!-- TOC --><ul><li><a href="#1-%E5%89%8D%E8%A8%80">1. 前言</a></li><li><a href="#2-snapshot%E5%87%BA%E7%8E%B0%E5%9C%BA%E6%99%AF">2. SNAPSHOT出现场景</a><ul><li><a href="#21-%E5%AF%B9%E5%A4%96%E6%8F%90%E4%BE%9B%E6%9C%8D%E5%8A%A1%E7%94%B1snapshot%E6%94%B9%E4%B8%BArelease">2.1. 对外提供服务由SNAPSHOT改为RELEASE</a></li><li><a href="#22-%E5%8F%91%E7%8E%B0%E5%B9%B6%E5%8E%BB%E9%99%A4snapshot%E4%BE%9D%E8%B5%96">2.2. 发现并去除SNAPSHOT依赖</a><ul><li><a href="#221-%E5%8F%91%E7%8E%B0snapshot%E4%BE%9D%E8%B5%96">2.2.1. 发现SNAPSHOT依赖</a></li><li><a href="#222-%E5%8E%BB%E9%99%A4snapshot%E4%BE%9D%E8%B5%96">2.2.2. 去除SNAPSHOT依赖</a></li></ul></li></ul></li><li><a href="#3-faq">3. FAQ</a></li><li><a href="#4-%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE">4. 参考文献</a></li></ul><!-- /TOC --><h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h1><p>公司质量保障团队近期在Push各技术团队在线上应用中禁止使用SNAPSHOT，因此各个技术团队均开始修改完善。不同人员对Maven学习了解程度不同，有些同事修改起来效率较低，因此我将自己所使用的方法和工具在公司内网BBS进行分享，供大家参考借鉴。</p><a id="more"></a><h1 id="2-SNAPSHOT出现场景"><a href="#2-SNAPSHOT出现场景" class="headerlink" title="2. SNAPSHOT出现场景"></a>2. SNAPSHOT出现场景</h1><ol><li>对外提供了SNAPSHOT</li><li>依赖三方SNAPSHOT</li></ol><h2 id="2-1-对外提供服务由SNAPSHOT改为RELEASE"><a href="#2-1-对外提供服务由SNAPSHOT改为RELEASE" class="headerlink" title="2.1. 对外提供服务由SNAPSHOT改为RELEASE"></a>2.1. 对外提供服务由SNAPSHOT改为RELEASE</h2><p>一般在开发测试阶段，需要经常变动代码，所以使用SNAPSHOT是合理的，但是线上对外提供的服务必须是稳定的版本，一般以RELEASE包提供。此处涉及修改版本号。我们的项目一般是以一个Project和多个Module的形式组织，Project与Module存在父子关系。如果手动一个个修改版本号，比较容易出错。Maven提供了插件：Versions，用于管理版本。</p><p>设置新版本号<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:set -DnewVersion=1.0.1-RELEASE</span><br></pre></td></tr></table></figure></p><p>确认提交新版本号<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:commit</span><br></pre></td></tr></table></figure></p><p>撤消版本号变更<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:revert</span><br></pre></td></tr></table></figure></p><h2 id="2-2-发现并去除SNAPSHOT依赖"><a href="#2-2-发现并去除SNAPSHOT依赖" class="headerlink" title="2.2. 发现并去除SNAPSHOT依赖"></a>2.2. 发现并去除SNAPSHOT依赖</h2><h3 id="2-2-1-发现SNAPSHOT依赖"><a href="#2-2-1-发现SNAPSHOT依赖" class="headerlink" title="2.2.1. 发现SNAPSHOT依赖"></a>2.2.1. 发现SNAPSHOT依赖</h3><p>一般我们的项目会有很多三方依赖，而他们自身亦可能有很多依赖，如果通过人工逐个去判断是否存在SNAPSHOT依赖，几乎是不可能的事。Maven提供了插件：dependency，用于管理依赖。为了发现SNAPSHOT依赖，可以通过以下两种方式：</p><p>方式一：通过dependency:list</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mvn dependency:list | grep -i snapshot</span><br><span class="line"></span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br></pre></td></tr></table></figure><p>这种方式会筛选出当前项目所有的SNAPSHOT依赖，但是问题很明显，我们很难判断是哪里依赖了这些SNAPSHOT。因此，我倾向采用第二方式。</p><p>方式二：通过dependency:tree</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mvn dependency:tree -Dincludes=:::*-SNAPSHOT</span><br><span class="line"></span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br><span class="line">[INFO] </span><br><span class="line">[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ pay_pcs_impl ---</span><br><span class="line">[INFO] com.xxx.service:pay_pcs_impl:jar:1.0.1-RELEASE</span><br><span class="line">[INFO] +- com.sample.service:pay_pcs_service:jar:1.0.1-RELEASE:compile</span><br><span class="line">[INFO] |  +- com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO] |  \- com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO] \- com.sample:pay-common:jar:1.0.1.1:compile</span><br><span class="line">[INFO]  \- com.sample.sentry:sentry-client:jar:2.1.15:compile</span><br><span class="line">[INFO]    \- com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br></pre></td></tr></table></figure><p>通过dependency:tree的方式，可以清晰明了的看到依赖的层次关系，从而快速的定位到SNAPSHOT依赖点。如上述：pay_pcs_service –&gt; pay_common –&gt; sentry-client –&gt; flatbuffers-java。</p><h3 id="2-2-2-去除SNAPSHOT依赖"><a href="#2-2-2-去除SNAPSHOT依赖" class="headerlink" title="2.2.2. 去除SNAPSHOT依赖"></a>2.2.2. 去除SNAPSHOT依赖</h3><p>通过2.2.1的方式发现SNAPSHOT依赖后，便可根据结果去除相应的SNAPSHOT依赖。去除的方式归根结底是变更依赖的版本，同样有多种方式。我主要采用两种方式。</p><p>方式一：利用Maven Versions插件</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:use-releases</span><br><span class="line">mvn versions:use-next-releases</span><br><span class="line">mvn versions:use-latest-releases</span><br></pre></td></tr></table></figure><p>该方式可批量的将SNAPSHOT替换成相应的RELEASE版本。</p><p><strong><em>注：某些服务提供方发布版本不合规范，所以请注意结合git的变更等，判断所变更的RELEASE是否正确。比如我在使用过程中遇到某一个依赖，同一版本号，SNAPSHOT和RELEASE代码出入较大，导致编译失败。经排查改用其他版本号才正常。</em></strong></p><p>方式二：人工逐个变更依赖的版本号<br>通过发现SNAPSHOT方式二发现的依赖，层次关系已经十分明确。在数量不多的情况下，保险起见，人工逐个核实确认新的RELEASE版本号。可以借助以下方法获取依赖是否有更新</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn versions:display-dependency-updates</span><br></pre></td></tr></table></figure><h1 id="3-FAQ"><a href="#3-FAQ" class="headerlink" title="3. FAQ"></a>3. FAQ</h1><ol><li>zsh:no matches found: -Dincludes=:::<em>-SNAPSHOT，该问题是由于zsh对通配符的解析，简单的解决方法是给参数加上引号：mvn dependency:tree -Dincludes=”:::</em>-SNAPSHOT”</li></ol><h1 id="4-参考文献"><a href="#4-参考文献" class="headerlink" title="4. 参考文献"></a>4. 参考文献</h1><ol><li><a href="http://www.mojohaus.org/versions-maven-plugin/usage.html" target="_blank" rel="external">http://www.mojohaus.org/versions-maven-plugin/usage.html</a></li><li><a href="https://maven.apache.org/plugins/maven-dependency-plugin/usage.html" target="_blank" rel="external">https://maven.apache.org/plugins/maven-dependency-plugin/usage.html</a></li></ol>]]></content>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;公司质量保障团队近期在Push各技术团队在线上应用中禁止使用SNAPSHOT，因此各个技术团队均开始修改完善。不同人员对Maven学习了解程度不同，有些同事修改起来效率较低，因此我将自己所使用的方法和工具在公司内网BBS进行分享，供大家参考借鉴。&lt;/p&gt;
+      &lt;!-- TOC --&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#1-%E5%89%8D%E8%A8%80&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#2-snapshot%E5%87%BA%E7%8E%B0%E5%9C%BA%E6%99%AF&quot;&gt;2. SNAPSHOT出现场景&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#21-%E5%AF%B9%E5%A4%96%E6%8F%90%E4%BE%9B%E6%9C%8D%E5%8A%A1%E7%94%B1snapshot%E6%94%B9%E4%B8%BArelease&quot;&gt;2.1. 对外提供服务由SNAPSHOT改为RELEASE&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#22-%E5%8F%91%E7%8E%B0%E5%B9%B6%E5%8E%BB%E9%99%A4snapshot%E4%BE%9D%E8%B5%96&quot;&gt;2.2. 发现并去除SNAPSHOT依赖&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#221-%E5%8F%91%E7%8E%B0snapshot%E4%BE%9D%E8%B5%96&quot;&gt;2.2.1. 发现SNAPSHOT依赖&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#222-%E5%8E%BB%E9%99%A4snapshot%E4%BE%9D%E8%B5%96&quot;&gt;2.2.2. 去除SNAPSHOT依赖&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#3-faq&quot;&gt;3. FAQ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#4-%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE&quot;&gt;4. 参考文献&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- /TOC --&gt;
+&lt;h1 id=&quot;1-前言&quot;&gt;&lt;a href=&quot;#1-前言&quot; class=&quot;headerlink&quot; title=&quot;1. 前言&quot;&gt;&lt;/a&gt;1. 前言&lt;/h1&gt;&lt;p&gt;公司质量保障团队近期在Push各技术团队在线上应用中禁止使用SNAPSHOT，因此各个技术团队均开始修改完善。不同人员对Maven学习了解程度不同，有些同事修改起来效率较低，因此我将自己所使用的方法和工具在公司内网BBS进行分享，供大家参考借鉴。&lt;/p&gt;
     
     </summary>
     
@@ -246,31 +689,6 @@
   </entry>
   
   <entry>
-    <title>【GitTips】非SSH免密提交</title>
-    <link href="https://dengxh.com/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E9%9D%9ESSH%E5%85%8D%E5%AF%86%E6%8F%90%E4%BA%A4/"/>
-    <id>https://dengxh.com/2015/01/12/Technologies/【GitTips】非SSH免密提交/</id>
-    <published>2015-01-12T14:51:31.000Z</published>
-    <updated>2017-11-12T15:14:56.809Z</updated>
-    
-    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config credential.helper store</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span clas
-      
-    
-    </summary>
-    
-    
-      <category term="Git" scheme="https://dengxh.com/tags/Git/"/>
-    
-      <category term="Tips" scheme="https://dengxh.com/tags/Tips/"/>
-    
-  </entry>
-  
-  <entry>
     <title>【GitTips】撤消操作</title>
     <link href="https://dengxh.com/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C/"/>
     <id>https://dengxh.com/2015/01/12/Technologies/【GitTips】撤消操作/</id>
@@ -284,6 +702,31 @@
       
       
         &lt;h1 id=&quot;撤消-add&quot;&gt;&lt;a href=&quot;#撤消-add&quot; class=&quot;headerlink&quot; title=&quot;撤消 add&quot;&gt;&lt;/a&gt;撤消 add&lt;/h1&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutt
+      
+    
+    </summary>
+    
+    
+      <category term="Git" scheme="https://dengxh.com/tags/Git/"/>
+    
+      <category term="Tips" scheme="https://dengxh.com/tags/Tips/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【GitTips】非SSH免密提交</title>
+    <link href="https://dengxh.com/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E9%9D%9ESSH%E5%85%8D%E5%AF%86%E6%8F%90%E4%BA%A4/"/>
+    <id>https://dengxh.com/2015/01/12/Technologies/【GitTips】非SSH免密提交/</id>
+    <published>2015-01-12T14:51:31.000Z</published>
+    <updated>2017-11-12T15:14:56.809Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config credential.helper store</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span clas
       
     
     </summary>
@@ -372,7 +815,7 @@
     <link href="https://dengxh.com/2014/10/15/Technologies/vsfptd%20%E6%90%AD%E5%BB%BAFTP%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/"/>
     <id>https://dengxh.com/2014/10/15/Technologies/vsfptd 搭建FTP服务器简明教程/</id>
     <published>2014-10-15T11:01:01.000Z</published>
-    <updated>2017-11-10T07:50:20.270Z</updated>
+    <updated>2018-07-12T02:15:01.080Z</updated>
     
     <content type="html"><![CDATA[<p>FTP服务器在当前工作、生活环境中，有时依然十分有用。在Linux服务器上搭建FTP服务器，首选 vsftptd (very secure FTP daemon) 应用。</p><a id="more"></a><p>下文以Centos 6.5为例，介绍如何快速搭建一个可用的FTP服务器。</p><h1 id="安装-vsftpd"><a href="#安装-vsftpd" class="headerlink" title="安装 vsftpd"></a>安装 vsftpd</h1><pre><code># 安装sudo yum -y install vsftpd# 启动sudo service vsftpd start# 设置为开机启动sudo chkconfig vsftpd on</code></pre><h1 id="创建FTP用户"><a href="#创建FTP用户" class="headerlink" title="创建FTP用户"></a>创建FTP用户</h1><pre><code># 增加一个ftp用户组sudo groupadd ftpgroup# 创建一个ftp用户，并配置目录sudo useradd -g ftpgroup -d /ftp/ftpuser -M ftpuser# 设置用户密码sudo passwd ftpuser# 创建相应目录sudo mkdir /ftpsudo mkdir /ftp/ftpuser# 修改目录权限sudo chmod 777 /ftp/ftpuser</code></pre><h1 id="配置-vsftpd"><a href="#配置-vsftpd" class="headerlink" title="配置 vsftpd"></a>配置 vsftpd</h1><p>Centos 6.5 安装完 vsftpd 之后，配置文件目录如下所示：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/etc/vsftpd/</span><br><span class="line">├── ftpusers                # 禁止使用vsftpd的用户列表文件</span><br><span class="line">├── user_list               # userlist_deny=YES/NO，禁止/允许用户使用vsftpd</span><br><span class="line">├── vsftpd.conf             # 主配置文件</span><br><span class="line">└── vsftpd_conf_migrate.sh</span><br></pre></td></tr></table></figure><p>主配置文件为 <code>vsftpd.conf</code>，通过阅读配置文件，可以配置参数以满足特殊需求，也可直接使用缺省值。出于安全性、实用性等方面的考虑，不建议使用缺省值。详细的参数配置教程可参考更专业的资料，下面仅简单介绍一些常用的设置。</p><h2 id="vsftpd-配置说明"><a href="#vsftpd-配置说明" class="headerlink" title="vsftpd 配置说明"></a>vsftpd 配置说明</h2><p><strong><em>注：</em></strong> 修改配置文件之前记得备份</p><pre><code># Allow anonymous FTP? (Beware - allowed by default if you comment this out).# anonymous_enable=YESanonymous_enable=NO # 不允许匿名用户# Uncomment this to allow local users to log in.local_enable=YES# Uncomment this to enable any form of FTP write command.write_enable=YES## If you want, you can arrange for uploaded anonymous files to be owned by# a different user. Note! Using &quot;root&quot; for uploaded files is not# recommended!#chown_uploads=YES#chown_username=whoeverchown_uploads=NO # 禁止上传文件更改宿主userlist_enable=YES # 配合userlist_deny=YES/NO，禁止/允许user_list文件中的用户使用vsftpd</code></pre><h1 id="重启-vsftpd"><a href="#重启-vsftpd" class="headerlink" title="重启 vsftpd"></a>重启 vsftpd</h1><p>重启 vsftpd 使配置之后的选项生效：</p><pre><code>sudo service vsftpd restart</code></pre><h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul><li><a href="http://www.cnblogs.com/taoweiji/p/3821924.html" target="_blank" rel="external">Ubuntu下vsftpd配置实例，超级简单，高度可用</a></li><li><a href="http://segmentfault.com/blog/tony/1190000000438443" target="_blank" rel="external">我见过最好的vsftpd配置教程</a></li></ul>]]></content>
     
@@ -392,7 +835,7 @@
     <link href="https://dengxh.com/2014/09/29/Tools/%E9%80%9A%E8%BF%87%E7%BD%91%E7%9B%98%E5%90%8C%E6%AD%A5Sublime-Text%E8%AE%BE%E7%BD%AE/"/>
     <id>https://dengxh.com/2014/09/29/Tools/通过网盘同步Sublime-Text设置/</id>
     <published>2014-09-29T12:32:36.000Z</published>
-    <updated>2017-11-10T07:50:07.513Z</updated>
+    <updated>2018-05-25T10:05:17.433Z</updated>
     
     <content type="html"><![CDATA[<p>Sublime Text的配置信息和插件都存放在<code>Packages</code>目录下，只要通过网盘在不同电脑间同步该目录，便可以实现在不同电脑间使用同一套Sublime Text的配置。</p><a id="more"></a><p>具体步骤如下：</p><ol><li>关闭Sublime Text</li><li>将Sublime Text的<code>Packages</code>目录（<code>~/Library/Application Support/Sublime Text 3/Packages）</code>移至网盘的同步目录（<code>~/OneDrive/MyWorkbench/MyApps/SublimeText/Packages</code>）。</li><li>执行命令：<code>ln -s ~/OneDrive/MyWorkbench/MyApps/SublimeText/Packages ~/Library/Application Support/Sublime Text 3/Packages</code></li><li>Done :)</li></ol>]]></content>
     
@@ -424,30 +867,6 @@
     
     
       <category term="Maven" scheme="https://dengxh.com/tags/Maven/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>REST</title>
-    <link href="https://dengxh.com/2014/09/13/Technologies/REST/"/>
-    <id>https://dengxh.com/2014/09/13/Technologies/REST/</id>
-    <published>2014-09-13T02:31:59.000Z</published>
-    <updated>2017-11-10T07:50:26.112Z</updated>
-    
-    <content type="html"><![CDATA[<p><code>REST</code>(Representational State Transfer)是一种软件架构风格，基于HTTP、URI、XML等技术与协议，为网络应用的设计与开发降低复杂性、提高伸缩性，已经普遍取代了基于SOAP和WSDL。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;&lt;code&gt;REST&lt;/code&gt;(Representational State Transfer)是一种软件架构风格，基于HTTP、URI、XML等技术与协议，为网络应用的设计与开发降低复杂性、提高伸缩性，已经普遍取代了基于SOAP和WSDL。&lt;/p&gt;
-
-      
-    
-    </summary>
-    
-    
-      <category term="REST" scheme="https://dengxh.com/tags/REST/"/>
     
   </entry>
   
