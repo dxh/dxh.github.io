@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[我的 Blog 生成流程]]></title>
     <url>%2F2018%2F12%2F07%2FLife%2F%E6%88%91%E7%9A%84-Blog-%E7%94%9F%E6%88%90%E6%B5%81%E7%A8%8B%2F</url>
-    <content type="text"><![CDATA[使用Typora撰写博客文章 Typora 借助 iPIC 可以自动上传图片至图床。 为避免图床不可用，所有博客的图片均在本地目录./Blog/blogImg/images备份一份，并用Dropbox同步。 Typora 可以自定义 CSS 样式，不同平台，使用不同的样式。其中参考：https://support.typora.io/Auto-Numbering/，为现有样式给 Header 加上序号，方便阅读。 部署至Github PagesTypora 撰写好的文章使用 Hexo 部署至 Github Pages。 发布至微信公众号 Typora 挑选合适的样式，复制到公众号编辑器。 检查样式，并进行简单的修改，即可发布。 微信公众号不支持外链，所以先发博客，然后在公众号的原文链接中，链到博客。]]></content>
+    <content type="text"><![CDATA[兜兜转转用了不少的博客工具，WordPress, Farbox, Octopress，Hexo，Ghost，近期打算不折腾了，先等有足够的内容再说。 使用Typora撰写博客文章 Typora 借助 iPIC 可以自动上传图片至图床。 为避免图床不可用，所有博客的图片均在本地目录./Blog/blogImg/images备份一份，并用Dropbox同步。 Typora 可以自定义 CSS 样式，不同平台，使用不同的样式。其中参考：https://support.typora.io/Auto-Numbering/，为现有样式给 Header 加上序号，方便阅读。 部署至Github PagesTypora 撰写好的文章使用 Hexo 部署至 Github Pages。 发布至微信公众号 Typora 挑选合适的样式，复制到公众号编辑器。 检查样式，并进行简单的修改，即可发布。 微信公众号不支持外链，所以先发博客，然后在公众号的原文链接中，链到博客。]]></content>
       <tags>
         <tag>Best Practice</tag>
         <tag>Tools</tag>
