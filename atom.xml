@@ -298,31 +298,6 @@
   </entry>
   
   <entry>
-    <title>【GitTips】撤消操作</title>
-    <link href="https://dengxh.com/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C/"/>
-    <id>https://dengxh.com/2015/01/12/Technologies/【GitTips】撤消操作/</id>
-    <published>2015-01-12T14:51:31.000Z</published>
-    <updated>2017-11-12T15:15:24.190Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="撤消-add"><a href="#撤消-add" class="headerlink" title="撤消 add"></a>撤消 add</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm --cached &lt;file&gt;</span><br></pre></td></tr></table></figure><h1 id="撤消-commit"><a href="#撤消-commit" class="headerlink" title="撤消 commit"></a>撤消 commit</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard &lt;commit id&gt; <span class="comment"># 将 HEAD 移至 &lt;commit id&gt;</span></span><br></pre></td></tr></table></figure><p>注意，–hard 将目录中所有文件中的修改</p><h1 id="撤消-push"><a href="#撤消-push" class="headerlink" title="撤消 push"></a>撤消 push</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard &lt;commit id&gt; <span class="comment"># 撤消commit</span></span><br><span class="line">$ git push origin HEAD --force <span class="comment"># 强制提交到远程版本库，从而删除之前提交的数据</span></span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;撤消-add&quot;&gt;&lt;a href=&quot;#撤消-add&quot; class=&quot;headerlink&quot; title=&quot;撤消 add&quot;&gt;&lt;/a&gt;撤消 add&lt;/h1&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutt
-      
-    
-    </summary>
-    
-    
-      <category term="Git" scheme="https://dengxh.com/tags/Git/"/>
-    
-      <category term="Tips" scheme="https://dengxh.com/tags/Tips/"/>
-    
-  </entry>
-  
-  <entry>
     <title>【GitTips】非SSH免密提交</title>
     <link href="https://dengxh.com/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E9%9D%9ESSH%E5%85%8D%E5%AF%86%E6%8F%90%E4%BA%A4/"/>
     <id>https://dengxh.com/2015/01/12/Technologies/【GitTips】非SSH免密提交/</id>
@@ -336,6 +311,31 @@
       
       
         &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span clas
+      
+    
+    </summary>
+    
+    
+      <category term="Git" scheme="https://dengxh.com/tags/Git/"/>
+    
+      <category term="Tips" scheme="https://dengxh.com/tags/Tips/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【GitTips】撤消操作</title>
+    <link href="https://dengxh.com/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C/"/>
+    <id>https://dengxh.com/2015/01/12/Technologies/【GitTips】撤消操作/</id>
+    <published>2015-01-12T14:51:31.000Z</published>
+    <updated>2017-11-12T15:15:24.190Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="撤消-add"><a href="#撤消-add" class="headerlink" title="撤消 add"></a>撤消 add</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm --cached &lt;file&gt;</span><br></pre></td></tr></table></figure><h1 id="撤消-commit"><a href="#撤消-commit" class="headerlink" title="撤消 commit"></a>撤消 commit</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard &lt;commit id&gt; <span class="comment"># 将 HEAD 移至 &lt;commit id&gt;</span></span><br></pre></td></tr></table></figure><p>注意，–hard 将目录中所有文件中的修改</p><h1 id="撤消-push"><a href="#撤消-push" class="headerlink" title="撤消 push"></a>撤消 push</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard &lt;commit id&gt; <span class="comment"># 撤消commit</span></span><br><span class="line">$ git push origin HEAD --force <span class="comment"># 强制提交到远程版本库，从而删除之前提交的数据</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;撤消-add&quot;&gt;&lt;a href=&quot;#撤消-add&quot; class=&quot;headerlink&quot; title=&quot;撤消 add&quot;&gt;&lt;/a&gt;撤消 add&lt;/h1&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutt
       
     
     </summary>

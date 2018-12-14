@@ -109,18 +109,18 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[【GitTips】撤消操作]]></title>
-    <url>%2F2015%2F01%2F12%2FTechnologies%2F%E3%80%90GitTips%E3%80%91%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C%2F</url>
-    <content type="text"><![CDATA[撤消 add1$ git rm --cached &lt;file&gt; 撤消 commit1$ git reset --hard &lt;commit id&gt; # 将 HEAD 移至 &lt;commit id&gt; 注意，–hard 将目录中所有文件中的修改 撤消 push12$ git reset --hard &lt;commit id&gt; # 撤消commit$ git push origin HEAD --force # 强制提交到远程版本库，从而删除之前提交的数据]]></content>
+    <title><![CDATA[【GitTips】非SSH免密提交]]></title>
+    <url>%2F2015%2F01%2F12%2FTechnologies%2F%E3%80%90GitTips%E3%80%91%E9%9D%9ESSH%E5%85%8D%E5%AF%86%E6%8F%90%E4%BA%A4%2F</url>
+    <content type="text"><![CDATA[1$ git config credential.helper store]]></content>
       <tags>
         <tag>Git</tag>
         <tag>Tips</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[【GitTips】非SSH免密提交]]></title>
-    <url>%2F2015%2F01%2F12%2FTechnologies%2F%E3%80%90GitTips%E3%80%91%E9%9D%9ESSH%E5%85%8D%E5%AF%86%E6%8F%90%E4%BA%A4%2F</url>
-    <content type="text"><![CDATA[1$ git config credential.helper store]]></content>
+    <title><![CDATA[【GitTips】撤消操作]]></title>
+    <url>%2F2015%2F01%2F12%2FTechnologies%2F%E3%80%90GitTips%E3%80%91%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C%2F</url>
+    <content type="text"><![CDATA[撤消 add1$ git rm --cached &lt;file&gt; 撤消 commit1$ git reset --hard &lt;commit id&gt; # 将 HEAD 移至 &lt;commit id&gt; 注意，–hard 将目录中所有文件中的修改 撤消 push12$ git reset --hard &lt;commit id&gt; # 撤消commit$ git push origin HEAD --force # 强制提交到远程版本库，从而删除之前提交的数据]]></content>
       <tags>
         <tag>Git</tag>
         <tag>Tips</tag>
