@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://dengxh.com/"/>
-  <updated>2018-12-14T09:35:08.275Z</updated>
+  <updated>2018-12-25T08:21:46.207Z</updated>
   <id>https://dengxh.com/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Spring 使用 Properties</title>
+    <link href="https://dengxh.com/2018/12/25/Technologies/Spring-%E4%BD%BF%E7%94%A8-Properties/"/>
+    <id>https://dengxh.com/2018/12/25/Technologies/Spring-使用-Properties/</id>
+    <published>2018-12-25T08:04:56.000Z</published>
+    <updated>2018-12-25T08:21:46.207Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Spring-使用-Properties"><a href="#Spring-使用-Properties" class="headerlink" title="Spring 使用 Properties"></a>Spring 使用 Properties</h1><h1 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h1><p>应用在开发、测试、生产等阶段的资源往往是不同的，如：某个 API 接口的 URL，可能存在以下三个 URL：</p><ol><li>开发环境：dev.api.xxx</li><li>测试环境：test.api.xxx</li><li>生产环境：proc.api.xxx</li></ol><p>如果每次在部署应用时，手动修改配置，在企业工作中显然不可行。幸运的是，我们有很多工具可以实现自动地的为不同环境加载不同的配置，一种常见的方法是：将配置按环境分别放在不同的 properties 文件（dev.properties, test.properties, proc.properties 等）每次在不同环境部署时，使用 Maven 打包时，加上环境变量参数将对应的配置文件拷贝至classpath，最终通过 Spring 加载并使用classpath 中的配置。</p><p>本文主要讲解 Spring 如何使用 Properties，用于备忘。</p><a id="more"></a><h1 id="注册-Properties"><a href="#注册-Properties" class="headerlink" title="注册 Properties"></a>注册 Properties</h1><p>Spring 要能使用到 Properties，首先得将 Properties 进行注册，注册方式有两种：</p><ol><li>XML 方式</li><li>Java Configuration 方式</li></ol><h2 id="通过-XML-注册"><a href="#通过-XML-注册" class="headerlink" title="通过 XML 注册"></a>通过 XML 注册</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">   <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">   <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></span></span><br><span class="line"><span class="tag">   <span class="attr">xsi:schemaLocation</span>=<span class="string">"</span></span></span><br><span class="line"><span class="tag"><span class="string">      http://www.springframework.org/schema/beans </span></span></span><br><span class="line"><span class="tag"><span class="string">      http://www.springframework.org/schema/beans/spring-beans-4.2.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">      http://www.springframework.org/schema/context </span></span></span><br><span class="line"><span class="tag"><span class="string">      http://www.springframework.org/schema/context/spring-context-4.2.xsd"</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">      <span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">location</span>=<span class="string">"classpath:foo.properties"</span> /&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure><p>上述 XML 配置指定使用 foo.properties，如果有多个 properties，可以多配置几个，也可以简单的将 foo.properties 改成 *.properties，按需选取即可。</p><p>老码农应该比较习惯使用 XML 的方式。</p><h2 id="通过-Java-Configuration注册"><a href="#通过-Java-Configuration注册" class="headerlink" title="通过 Java Configuration注册"></a>通过 Java Configuration注册</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@PropertySource</span>(<span class="string">"classpath:foo.properties"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PropertiesWithJavaConfig</span> </span>&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>上述效果与 XML 方式一致。</p><h1 id="使用-Properties"><a href="#使用-Properties" class="headerlink" title="使用 Properties"></a>使用 Properties</h1><p>通过 XML 或者 Java Configuration 完成Properties 注册后，即可在 Spring 中开始使用它们。使用方式有两种：</p><ol><li>通过 @Value 注解使用</li><li>通过  XML 使用</li></ol><h2 id="通过-Value-注解使用"><a href="#通过-Value-注解使用" class="headerlink" title="通过 @Value 注解使用"></a>通过 @Value 注解使用</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value</span>( <span class="string">"$&#123;jdbc.url&#125;"</span> )</span><br><span class="line"><span class="keyword">private</span> String jdbcUrl;</span><br></pre></td></tr></table></figure><h2 id="通过-XML-使用"><a href="#通过-XML-使用" class="headerlink" title="通过 XML 使用"></a>通过 XML 使用</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"dataSource"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"url"</span> <span class="attr">value</span>=<span class="string">"$&#123;jdbc.url&#125;"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure><p>注：Properties 无论使用哪种方式注册，均可使用以上两个方式使用 Properties。</p><h1 id="Properties-加载顺序"><a href="#Properties-加载顺序" class="headerlink" title="Properties 加载顺序"></a>Properties 加载顺序</h1><p>当有多个 Properties 文件，特别是不同的 Properties 文件内部存在相同的 properties 的 key 时，后加载的 properties 会覆盖掉先加载的 properties，所以理解并控制 Properties 加载顺序，才能避免踩坑。</p><p>Properties 加载顺序一般也有 2 种方式</p><ol><li>按 properties 出现的先后顺序</li><li>显示使用 order 指定顺序</li></ol><h2 id="按-properties-出现的先后顺序"><a href="#按-properties-出现的先后顺序" class="headerlink" title="按 properties 出现的先后顺序"></a>按 properties 出现的先后顺序</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"</span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/beans </span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/beans/spring-beans-4.2.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/context </span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/context/spring-context-4.2.xsd"</span>&gt;</span></span><br><span class="line">     </span><br><span class="line">        <span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">location</span>=<span class="string">"classpath:foo.properties"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">location</span>=<span class="string">"classpath:bar.properties"</span> /&gt;</span></span><br><span class="line">     </span><br><span class="line">    <span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure><p>这样的话，会先加载 <a href="http://foo.properties" target="_blank" rel="external">foo.properties</a>，再加载 bar.properties。</p><h2 id="显示使用-order-指定顺序"><a href="#显示使用-order-指定顺序" class="headerlink" title="显示使用 order 指定顺序"></a>显示使用 order 指定顺序</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"</span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/beans </span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/beans/spring-beans-4.2.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/context </span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/context/spring-context-4.2.xsd"</span>&gt;</span></span><br><span class="line">          </span><br><span class="line">        <span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">location</span>=<span class="string">"classpath:foo.properties"</span> </span></span><br><span class="line"><span class="tag">            <span class="attr">order</span>=<span class="string">"1"</span> <span class="attr">ignore-unresolvable</span>=<span class="string">"true"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">location</span>=<span class="string">"classpath:bar.properties"</span> </span></span><br><span class="line"><span class="tag">            <span class="attr">order</span>=<span class="string">"2"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure><p>通过  order 属性可以显示指定加载顺序，需要注意的是除去最后一个加载的配置，其他均需添加 ignore-unresolvable=”true”，以防中间加载出现异常，导致后面的配置无法加载。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Spring-使用-Properties&quot;&gt;&lt;a href=&quot;#Spring-使用-Properties&quot; class=&quot;headerlink&quot; title=&quot;Spring 使用 Properties&quot;&gt;&lt;/a&gt;Spring 使用 Properties&lt;/h1&gt;&lt;h1 id=&quot;业务场景&quot;&gt;&lt;a href=&quot;#业务场景&quot; class=&quot;headerlink&quot; title=&quot;业务场景&quot;&gt;&lt;/a&gt;业务场景&lt;/h1&gt;&lt;p&gt;应用在开发、测试、生产等阶段的资源往往是不同的，如：某个 API 接口的 URL，可能存在以下三个 URL：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;开发环境：dev.api.xxx&lt;/li&gt;
+&lt;li&gt;测试环境：test.api.xxx&lt;/li&gt;
+&lt;li&gt;生产环境：proc.api.xxx&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;如果每次在部署应用时，手动修改配置，在企业工作中显然不可行。幸运的是，我们有很多工具可以实现自动地的为不同环境加载不同的配置，一种常见的方法是：将配置按环境分别放在不同的 properties 文件（dev.properties, test.properties, proc.properties 等）每次在不同环境部署时，使用 Maven 打包时，加上环境变量参数将对应的配置文件拷贝至classpath，最终通过 Spring 加载并使用classpath 中的配置。&lt;/p&gt;
+&lt;p&gt;本文主要讲解 Spring 如何使用 Properties，用于备忘。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Spring" scheme="https://dengxh.com/tags/Spring/"/>
+    
+      <category term="Java" scheme="https://dengxh.com/tags/Java/"/>
+    
+      <category term="Technologies" scheme="https://dengxh.com/tags/Technologies/"/>
+    
+  </entry>
   
   <entry>
     <title>我的 Blog 生成流程</title>
@@ -294,31 +325,6 @@
   </entry>
   
   <entry>
-    <title>【GitTips】非SSH免密提交</title>
-    <link href="https://dengxh.com/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E9%9D%9ESSH%E5%85%8D%E5%AF%86%E6%8F%90%E4%BA%A4/"/>
-    <id>https://dengxh.com/2015/01/12/Technologies/【GitTips】非SSH免密提交/</id>
-    <published>2015-01-12T14:51:31.000Z</published>
-    <updated>2017-11-12T15:14:56.809Z</updated>
-    
-    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config credential.helper store</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span clas
-      
-    
-    </summary>
-    
-    
-      <category term="Git" scheme="https://dengxh.com/tags/Git/"/>
-    
-      <category term="Tips" scheme="https://dengxh.com/tags/Tips/"/>
-    
-  </entry>
-  
-  <entry>
     <title>【GitTips】撤消操作</title>
     <link href="https://dengxh.com/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C/"/>
     <id>https://dengxh.com/2015/01/12/Technologies/【GitTips】撤消操作/</id>
@@ -332,6 +338,31 @@
       
       
         &lt;h1 id=&quot;撤消-add&quot;&gt;&lt;a href=&quot;#撤消-add&quot; class=&quot;headerlink&quot; title=&quot;撤消 add&quot;&gt;&lt;/a&gt;撤消 add&lt;/h1&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutt
+      
+    
+    </summary>
+    
+    
+      <category term="Git" scheme="https://dengxh.com/tags/Git/"/>
+    
+      <category term="Tips" scheme="https://dengxh.com/tags/Tips/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【GitTips】非SSH免密提交</title>
+    <link href="https://dengxh.com/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E9%9D%9ESSH%E5%85%8D%E5%AF%86%E6%8F%90%E4%BA%A4/"/>
+    <id>https://dengxh.com/2015/01/12/Technologies/【GitTips】非SSH免密提交/</id>
+    <published>2015-01-12T14:51:31.000Z</published>
+    <updated>2017-11-12T15:14:56.809Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config credential.helper store</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span clas
       
     
     </summary>
@@ -432,26 +463,6 @@
     
     
       <category term="ftp" scheme="https://dengxh.com/tags/ftp/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>通过网盘同步Sublime Text设置</title>
-    <link href="https://dengxh.com/2014/09/29/Tools/%E9%80%9A%E8%BF%87%E7%BD%91%E7%9B%98%E5%90%8C%E6%AD%A5Sublime-Text%E8%AE%BE%E7%BD%AE/"/>
-    <id>https://dengxh.com/2014/09/29/Tools/通过网盘同步Sublime-Text设置/</id>
-    <published>2014-09-29T12:32:36.000Z</published>
-    <updated>2018-05-25T10:05:17.433Z</updated>
-    
-    <content type="html"><![CDATA[<p>Sublime Text的配置信息和插件都存放在<code>Packages</code>目录下，只要通过网盘在不同电脑间同步该目录，便可以实现在不同电脑间使用同一套Sublime Text的配置。</p><a id="more"></a><p>具体步骤如下：</p><ol><li>关闭Sublime Text</li><li>将Sublime Text的<code>Packages</code>目录（<code>~/Library/Application Support/Sublime Text 3/Packages）</code>移至网盘的同步目录（<code>~/OneDrive/MyWorkbench/MyApps/SublimeText/Packages</code>）。</li><li>执行命令：<code>ln -s ~/OneDrive/MyWorkbench/MyApps/SublimeText/Packages ~/Library/Application Support/Sublime Text 3/Packages</code></li><li>Done :)</li></ol>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Sublime Text的配置信息和插件都存放在&lt;code&gt;Packages&lt;/code&gt;目录下，只要通过网盘在不同电脑间同步该目录，便可以实现在不同电脑间使用同一套Sublime Text的配置。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="SublimeText" scheme="https://dengxh.com/tags/SublimeText/"/>
     
   </entry>
   
