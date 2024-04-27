@@ -1,37 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[【好物推荐】极简屏保-Fliqlo]]></title>
-    <url>%2F2019%2F05%2F23%2FLife%2F%E3%80%90%E5%A5%BD%E7%89%A9%E6%8E%A8%E8%8D%90%E3%80%91%E6%9E%81%E7%AE%80%E5%B1%8F%E4%BF%9D-Fliqlo%2F</url>
-    <content type="text"><![CDATA[Fliqlo 是一款极简主义的屏保，实用兼美观，Ins 上的那些网红们，拍照时特意将电脑锁屏，就是为了展示 Fliqlo，可见 Fliqlo的人气！ Mac、Windows 免费，官网可以直接下载，iPad 和 iPhone 也只要$0.99 美元，相当便宜。 随便贴几张图给大家瞅瞅，喜欢的上！]]></content>
+    <title>【好物推荐】极简屏保-Fliqlo</title>
+    <url>/2019/05/23/Life/%E3%80%90%E5%A5%BD%E7%89%A9%E6%8E%A8%E8%8D%90%E3%80%91%E6%9E%81%E7%AE%80%E5%B1%8F%E4%BF%9D-Fliqlo/</url>
+    <content><![CDATA[<p><img src="/.io//main.png" alt=""></p>
+<p>Fliqlo 是一款极简主义的屏保，实用兼美观，Ins 上的那些网红们，拍照时特意将电脑锁屏，就是为了展示 Fliqlo，可见 Fliqlo的人气！</p>
+<p>Mac、Windows 免费，官网可以直接下载，iPad 和 iPhone 也只要$0.99 美元，相当便宜。</p>
+<p>随便贴几张图给大家瞅瞅，喜欢的上！</p>
+<a id="more"></a>
+<p><img src="/.io//show1.jpg" alt=""></p>
+<p><img src="/.io//show2.jpg" alt=""></p>
+<p><img src="/.io//mobileapp.jpg" alt=""></p>
+]]></content>
       <tags>
         <tag>好物推荐</tag>
         <tag>APP</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Spring 使用 Properties]]></title>
-    <url>%2F2018%2F12%2F25%2FTechnologies%2FSpring-%E4%BD%BF%E7%94%A8-Properties%2F</url>
-    <content type="text"><![CDATA[Spring 使用 Properties业务场景应用在开发、测试、生产等阶段的资源往往是不同的，如：某个 API 接口的 URL，可能存在以下三个 URL： 开发环境：dev.api.xxx 测试环境：test.api.xxx 生产环境：proc.api.xxx 如果每次在部署应用时，手动修改配置，在企业工作中显然不可行。幸运的是，我们有很多工具可以实现自动地的为不同环境加载不同的配置，一种常见的方法是：将配置按环境分别放在不同的 properties 文件（dev.properties, test.properties, proc.properties 等）每次在不同环境部署时，使用 Maven 打包时，加上环境变量参数将对应的配置文件拷贝至classpath，最终通过 Spring 加载并使用classpath 中的配置。 本文主要讲解 Spring 如何使用 Properties，用于备忘。 注册 PropertiesSpring 要能使用到 Properties，首先得将 Properties 进行注册，注册方式有两种： XML 方式 Java Configuration 方式 通过 XML 注册12345678910111213&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd"&gt; &lt;context:property-placeholder location="classpath:foo.properties" /&gt; &lt;/beans&gt; 上述 XML 配置指定使用 foo.properties，如果有多个 properties，可以多配置几个，也可以简单的将 foo.properties 改成 *.properties，按需选取即可。 老码农应该比较习惯使用 XML 的方式。 通过 Java Configuration注册12345@Configuration@PropertySource("classpath:foo.properties")public class PropertiesWithJavaConfig &#123; //...&#125; 上述效果与 XML 方式一致。 使用 Properties通过 XML 或者 Java Configuration 完成Properties 注册后，即可在 Spring 中开始使用它们。使用方式有两种： 通过 @Value 注解使用 通过 XML 使用 通过 @Value 注解使用12@Value( "$&#123;jdbc.url&#125;" )private String jdbcUrl; 通过 XML 使用123&lt;bean id="dataSource"&gt; &lt;property name="url" value="$&#123;jdbc.url&#125;" /&gt;&lt;/bean&gt; 注：Properties 无论使用哪种方式注册，均可使用以上两个方式使用 Properties。 Properties 加载顺序当有多个 Properties 文件，特别是不同的 Properties 文件内部存在相同的 properties 的 key 时，后加载的 properties 会覆盖掉先加载的 properties，所以理解并控制 Properties 加载顺序，才能避免踩坑。 Properties 加载顺序一般也有 2 种方式 按 properties 出现的先后顺序 显示使用 order 指定顺序 按 properties 出现的先后顺序1234567891011121314&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd"&gt; &lt;context:property-placeholder location="classpath:foo.properties" /&gt; &lt;context:property-placeholder location="classpath:bar.properties" /&gt; &lt;/beans&gt; 这样的话，会先加载 foo.properties，再加载 bar.properties。 显示使用 order 指定顺序123456789101112131415&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd"&gt; &lt;context:property-placeholder location="classpath:foo.properties" order="1" ignore-unresolvable="true"/&gt; &lt;context:property-placeholder location="classpath:bar.properties" order="2"/&gt; &lt;/beans&gt; 通过 order 属性可以显示指定加载顺序，需要注意的是除去最后一个加载的配置，其他均需添加 ignore-unresolvable=”true”，以防中间加载出现异常，导致后面的配置无法加载。]]></content>
-      <tags>
-        <tag>Spring</tag>
-        <tag>Java</tag>
-        <tag>Technologies</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[我的 Blog 生成流程]]></title>
-    <url>%2F2018%2F12%2F07%2FLife%2F%E6%88%91%E7%9A%84-Blog-%E7%94%9F%E6%88%90%E6%B5%81%E7%A8%8B%2F</url>
-    <content type="text"><![CDATA[兜兜转转用了不少的博客工具，WordPress, Farbox, Octopress，Hexo，Ghost，近期打算不折腾了，先等有足够的内容再说。 使用Typora撰写博客文章 Typora 借助 iPIC 可以自动上传图片至图床。 为避免图床不可用，所有博客的图片均在本地目录./Blog/blogImg/images备份一份，并用Dropbox同步。 Typora 可以自定义 CSS 样式，不同平台，使用不同的样式。其中参考：https://support.typora.io/Auto-Numbering/，为现有样式给 Header 加上序号，方便阅读。 部署至Github PagesTypora 撰写好的文章使用 Hexo 部署至 Github Pages。 发布至微信公众号 Typora 挑选合适的样式，复制到公众号编辑器。 检查样式，并进行简单的修改，即可发布。 微信公众号不支持外链，所以先发博客，然后在公众号的原文链接中，链到博客。]]></content>
-      <tags>
-        <tag>Best Practice</tag>
-        <tag>Tools</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[跨境支付 Quick Start]]></title>
-    <url>%2F2018%2F11%2F20%2FBusiness%2F%E8%B7%A8%E5%A2%83%E6%94%AF%E4%BB%98-Quick-Start%2F</url>
-    <content type="text"><![CDATA[随着经济全球化的推进，以及社会大众经济水平的提升，近年来跨境电商生机勃勃、发展迅猛。国内大大小小战队，如：天猫国际、网易考拉海购、京东全球购等，纷纷涌入这场浪潮之中。作为一名电商和互联网支付行业从业人员，对此深有感触，因而进行梳理总结。 本文主要介绍跨境电商相关的基础概念，并对未来发展趋势进行简单的分析。章节安排如下： 什么是跨境电商 跨境电商的模式 跨境电商交易流程 税 未来发展趋势 参考资料 什么是跨境电商 跨境电子商务（Cross-Border Electronic Commerce）是指分属不同关境的交易主体，通过电子商务平台达成交易、进行支付结算，并通过跨境物流送达商品、完成交易的一种国际商业活动。——百度百科 参考百度百科的定义，跨境电子商务有几个约束条件： 交易主体分属不同关境。 涉及交易、支付、结算、跨境物流等环节。 是一种国际商业活动。 上述约束条件，对跨境电商与传统电商进行了较为明确的区分，判断一种交易行为是否归属跨境电商，可参考该定义。 跨境电商的模式商业模式 模式 说明 M2C 平台招商，如：天猫国际 B2C 自营+平台招商，如：京东全球购 C2C 个人代购模式，如：海外买手代购 B2B 如：阿里巴巴国际站 线下+O2O 线下实体店并布局线上平台，如：苏宁易购 闪购 低价抢购模式，如：唯品会 自营 完全自营，如：网易考拉海购 导购+返利 自身不经营交易，为其他平台导购，如：什么值得买 物流模式 模式 说明 保税仓备货 在国家政策支持下设立跨境电子商务贸易试验区，支持保税进口模式。保税仓指的是存放未交关税的仓库，如同境外仓库。当用户购买付款后，向海关申报，海关放行之后，直接从保税仓发货，再收取关税。 海外直邮 直邮指的是直接从海外邮寄到用户手中。海外直邮的模式类似个人物品直邮入境，不受通关单的限制，由快递公司正常报关、商检（抽查形式）。许多时候可以合理避税。受四八新政影响以及扩充品类的需求，许多跨境电商企业都建有海外仓，或是直接从海外供应商发货。海外直邮的货品需要通过两个国家的海关，直邮效率低下。一般需要7~15天才能收到物品。 一般贸易 一般贸易指的是先将跨境商品进口至国内，以完税价格出售。这种模式增加供应链成本的压力，进口程序复杂、周期长，而且完税价格优势较低。优势在于能够快速发货，不需要用户的身份证信息。 跨境电商交易流程 第一步：用户在跨境电商企业进行下单流程，生成订单 第二步：根据用户的付款方式，如果用户使用支付宝付款，相应的电商企业对接支付宝的报关接口；如果用户使用微信支付，那么电商企业就对接微信的报关接口。这一步的结果就是【支付单】成功推送到海关 第三步：接收到支付企业的回传后，电商企业推送订单信息。这一步的结果是【订单信息】成功推送到海关 第四步：电商企业接收到订单信息推送的同步回传后，如果是成功的话，电商企业推送清单信息到仓库，然后仓库推送清单信息到海关，因为这里我们假定电商企业没有清关资质，所以需要有清关资质的仓库来推送清单信息。这一步的结果是【清单信息】成功推送到海关 第五步：仓库企业对接物流企业，将物流企业需要的信息推送成功，然后物流企业将信息推送给海关。这一步的结果是【物流单】成功推送到海关 第六步：海关结合收到的订单信息、清单信息、支付单信息、物流单信息进行清关 第七步：海关将清关结果回传给仓库，同时仓库把清关结果回传给电商企业，流程结束 其中，第六步，按不同海关，有些是进行”三单一证“的核查（订单、物流单、支付单和身份证），有些需要加上清单信息，即”四单一证“。 还有一点需注意：目前大部分只要报地方关或者总署即可，但是，有些要求先报地方关，再报总署。 税海淘和国内专柜商品比，最大的优势就在税的差价。 海外直邮：对于转运物流公司而言，通关能力（避税能力）是第一要素，几乎所有的转运公司都是以个人邮寄物品形式报关。其中有抽查的概率问题，没抽到就不用交税。 保税仓：税费组成包括三部分： 进口环节增值税 、消费税、关税。 在税的征收方案和计算方法，财政部国家税务总局有明文规定，参考国家税务总局各项文献，影响比较大的是：《关于跨境电子商务零售进口税收政策的通知》和《关于调整化妆品消费税政策的通知》。 未来发展趋势 跨境电商平台将继续扩大，将会有更多的新生力量跳入追浪。 物流将被重新定义。当前物流环节是跨境电商的瓶颈，随着这个瓶颈的突破，跨境电商必将迎来一波高潮。 当前仍以出口为主，接下来进口占比将显著提升。 B2C向B2B转型，B2C的ROI太低，也不便于政府监管，B2B将会带来暴发式增长，因此B2B模式将会成为主流。 技术创新是生产力，大数据、人工智能、无人驾驶、虚拟现实等技术创新，将会为跨境电商的创造新的用户体验和发展空间，值得期待。 参考资料 跨境电商——百度百科 跨境电商产品事 浅析海淘基本概念 《关于跨境电子商务零售进口税收政策的通知》，因本通知自2016年4月8起执行，所以一般俗称”408新政“。 《关于调整化妆品消费税政策的通知》]]></content>
+    <title>跨境支付 Quick Start</title>
+    <url>/2018/11/20/Business/%E8%B7%A8%E5%A2%83%E6%94%AF%E4%BB%98-Quick-Start/</url>
+    <content><![CDATA[<p>随着经济全球化的推进，以及社会大众经济水平的提升，近年来跨境电商生机勃勃、发展迅猛。国内大大小小战队，如：天猫国际、网易考拉海购、京东全球购等，纷纷涌入这场浪潮之中。作为一名电商和互联网支付行业从业人员，对此深有感触，因而进行梳理总结。</p>
+<a id="more"></a>
+<p>本文主要介绍跨境电商相关的基础概念，并对未来发展趋势进行简单的分析。章节安排如下：</p>
+<ol>
+<li>什么是跨境电商</li>
+<li>跨境电商的模式</li>
+<li>跨境电商交易流程</li>
+<li>税</li>
+<li>未来发展趋势</li>
+<li>参考资料</li>
+</ol>
+<h1 id="什么是跨境电商"><a href="#什么是跨境电商" class="headerlink" title="什么是跨境电商"></a>什么是跨境电商</h1><blockquote>
+<p>跨境电子商务（Cross-Border Electronic Commerce）是指分属不同关境的交易主体，通过电子商务平台达成交易、进行支付结算，并通过跨境物流送达商品、完成交易的一种国际商业活动。——百度百科</p>
+</blockquote>
+<p>参考百度百科的定义，跨境电子商务有几个约束条件：</p>
+<ol>
+<li>交易主体分属不同关境。</li>
+<li>涉及交易、支付、结算、跨境物流等环节。</li>
+<li>是一种国际商业活动。</li>
+</ol>
+<p>上述约束条件，对跨境电商与传统电商进行了较为明确的区分，判断一种交易行为是否归属跨境电商，可参考该定义。</p>
+<h1 id="跨境电商的模式"><a href="#跨境电商的模式" class="headerlink" title="跨境电商的模式"></a>跨境电商的模式</h1><h2 id="商业模式"><a href="#商业模式" class="headerlink" title="商业模式"></a>商业模式</h2><table>
+<thead>
+<tr>
+<th>模式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M2C</td>
+<td>平台招商，如：天猫国际</td>
+</tr>
+<tr>
+<td>B2C</td>
+<td>自营+平台招商，如：京东全球购</td>
+</tr>
+<tr>
+<td>C2C</td>
+<td>个人代购模式，如：海外买手代购</td>
+</tr>
+<tr>
+<td>B2B</td>
+<td>如：阿里巴巴国际站</td>
+</tr>
+<tr>
+<td>线下+O2O</td>
+<td>线下实体店并布局线上平台，如：苏宁易购</td>
+</tr>
+<tr>
+<td>闪购</td>
+<td>低价抢购模式，如：唯品会</td>
+</tr>
+<tr>
+<td>自营</td>
+<td>完全自营，如：网易考拉海购</td>
+</tr>
+<tr>
+<td>导购+返利</td>
+<td>自身不经营交易，为其他平台导购，如：什么值得买</td>
+</tr>
+</tbody>
+</table>
+<h2 id="物流模式"><a href="#物流模式" class="headerlink" title="物流模式"></a>物流模式</h2><table>
+<thead>
+<tr>
+<th>模式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>保税仓备货</td>
+<td>在国家政策支持下设立跨境电子商务贸易试验区，支持保税进口模式。保税仓指的是存放未交关税的仓库，如同境外仓库。当用户购买付款后，向海关申报，海关放行之后，直接从保税仓发货，再收取关税。</td>
+</tr>
+<tr>
+<td>海外直邮</td>
+<td>直邮指的是直接从海外邮寄到用户手中。海外直邮的模式类似个人物品直邮入境，不受通关单的限制，由快递公司正常报关、商检（抽查形式）。许多时候可以合理避税。受四八新政影响以及扩充品类的需求，许多跨境电商企业都建有海外仓，或是直接从海外供应商发货。海外直邮的货品需要通过两个国家的海关，直邮效率低下。一般需要7~15天才能收到物品。</td>
+</tr>
+<tr>
+<td>一般贸易</td>
+<td>一般贸易指的是先将跨境商品进口至国内，以完税价格出售。这种模式增加供应链成本的压力，进口程序复杂、周期长，而且完税价格优势较低。优势在于能够快速发货，不需要用户的身份证信息。</td>
+</tr>
+</tbody>
+</table>
+<h1 id="跨境电商交易流程"><a href="#跨境电商交易流程" class="headerlink" title="跨境电商交易流程"></a>跨境电商交易流程</h1><p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fxe6culubvj31de0u0aex.jpg" alt=""></p>
+<p>第一步：用户在跨境电商企业进行下单流程，生成订单</p>
+<p>第二步：根据用户的付款方式，如果用户使用支付宝付款，相应的电商企业对接支付宝的报关接口；如果用户使用微信支付，那么电商企业就对接微信的报关接口。这一步的结果就是【支付单】成功推送到海关</p>
+<p>第三步：接收到支付企业的回传后，电商企业推送订单信息。这一步的结果是【订单信息】成功推送到海关</p>
+<p>第四步：电商企业接收到订单信息推送的同步回传后，如果是成功的话，电商企业推送清单信息到仓库，然后仓库推送清单信息到海关，因为这里我们假定电商企业没有清关资质，所以需要有清关资质的仓库来推送清单信息。这一步的结果是【清单信息】成功推送到海关</p>
+<p>第五步：仓库企业对接物流企业，将物流企业需要的信息推送成功，然后物流企业将信息推送给海关。这一步的结果是【物流单】成功推送到海关</p>
+<p>第六步：海关结合收到的订单信息、清单信息、支付单信息、物流单信息进行清关</p>
+<p>第七步：海关将清关结果回传给仓库，同时仓库把清关结果回传给电商企业，流程结束</p>
+<p>其中，第六步，按不同海关，有些是进行”三单一证“的核查（订单、物流单、支付单和身份证），有些需要加上清单信息，即”四单一证“。</p>
+<p>还有一点需注意：目前大部分只要报地方关或者总署即可，但是，有些要求先报地方关，再报总署。</p>
+<h1 id="税"><a href="#税" class="headerlink" title="税"></a>税</h1><p>海淘和国内专柜商品比，最大的优势就在税的差价。</p>
+<ul>
+<li>海外直邮：对于转运物流公司而言，通关能力（避税能力）是第一要素，几乎所有的转运公司都是以个人邮寄物品形式报关。其中有抽查的概率问题，没抽到就不用交税。</li>
+<li>保税仓：税费组成包括三部分： 进口环节增值税 、消费税、关税。</li>
+</ul>
+<p>在税的征收方案和计算方法，财政部国家税务总局有明文规定，参考国家税务总局各项文献，影响比较大的是：《<a href="http://www.chinatax.gov.cn/n810341/n810755/c2044092/content.html" target="_blank" rel="external">关于跨境电子商务零售进口税收政策的通知</a>》和《<a href="http://www.chinatax.gov.cn/n810341/n810755/c2279432/content.html" target="_blank" rel="external">关于调整化妆品消费税政策的通知</a>》。</p>
+<h1 id="未来发展趋势"><a href="#未来发展趋势" class="headerlink" title="未来发展趋势"></a>未来发展趋势</h1><ol>
+<li>跨境电商平台将继续扩大，将会有更多的新生力量跳入追浪。</li>
+<li>物流将被重新定义。当前物流环节是跨境电商的瓶颈，随着这个瓶颈的突破，跨境电商必将迎来一波高潮。</li>
+<li>当前仍以出口为主，接下来进口占比将显著提升。</li>
+<li>B2C向B2B转型，B2C的ROI太低，也不便于政府监管，B2B将会带来暴发式增长，因此B2B模式将会成为主流。</li>
+<li>技术创新是生产力，大数据、人工智能、无人驾驶、虚拟现实等技术创新，将会为跨境电商的创造新的用户体验和发展空间，值得期待。</li>
+</ol>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="https://baike.baidu.com/item/%E8%B7%A8%E5%A2%83%E7%94%B5%E5%AD%90%E5%95%86%E5%8A%A1/12747090?fromtitle=%E8%B7%A8%E5%A2%83%E7%94%B5%E5%95%86&amp;fromid=16540018" target="_blank" rel="external">跨境电商——百度百科</a></li>
+<li><a href="http://www.ebrun.com/20170629/236682.shtml" target="_blank" rel="external">跨境电商产品事 浅析海淘基本概念</a></li>
+<li>《<a href="http://www.chinatax.gov.cn/n810341/n810755/c2044092/content.html" target="_blank" rel="external">关于跨境电子商务零售进口税收政策的通知</a>》，因本通知自2016年4月8起执行，所以一般俗称”408新政“。</li>
+<li>《<a href="http://www.chinatax.gov.cn/n810341/n810755/c2279432/content.html" target="_blank" rel="external">关于调整化妆品消费税政策的通知</a>》</li>
+</ol>
+]]></content>
       <tags>
         <tag>跨境</tag>
         <tag>支付</tag>
@@ -39,200 +142,721 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[胖胖瘦身记-day16]]></title>
-    <url>%2F2018%2F05%2F22%2FLife%2F%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day16%2F</url>
-    <content type="text"><![CDATA[坚持16天了（水份7天），最近因为家里出了点事，情绪较为不好，没有进行健身，周末和周一浪费了，还好也没啥心情吃饭，所以体重还是控制住了。 今日数据：体重：74.20kg，相对上一次减轻了0.25kg，历史累计减了2.35kg，继续保持！ 今日晚餐，还是吃草，带坚果的那种，似乎热量有点高，并且量有点大，没怎么吃晚。 今日跑步]]></content>
+    <title>胖胖瘦身记-20191106-day1</title>
+    <url>/2019/11/06/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-20191106-day1/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>胖胖瘦身记-day1</title>
+    <url>/2018/05/07/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day1/</url>
+    <content><![CDATA[<p>今年五一回老家，遇到的亲朋好友、父老乡亲们，个个都发出惊叹：</p>
+<p>哟，华华啊，现在怎么这么胖了哦~~</p>
+<p>咦，华华啊，胖得我都认不出来啦~~</p>
+<p>哎，华华啊，你不能再胖下去了咧~~</p>
+<a id="more"></a>
+<p>我那叫一个郁闷，回到杭州后，赶紧用体脂秤好好测量了一下。呜呼哀哉~~，我滴娘，我的体重达到了历史巅峰——76.55kg，你敢信？</p>
+<p>so，下定决心再次减肥。今日数据如下：</p>
+<p>体重：76.55kg</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe6w4oz5fj31430u0gnz.jpg" alt="20180507-跑步"></p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe6wix9mvj31440u0u10.jpg" alt="20180507-晚餐"></p>
+]]></content>
       <tags>
         <tag>健身减肥</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[胖胖瘦身记-day12]]></title>
-    <url>%2F2018%2F05%2F18%2FLife%2F%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day12%2F</url>
-    <content type="text"><![CDATA[我滴妈呀，我滴妈呀，干啥呢！！！害我断了2天锻炼。 16号原本要约小龙虾，结果没约成。 17号原本不约小龙虾，结果一窝人。。。 今天的数据如下： 体重：74.45kg，相对上一次减了0.5kg，历史累计减了2.1kg。继续加油，小伙子！ 17号晚上吃了6斤小龙虾，还有鱼头煲，然后乱七八糟的小菜，每个人都吃得撑撑的，然后临时起意去暴走，然后我的内裤磨破了。。。 今天的晚饭，周六要睡懒觉，所以多吃点肉，hhh 这个周五，虽然跑得少一点，不过，好得没有浪费，也算是跑了。继续坚持。]]></content>
+    <title>胖胖瘦身记-day16</title>
+    <url>/2018/05/22/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day16/</url>
+    <content><![CDATA[<p>坚持16天了（水份7天），最近因为家里出了点事，情绪较为不好，没有进行健身，周末和周一浪费了，还好也没啥心情吃饭，所以体重还是控制住了。</p>
+<p>今日数据：<br>体重：74.20kg，相对上一次减轻了0.25kg，历史累计减了2.35kg，继续保持！</p>
+<a id="more"></a>
+<p>今日晚餐，还是吃草，带坚果的那种，似乎热量有点高，并且量有点大，没怎么吃晚。<br><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe76hv3vzj31440u0u10.jpg" alt="20180522-晚餐"></p>
+<p>今日跑步<br><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fxe7ccx8uej31440u07wl.jpg" alt="20180522-跑步"></p>
+]]></content>
       <tags>
         <tag>健身减肥</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[胖胖瘦身记-day9]]></title>
-    <url>%2F2018%2F05%2F15%2FLife%2F%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day9%2F</url>
-    <content type="text"><![CDATA[今天破5进4啦~~ 今日体重：74.95kg，相对前一天减少：0.4kg，历史累计减了1.6kg。 今天跑步一个激动，忘了拍跑步机上的数据，刚下来跑步机就被人抢来了，来不及拍，郁闷。。。只好拍一个老妈口中的虎背熊腰。 这天热的，真的很容易湿身呀，但是健身房的妹子咂还穿这么多呢？ 晚餐继续吃草，明天朋友约了吃小龙虾，真担心又反弹。原本计划一周最多吃一次小龙虾呀。这里周日吃了一顿，明天吃一顿，但是我还有两包料哎，忧伤~~~]]></content>
+    <title>胖胖瘦身记-day2</title>
+    <url>/2018/05/08/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day2/</url>
+    <content><![CDATA[<p>单车热身5分钟还是蛮轻松的，但是在正式开始训练后，坡度会逐渐提升，当达到9时，已经非常累，汗直接可见的滴到地上。达到10后，基本踩不动了，需要站起来才勉强可以慢慢的踩动。</p>
+<p>仅仅坚持了16分钟（不包含热身），第1次骑，的确有点意外的有挑战，继续努力吧！</p>
+<a id="more"></a>
+<p>今天数据如下：</p>
+<p>体重：75.80kg （相比前一天，减了0.75kg，大概是饿出来的）</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe6xb81nbj31430u0tc5.jpg" alt="20180508-晚餐"></p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe79322hyj31430u0ado.jpg" alt="20180508-单车"></p>
+]]></content>
       <tags>
         <tag>健身减肥</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[胖胖瘦身记-day8]]></title>
-    <url>%2F2018%2F05%2F14%2FLife%2F%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day8%2F</url>
-    <content type="text"><![CDATA[好吧，day7浪掉了。day7晚饭烧了3斤小龙虾，喝了两碗面疙瘩粥，今天全体现在体重上了。 今日数据如下： 体重：75.35kg，相对上一次反弹0.35kg，历史累计减了1.2kg。哎，周末要是坚持一下，应该能破5进4的，掌嘴！！！ 3斤小龙虾，直接拿锅吃，十三香口味的，自己一个个刷过去，再把头剪得干干净净，配上冰镇百事可乐，吃得那叫一个爽。哎，想想都流口水。（再掌嘴！！！） 今天晚上有中间件团队的技术分享，因此下班后赶紧去运动，结果发现跑步机又没有了。哎，单车先骑骑。 再跑跑~~ 一边听分享一边吃草~~~]]></content>
+    <title>胖胖瘦身记-day3</title>
+    <url>/2018/05/09/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day3/</url>
+    <content><![CDATA[<p>鉴于下班时刻抢跑步机的人太多，调整下锻炼时间。如果无法下班前提前赶过去抢跑步机，那么，就先吃晚饭，打几盘王者再去好了（机智如我）。</p>
+<a id="more"></a>
+<p>今天数据如下：</p>
+<p>体重：75.35，相比前一天，减了：0.45kg，历史累计减了：1.2kg</p>
+<p>今天晚餐吃的是：经典凯撒沙拉，好多香肠，但是除了香肠，其他都挺好吃。在吃草的日子里，咬一口紫薯，幸福得哭出来~~</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fxe6xqp3prj31430u076q.jpg" alt="20180509-晚餐"></p>
+<p>就打了一把王者，赢得很快，拿了银牌辅助和MVP，有点意外。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe6xwu7ftj30r40f6wgp.jpg" alt="20180509-王者"></p>
+<p>今天跑步前，腿是有点酸（拒绝）的，不过，通过快走5分钟后就没感觉了。一口气跑4公里，腰不酸腿不疼，吃嘛嘛香~~~</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fxe79ki1akj31430u040x.jpg" alt="20180509-跑步"></p>
+]]></content>
       <tags>
         <tag>健身减肥</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[胖胖瘦身记-day6]]></title>
-    <url>%2F2018%2F05%2F12%2FLife%2F%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day6%2F</url>
-    <content type="text"><![CDATA[day6? 是的，周五果然魔性，虽然事前已经料到周五有可能会中断，虽然下班后仍然换好装备并且迈开了步子准备跑。但是，刚热身5分钟完毕，突然想起今天我的信用卡世纪联华可以五折，并且截止时间快到了！迫穷，赶紧换回装备杀向超市。 so，day5，事实上就这么中断了，为了激励自我，因此day5空缺。 因为周五这么一弄，今天没敢留到晚上去跑步，白天便杀向健身房开跑。可能是因为周末，可能是因为今天天气比较闷，因此今天跑步状态不是特别好，全身上下湿透。（后面朋友见到我，竟然说，咦，外面下大雨了？） 今天的数据如下： 体重：75.00kg，相对上一次减了0.25kg，历史累计减了1.55kg。 周末的健身房空无一人，包一扔，就开跑。 原本想把周五的份补上，想想还是算了，担心过度，影响周日的跑步。 跑后，根据Keep的指导进行跑后拉伸，其实不太知道拉伸是否有效果，但是大家都建议做下拉伸，那我就拉一下。 周六晚餐有点浪，土豆丝、毛毛菜、大料炖肉，还有一杯可乐。。。老妈和丈母娘都惊呆了，减肥还吃这么肥的肉？其实有一点自己的考虑：想我这么一个吃货，不可能接下来的人生都只吃草，所以周末吃正常餐，但会控制一下量。即使减肥效果不是特别明显，但也要继续坚持。 最近王者打得有点艰难，要赢都是逆袭局，逆袭不成就只能输了。]]></content>
+    <title>胖胖瘦身记-day4</title>
+    <url>/2018/05/10/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day4/</url>
+    <content><![CDATA[<p>今天继续晚餐、王者、跑步、日记。</p>
+<p>中午罪孽了，Melon想吃开封菜，so… 一个虾堡，一杯大可，半个蛋挞，半盒薯条，一个不小心就进我肚子里了。（希望明天体重没注意到，不会弹回去吧）</p>
+<a id="more"></a>
+<p>今天数据如下：</p>
+<p>体重：75.25kg，相比前一天减了0.1kg（无视吧，大概饥饿的效果仅限于此，阿门）。历史累计减了1.3kg，希望运动的效果开始逐步体现吧。</p>
+<p>我的晚餐，今天早上体重减少不明显，大概是昨天晚上的那个带紫薯的量太大，所以今天晚饭改吃只有一丢丢肉的。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe6ybq76ij30u014377g.jpg" alt="20180510-晚餐1"></p>
+<p>Melon的三文鱼沙拉，我没忍住偷吃了一片三文鱼，配合沙拉酱比蘸酱油和芥末好吃，真的。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe6yhxc1gj30u014341l.jpg" alt="20180510-晚餐2"></p>
+<p>下班时和同事组队打了一把王者，同事太给力，轻松+愉快地就像麻将胡牌似的就把对方一把推掉。可是…</p>
+<p>哎，后面自己打排位，没打多久，头像上就开始挂着MVP了，不用想啦，最终拿了MVP和金牌辅助，但还是输了，伤心。。。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe6yot7r6j31hc0u0jtx.jpg" alt="20180510-王者"></p>
+<p>现在跑30分钟4公里，体能还可以的，除了一身汗，没感觉累。今天耳机落家里，没带耳机跑。然后不知道是不是因为今天复联3首映，跑步机竟然只有我一个人在用，所以时间感觉过得有点慢。不过，继续适应跑一段时间吧，不急着提升强度。</p>
+<p>明天周五，是个关键时间点，要把持住！！！</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe6yuxplpj31430u0ach.jpg" alt="20180510-跑步"></p>
+]]></content>
       <tags>
         <tag>健身减肥</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[胖胖瘦身记-day4]]></title>
-    <url>%2F2018%2F05%2F10%2FLife%2F%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day4%2F</url>
-    <content type="text"><![CDATA[今天继续晚餐、王者、跑步、日记。 中午罪孽了，Melon想吃开封菜，so… 一个虾堡，一杯大可，半个蛋挞，半盒薯条，一个不小心就进我肚子里了。（希望明天体重没注意到，不会弹回去吧） 今天数据如下： 体重：75.25kg，相比前一天减了0.1kg（无视吧，大概饥饿的效果仅限于此，阿门）。历史累计减了1.3kg，希望运动的效果开始逐步体现吧。 我的晚餐，今天早上体重减少不明显，大概是昨天晚上的那个带紫薯的量太大，所以今天晚饭改吃只有一丢丢肉的。 Melon的三文鱼沙拉，我没忍住偷吃了一片三文鱼，配合沙拉酱比蘸酱油和芥末好吃，真的。 下班时和同事组队打了一把王者，同事太给力，轻松+愉快地就像麻将胡牌似的就把对方一把推掉。可是… 哎，后面自己打排位，没打多久，头像上就开始挂着MVP了，不用想啦，最终拿了MVP和金牌辅助，但还是输了，伤心。。。 现在跑30分钟4公里，体能还可以的，除了一身汗，没感觉累。今天耳机落家里，没带耳机跑。然后不知道是不是因为今天复联3首映，跑步机竟然只有我一个人在用，所以时间感觉过得有点慢。不过，继续适应跑一段时间吧，不急着提升强度。 明天周五，是个关键时间点，要把持住！！！]]></content>
+    <title>胖胖瘦身记-day6</title>
+    <url>/2018/05/12/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day6/</url>
+    <content><![CDATA[<p>day6? 是的，周五果然魔性，虽然事前已经料到周五有可能会中断，虽然下班后仍然换好装备并且迈开了步子准备跑。但是，刚热身5分钟完毕，突然想起今天我的信用卡世纪联华可以五折，并且截止时间快到了！迫穷，赶紧换回装备杀向超市。</p>
+<a id="more"></a>
+<p>so，day5，事实上就这么中断了，为了激励自我，因此day5空缺。</p>
+<p>因为周五这么一弄，今天没敢留到晚上去跑步，白天便杀向健身房开跑。可能是因为周末，可能是因为今天天气比较闷，因此今天跑步状态不是特别好，全身上下湿透。（后面朋友见到我，竟然说，咦，外面下大雨了？）</p>
+<p>今天的数据如下：</p>
+<p>体重：75.00kg，相对上一次减了0.25kg，历史累计减了1.55kg。</p>
+<p>周末的健身房空无一人，包一扔，就开跑。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe6z5xn1jj31430u041c.jpg" alt="20180512-跑步1"></p>
+<p>原本想把周五的份补上，想想还是算了，担心过度，影响周日的跑步。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe7a8q29jj31430u0wgs.jpg" alt="20180512-跑步2"></p>
+<p>跑后，根据Keep的指导进行跑后拉伸，其实不太知道拉伸是否有效果，但是大家都建议做下拉伸，那我就拉一下。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fxe6zgo3fbj30u01hcdhb.jpg" alt="20180512-keep"></p>
+<p>周六晚餐有点浪，土豆丝、毛毛菜、大料炖肉，还有一杯可乐。。。老妈和丈母娘都惊呆了，减肥还吃这么肥的肉？其实有一点自己的考虑：想我这么一个吃货，不可能接下来的人生都只吃草，所以周末吃正常餐，但会控制一下量。即使减肥效果不是特别明显，但也要继续坚持。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe6zojfpoj30u00u040r.jpg" alt="20180512-晚餐1"></p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe6zt45yvj30u00u041c.jpg" alt="20180512-晚餐3"><br><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe6zz5y3vj30u00u0go3.jpg" alt="20180512-晚餐2"></p>
+<p>最近王者打得有点艰难，要赢都是逆袭局，逆袭不成就只能输了。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe7ai5efnj30r40f6mze.jpg" alt="20180512-王者"></p>
+]]></content>
       <tags>
         <tag>健身减肥</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[胖胖瘦身记-day3]]></title>
-    <url>%2F2018%2F05%2F09%2FLife%2F%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day3%2F</url>
-    <content type="text"><![CDATA[鉴于下班时刻抢跑步机的人太多，调整下锻炼时间。如果无法下班前提前赶过去抢跑步机，那么，就先吃晚饭，打几盘王者再去好了（机智如我）。 今天数据如下： 体重：75.35，相比前一天，减了：0.45kg，历史累计减了：1.2kg 今天晚餐吃的是：经典凯撒沙拉，好多香肠，但是除了香肠，其他都挺好吃。在吃草的日子里，咬一口紫薯，幸福得哭出来~~ 就打了一把王者，赢得很快，拿了银牌辅助和MVP，有点意外。 今天跑步前，腿是有点酸（拒绝）的，不过，通过快走5分钟后就没感觉了。一口气跑4公里，腰不酸腿不疼，吃嘛嘛香~~~]]></content>
+    <title>胖胖瘦身记-day8</title>
+    <url>/2018/05/14/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day8/</url>
+    <content><![CDATA[<p>好吧，day7浪掉了。day7晚饭烧了3斤小龙虾，喝了两碗面疙瘩粥，今天全体现在体重上了。</p>
+<a id="more"></a>
+<p>今日数据如下：</p>
+<p>体重：75.35kg，相对上一次反弹0.35kg，历史累计减了1.2kg。哎，周末要是坚持一下，应该能破5进4的，掌嘴！！！</p>
+<p>3斤小龙虾，直接拿锅吃，十三香口味的，自己一个个刷过去，再把头剪得干干净净，配上冰镇百事可乐，吃得那叫一个爽。哎，想想都流口水。（再掌嘴！！！）</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fxe7arkc3nj30u00u00vv.jpg" alt="20180513-晚餐"></p>
+<p>今天晚上有中间件团队的技术分享，因此下班后赶紧去运动，结果发现跑步机又没有了。哎，单车先骑骑。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe70ayvpmj31430u0tci.jpg" alt="20180514-单车"></p>
+<p>再跑跑~~</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe70pie4jj31430u076r.jpg" alt="20180514-跑步"></p>
+<p>一边听分享一边吃草~~~</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe70xdbq0j30u0143gnr.jpg" alt="20180514-晚餐"></p>
+]]></content>
       <tags>
         <tag>健身减肥</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[胖胖瘦身记-day2]]></title>
-    <url>%2F2018%2F05%2F08%2FLife%2F%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day2%2F</url>
-    <content type="text"><![CDATA[单车热身5分钟还是蛮轻松的，但是在正式开始训练后，坡度会逐渐提升，当达到9时，已经非常累，汗直接可见的滴到地上。达到10后，基本踩不动了，需要站起来才勉强可以慢慢的踩动。 仅仅坚持了16分钟（不包含热身），第1次骑，的确有点意外的有挑战，继续努力吧！ 今天数据如下： 体重：75.80kg （相比前一天，减了0.75kg，大概是饿出来的）]]></content>
+    <title>胖胖瘦身记-day12</title>
+    <url>/2018/05/18/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day12/</url>
+    <content><![CDATA[<p>我滴妈呀，我滴妈呀，干啥呢！！！害我断了2天锻炼。</p>
+<a id="more"></a>
+<p>16号原本要约小龙虾，结果没约成。</p>
+<p>17号原本不约小龙虾，结果一窝人。。。</p>
+<p>今天的数据如下：</p>
+<p>体重：74.45kg，相对上一次减了0.5kg，历史累计减了2.1kg。继续加油，小伙子！</p>
+<p>17号晚上吃了6斤小龙虾，还有鱼头煲，然后乱七八糟的小菜，每个人都吃得撑撑的，然后临时起意去暴走，然后我的内裤磨破了。。。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fxe71l82fkj31430u0dj5.jpg" alt="20180517-晚餐"></p>
+<p>今天的晚饭，周六要睡懒觉，所以多吃点肉，hhh</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe71se99aj31hc0u0td4.jpg" alt="20180518-晚餐"></p>
+<p>这个周五，虽然跑得少一点，不过，好得没有浪费，也算是跑了。继续坚持。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe71zq4gqj31430u0wgf.jpg" alt="20180518-跑步"></p>
+]]></content>
       <tags>
         <tag>健身减肥</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[胖胖瘦身记-day1]]></title>
-    <url>%2F2018%2F05%2F07%2FLife%2F%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day1%2F</url>
-    <content type="text"><![CDATA[今年五一回老家，遇到的亲朋好友、父老乡亲们，个个都发出惊叹： 哟，华华啊，现在怎么这么胖了哦~~ 咦，华华啊，胖得我都认不出来啦~~ 哎，华华啊，你不能再胖下去了咧~~ 我那叫一个郁闷，回到杭州后，赶紧用体脂秤好好测量了一下。呜呼哀哉~~，我滴娘，我的体重达到了历史巅峰——76.55kg，你敢信？ so，下定决心再次减肥。今日数据如下： 体重：76.55kg]]></content>
-      <tags>
-        <tag>健身减肥</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[利用Maven插件高效去除SNAPSHOT]]></title>
-    <url>%2F2017%2F02%2F07%2FTechnologies%2F%E5%88%A9%E7%94%A8Maven%E6%8F%92%E4%BB%B6%E9%AB%98%E6%95%88%E5%8E%BB%E9%99%A4SNAPSHOT%2F</url>
-    <content type="text"><![CDATA[1. 前言公司质量保障团队近期在Push各技术团队在线上应用中禁止使用SNAPSHOT，因此各个技术团队均开始修改完善。不同人员对Maven学习了解程度不同，有些同事修改起来效率较低，因此我将自己所使用的方法和工具在公司内网BBS进行分享，供大家参考借鉴。 2. SNAPSHOT出现场景 对外提供了SNAPSHOT 依赖三方SNAPSHOT 2.1. 对外提供服务由SNAPSHOT改为RELEASE一般在开发测试阶段，需要经常变动代码，所以使用SNAPSHOT是合理的，但是线上对外提供的服务必须是稳定的版本，一般以RELEASE包提供。此处涉及修改版本号。我们的项目一般是以一个Project和多个Module的形式组织，Project与Module存在父子关系。如果手动一个个修改版本号，比较容易出错。Maven提供了插件：Versions，用于管理版本。 设置新版本号1mvn versions:set -DnewVersion=1.0.1-RELEASE 确认提交新版本号1mvn versions:commit 撤消版本号变更1mvn versions:revert 2.2. 发现并去除SNAPSHOT依赖2.2.1. 发现SNAPSHOT依赖一般我们的项目会有很多三方依赖，而他们自身亦可能有很多依赖，如果通过人工逐个去判断是否存在SNAPSHOT依赖，几乎是不可能的事。Maven提供了插件：dependency，用于管理依赖。为了发现SNAPSHOT依赖，可以通过以下两种方式： 方式一：通过dependency:list 12345678910111213141516mvn dependency:list | grep -i snapshot[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile[INFO] com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile 这种方式会筛选出当前项目所有的SNAPSHOT依赖，但是问题很明显，我们很难判断是哪里依赖了这些SNAPSHOT。因此，我倾向采用第二方式。 方式二：通过dependency:tree 123456789101112mvn dependency:tree -Dincludes=:::*-SNAPSHOT[INFO] ------------------------------------------------------------------------[INFO] [INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ pay_pcs_impl ---[INFO] com.xxx.service:pay_pcs_impl:jar:1.0.1-RELEASE[INFO] +- com.sample.service:pay_pcs_service:jar:1.0.1-RELEASE:compile[INFO] | +- com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile[INFO] | \- com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile[INFO] \- com.sample:pay-common:jar:1.0.1.1:compile[INFO] \- com.sample.sentry:sentry-client:jar:2.1.15:compile[INFO] \- com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile 通过dependency:tree的方式，可以清晰明了的看到依赖的层次关系，从而快速的定位到SNAPSHOT依赖点。如上述：pay_pcs_service –&gt; pay_common –&gt; sentry-client –&gt; flatbuffers-java。 2.2.2. 去除SNAPSHOT依赖通过2.2.1的方式发现SNAPSHOT依赖后，便可根据结果去除相应的SNAPSHOT依赖。去除的方式归根结底是变更依赖的版本，同样有多种方式。我主要采用两种方式。 方式一：利用Maven Versions插件 123mvn versions:use-releasesmvn versions:use-next-releasesmvn versions:use-latest-releases 该方式可批量的将SNAPSHOT替换成相应的RELEASE版本。 注：某些服务提供方发布版本不合规范，所以请注意结合git的变更等，判断所变更的RELEASE是否正确。比如我在使用过程中遇到某一个依赖，同一版本号，SNAPSHOT和RELEASE代码出入较大，导致编译失败。经排查改用其他版本号才正常。 方式二：人工逐个变更依赖的版本号通过发现SNAPSHOT方式二发现的依赖，层次关系已经十分明确。在数量不多的情况下，保险起见，人工逐个核实确认新的RELEASE版本号。可以借助以下方法获取依赖是否有更新 1mvn versions:display-dependency-updates 3. FAQ zsh:no matches found: -Dincludes=:::-SNAPSHOT，该问题是由于zsh对通配符的解析，简单的解决方法是给参数加上引号：mvn dependency:tree -Dincludes=”:::-SNAPSHOT” 4. 参考文献 http://www.mojohaus.org/versions-maven-plugin/usage.html https://maven.apache.org/plugins/maven-dependency-plugin/usage.html]]></content>
+    <title>Maven快速入门</title>
+    <url>/2014/09/13/Technologies/Maven%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h1 id="Maven-简介"><a href="#Maven-简介" class="headerlink" title="Maven 简介"></a>Maven 简介</h1><p>Maven是一个Java项目管理工具，可以简化项目构建、管理项目依赖、生成报告等。具体介绍参考官网<a href="http://maven.apache.org/what-is-maven.html" target="_blank" rel="external">what-is-maven</a></p>
+<a id="more"></a>
+<h1 id="Maven-安装教程"><a href="#Maven-安装教程" class="headerlink" title="Maven 安装教程"></a>Maven 安装教程</h1><p>Maven的安装非常简单，只要2个步骤：</p>
+<ol>
+<li>下载Maven</li>
+<li>解压至某个目录（eg：<code>/usr/local/apache-maven/</code>），并设置环境变量</li>
+</ol>
+<p>各个平台具体安装教程参考官网<a href="http://maven.apache.org/download.cgi#Installation" target="_blank" rel="external">Installation</a></p>
+<p><em>注：</em> Maven安装成功后，会在<code>~/.m2/repository</code>生成一个本地仓库，后续在使用 Maven 构建项目时，如果依赖的包在该仓库中不存在，则先下载相应的依赖包至该仓库。</p>
+<h1 id="Maven-使用教程"><a href="#Maven-使用教程" class="headerlink" title="Maven 使用教程"></a>Maven 使用教程</h1><p>Maven 基于项目对象模型（POM），具有标准的文件目录结构，通过文件<code>pom.xml</code>的配置来管理整个 Maven 项目。</p>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>Maven 项目目录结构可以按约定手工创建，也可通过 Maven 命令自动创建。最简单的目录结构如下所示：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">my-app</span><br><span class="line">|-- pom.xml</span><br><span class="line">`-- src</span><br><span class="line">    |-- main</span><br><span class="line">    |   `-- java</span><br><span class="line">    |       `-- com</span><br><span class="line">    |           `-- mycompany</span><br><span class="line">    |               `-- app</span><br><span class="line">    |                   `-- App.java</span><br><span class="line">    `-- test</span><br><span class="line">        `-- java</span><br><span class="line">            `-- com</span><br><span class="line">                `-- mycompany</span><br><span class="line">                    `-- app</span><br><span class="line">                        `-- AppTest.java</span><br></pre></td></tr></table></figure></p>
+<p>创建 Maven 项目的命令如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mvn archetype:generate \</span><br><span class="line">     -DgroupId=com.mycompany.app \</span><br><span class="line">     -DartifactId=my-app \</span><br><span class="line">     -DarchetypeArtifactId=maven-archetype-quickstart \</span><br><span class="line">     -DinteractiveMode=false</span><br></pre></td></tr></table></figure>
+<h2 id="POM"><a href="#POM" class="headerlink" title="POM"></a>POM</h2><p>通过 Maven 命令创建项目时，会根据命令参数自动生成<code>pom.xml</code>文件。根据上述命令生成的<code>pom.xml</code>文件如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line"></span><br><span class="line">  &lt;groupId&gt;com.mycompany.app&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;my-app&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line">  &lt;packaging&gt;jar&lt;/packaging&gt;</span><br><span class="line"></span><br><span class="line">  &lt;name&gt;Maven Quick Start Archetype&lt;/name&gt;</span><br><span class="line">  &lt;url&gt;http://maven.apache.org&lt;/url&gt;</span><br><span class="line"></span><br><span class="line">  &lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;junit&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;junit&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;4.8.2&lt;/version&gt;</span><br><span class="line">      &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">  &lt;/dependencies&gt;</span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure>
+<p><code>pom.xml</code>常用设置：</p>
+<ul>
+<li>project（必填） - This is the top-level element in all Maven pom.xml files.</li>
+<li>modelVersion（必填） - 所使用的POM版本号</li>
+<li>groupId（必填）- 项目创建者的唯一标识，通常用逆置的域名（eg: <code>io.github.dxh</code>）。</li>
+<li>artifactId（必填）- 项目的生成产品，命名通常为：<artifactid>-<version>.<extension></extension></version></artifactid></li>
+<li>version（必填）- 项目版本号，推荐使用语义化的版本号</li>
+<li>packaging（可选） - 项目生成产品的包类型（eg: jar、war, etc.)，默认为<code>jar</code>。</li>
+</ul>
+<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><p>Maven 构建项目整个生命周期由多个阶段构成：</p>
+<ol>
+<li>validate - 检查项目和必要的信息是否正确</li>
+<li>compile - 编译</li>
+<li>test - 利用单元测试框架测试编译后的代码</li>
+<li>package - 打包，如打包成:jar</li>
+<li>integration-test - 与整个项目集成测试</li>
+<li>verify - 验证包是否可用并且达到质量标准</li>
+<li>install - 将包部署至本地库，可作为本地其它项目的依赖</li>
+<li>deploy - 将最终产品部署至远程仓库，供别的开发人员和项目使用</li>
+</ol>
+<p>除了上述阶段之外，还有2个比较常用的生命周期：</p>
+<ol>
+<li>clean - cleans up artifacts created by prior builds</li>
+<li>site - generates site documentation for this project</li>
+</ol>
+<p>每个阶段对应一个 Maven 命令，并且命令是按顺序执行的。比如执行<code>mvn package</code>，则命令<code>validate</code>、<code>compile</code>、<code>test</code>将自动被有序执行。</p>
+<h1 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h1><p>通过短暂的半天了解与使用之后，基本的体会是：对于小项目，可能还是直接使用JDK中自带的工具或者IDE的集成工具更为快速简单。对于大项目，特别是存在各种依赖的项目，使用 Maven 将会大大降低项目构建的复杂度。但是，目前初步有个担忧，对于超级大的项目，<code>pom.xml</code>的维护是不是成为一个问题？传说中，已经有一新的工具流行起来了，它叫<a href="http://www.gradle.org/" target="_blank" rel="external">Gradle</a>.</p>
+]]></content>
       <tags>
         <tag>Maven</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[【GitTips】merge指定分支的指定文件]]></title>
-    <url>%2F2015%2F03%2F05%2FTechnologies%2F%E3%80%90GitTips%E3%80%91merge%E6%8C%87%E5%AE%9A%E5%88%86%E6%94%AF%E7%9A%84%E6%8C%87%E5%AE%9A%E6%96%87%E4%BB%B6%2F</url>
-    <content type="text"><![CDATA[1234$ git branch* master twitter_integration$ git checkout twitter_integration app/models/avatar.rbd b/migrate/20090223104419]]></content>
+    <title>胖胖瘦身记-day9</title>
+    <url>/2018/05/15/Life/%E8%83%96%E8%83%96%E7%98%A6%E8%BA%AB%E8%AE%B0-day9/</url>
+    <content><![CDATA[<p>今天破5进4啦~~</p>
+<a id="more"></a>
+<p>今日体重：74.95kg，相对前一天减少：0.4kg，历史累计减了1.6kg。</p>
+<p>今天跑步一个激动，忘了拍跑步机上的数据，刚下来跑步机就被人抢来了，来不及拍，郁闷。。。只好拍一个老妈口中的虎背熊腰。</p>
+<p>这天热的，真的很容易湿身呀，但是健身房的妹子咂还穿这么多呢？</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fxe716d0coj30u01hc76k.jpg" alt="20180515-跑步"></p>
+<p>晚餐继续吃草，明天朋友约了吃小龙虾，真担心又反弹。原本计划一周最多吃一次小龙虾呀。这里周日吃了一顿，明天吃一顿，但是我还有两包料哎，忧伤~~~</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fxe71chbakj31430u0juz.jpg" alt="20180515-晚餐"></p>
+]]></content>
       <tags>
-        <tag>Git</tag>
-        <tag>Tips</tag>
+        <tag>健身减肥</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[【GitTips】撤消操作]]></title>
-    <url>%2F2015%2F01%2F12%2FTechnologies%2F%E3%80%90GitTips%E3%80%91%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C%2F</url>
-    <content type="text"><![CDATA[撤消 add1$ git rm --cached &lt;file&gt; 撤消 commit1$ git reset --hard &lt;commit id&gt; # 将 HEAD 移至 &lt;commit id&gt; 注意，–hard 将目录中所有文件中的修改 撤消 push12$ git reset --hard &lt;commit id&gt; # 撤消commit$ git push origin HEAD --force # 强制提交到远程版本库，从而删除之前提交的数据]]></content>
+    <title>REST</title>
+    <url>/2014/09/13/Technologies/REST/</url>
+    <content><![CDATA[<p><code>REST</code>(Representational State Transfer)是一种软件架构风格，基于HTTP、URI、XML等技术与协议，为网络应用的设计与开发降低复杂性、提高伸缩性，已经普遍取代了基于SOAP和WSDL。</p>
+]]></content>
       <tags>
-        <tag>Git</tag>
-        <tag>Tips</tag>
+        <tag>REST</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[【GitTips】非SSH免密提交]]></title>
-    <url>%2F2015%2F01%2F12%2FTechnologies%2F%E3%80%90GitTips%E3%80%91%E9%9D%9ESSH%E5%85%8D%E5%AF%86%E6%8F%90%E4%BA%A4%2F</url>
-    <content type="text"><![CDATA[1$ git config credential.helper store]]></content>
-      <tags>
-        <tag>Git</tag>
-        <tag>Tips</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[【GitTips】修改远程仓库的URL]]></title>
-    <url>%2F2015%2F01%2F02%2FTechnologies%2F%E3%80%90GitTips%E3%80%91%E4%BF%AE%E6%94%B9%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%9A%84URL%2F</url>
-    <content type="text"><![CDATA[1$ git remote set-url origin https://github.com/dxh/dxh.github.io.git]]></content>
-      <tags>
-        <tag>Git</tag>
-        <tag>Tips</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[Sublime Text 编辑 Evernote（印象笔记）]]></title>
-    <url>%2F2014%2F10%2F23%2FTools%2FSublime-Text-%E7%BC%96%E8%BE%91-Evernote%EF%BC%88%E5%8D%B0%E8%B1%A1%E7%AC%94%E8%AE%B0%EF%BC%89%2F</url>
-    <content type="text"><![CDATA[跨平台的Evernote（印象笔记）十分好用，是我进行知识管理、笔记记录的主要工具，美中不足的是原生的编辑功能实在太弱。对于文章内容多样化、排版复杂的笔记体验较差。幸运的事有3件： Evernote（印象笔记）提供了API，供第三方应用管理笔记。 这世界上有markdown这样舒服的标记语言。 神器Sublime Text 受益于上述三件幸运的事，使得我们可以十分方便的在Sublime Text中，利用markdown编辑修改Evernote（印象笔记）中的笔记。废话不多说，下面进入正题。 首先你要习惯使用Sublime Text，如果还不习惯，那么我强烈推荐你花点时间了解一下，对它的评价我只用两个字：”神器”！具体可参考文章：Sublime Text。 打开Sublime Text之后，cmd + shift + P打开Package Control，输入install，跳出插件库，然后输入Evernote安装Evernote插件。该插件的介绍和详细的使用说明请参考：插件介绍。 插件安装完成之后，第一次使用时需要进行授权认证。步骤如下： 打开Package Control，输入send to evernote，在窗口底部会弹出一个小窗口，窗口中的内容为一个带token的链接。该token后面用到。 将链接复制到浏览器并访问，登录授权后，会有一个NoteStore URL。印象笔记用户，直接用浏览器访问链接：https://app.yinxiang.com/api/DeveloperToken.action 打开Sublime Text，打开Preferences &gt; Package Settings &gt; Evernote &gt; Settings User，将步骤2和步骤3中的token和NoteStore URL复制为对应属性值。保存之后便可以开始使用了。 按上述方法创建完成之后，便可以非常方便的使用Evernote（印象笔记）了，而且笔记对应的目录和tag都可以自动提示。详细的功能和使用方法还是参考：插件介绍。]]></content>
-      <tags>
-        <tag>SublimeText</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[Apache 安装笔记]]></title>
-    <url>%2F2014%2F10%2F19%2FTechnologies%2FApache-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B%2F</url>
-    <content type="text"><![CDATA[CentOS 6.5 官方支持的Apache版本为Apache/2.2.15 (Unix)，如果要安装最新版本的Apache，则可以通过源码编译安装的方式实现。本文以CentOS 6.5为例，记录源码编译安装Apache的方法。主要步骤如下所述： 环境要求The following requirements exist for building Apache httpd: APR and APR-Util Perl-Compatible Regular Expressions Library (PCRE) Disk Space ANSI-C Compiler and Build System Accurate time keeping Perl 5 [OPTIONAL] 根据官网教程，通过源码编译安装需要一些基础环境，比如：APR、PCRE、C编译器等。 APR、APR-Util我之前已经根据APR官网文档通过源码编译安装的方式进行安装，简述如下： 下载APR、APR-Util的源代码并解压 分别进入解压后的目录，两者均使用默认的./configure make &amp;&amp; sudo make install 通过上述步骤安装之后，APR、APR-Util被安装至目录：/usr/local/apr/，如下所示： /usr/local/apr/bin/ ├── apr-1-config └── apu-1-config PCRE我之前使用了yum进行了安装 $ sudo yum -y install pcre-devel 编译、安装下载解压Apache源代码之后，使用 ./configure --help可以查看编译选项，如果没有指定--prefix选项，默认安装目录为/usr/local/apache2，我使用了缺省值。为了使用APR, APR-Util、PCRE，需要使用--with-apr、--with-apr-util、--with-pcre。命令如下所示： $ ./configure --with-apr=/usr/local/apr/bin/apr-1-config \ --with-apr-util=/usr/local/apr/bin/apu-1-config \ --with-pcre=/usr/bin/pcre $ make &amp;&amp; sudo make install Apache官网教程使用的是--with-included-apr，我没有尝试，原文如下所述： APR and APR-UtilMake sure you have APR and APR-Util already installed on your system. If you don’t, or prefer to not use the system-provided versions, download the latest versions of both APR and APR-Util from Apache APR, unpack them into ./srclib/apr and ./srclib/apr-util (be sure the directory names do not have version numbers; for example, the APR distribution must be under ./srclib/apr/) and use ./configure’s –with-included-apr option. On some platforms, you may have to install the corresponding -dev packages to allow httpd to build against your installed copy of APR and APR-Util. 测试是否安装成功启动Apache： $ sudo /usr/local/apache2/bin/httpd -k start 打开浏览器，访问localhost，如果页面显示It works!，则安装Apache成功。]]></content>
+    <title>Apache 安装笔记</title>
+    <url>/2014/10/19/Technologies/Apache-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<p>CentOS 6.5 官方支持的Apache版本为<code>Apache/2.2.15 (Unix)</code>，如果要安装最新版本的Apache，则可以通过源码编译安装的方式实现。本文以CentOS 6.5为例，记录源码编译安装Apache的方法。主要步骤如下所述：</p>
+<a id="more"></a>
+<h1 id="环境要求"><a href="#环境要求" class="headerlink" title="环境要求"></a>环境要求</h1><blockquote><p>The following requirements exist for building Apache httpd:</p>
+<ul>
+<li>APR and APR-Util</li>
+<li>Perl-Compatible Regular Expressions Library (PCRE)</li>
+<li>Disk Space</li>
+<li>ANSI-C Compiler and Build System</li>
+<li>Accurate time keeping</li>
+<li>Perl 5 [OPTIONAL]</li>
+</ul>
+</blockquote>
+<p>根据<a href="http://httpd.apache.org/docs/2.4/install.html" target="_blank" rel="external">官网教程</a>，通过源码编译安装需要一些基础环境，比如：APR、PCRE、C编译器等。</p>
+<p>APR、APR-Util我之前已经根据<a href="http://apr.apache.org/" target="_blank" rel="external">APR官网文档</a>通过源码编译安装的方式进行安装，简述如下：</p>
+<ol>
+<li>下载APR、APR-Util的源代码并解压</li>
+<li>分别进入解压后的目录，两者均使用默认的<code>./configure</code></li>
+<li>make &amp;&amp; sudo make install</li>
+</ol>
+<p>通过上述步骤安装之后，APR、APR-Util被安装至目录：<code>/usr/local/apr/</code>，如下所示：</p>
+<pre><code>/usr/local/apr/bin/
+├── apr-1-config
+└── apu-1-config
+</code></pre><p>PCRE我之前使用了<code>yum</code>进行了安装</p>
+<pre><code>$ sudo yum -y install pcre-devel
+</code></pre><h1 id="编译、安装"><a href="#编译、安装" class="headerlink" title="编译、安装"></a>编译、安装</h1><p>下载解压Apache源代码之后，使用 <code>./configure --help</code>可以查看编译选项，如果没有指定<code>--prefix</code>选项，默认安装目录为<code>/usr/local/apache2</code>，我使用了缺省值。为了使用APR, APR-Util、PCRE，需要使用<code>--with-apr</code>、<code>--with-apr-util</code>、<code>--with-pcre</code>。命令如下所示：</p>
+<pre><code>$ ./configure --with-apr=/usr/local/apr/bin/apr-1-config \
+    --with-apr-util=/usr/local/apr/bin/apu-1-config \
+    --with-pcre=/usr/bin/pcre
+$ make &amp;&amp; sudo make install
+</code></pre><p>Apache官网教程使用的是<code>--with-included-apr</code>，我没有尝试，原文如下所述：</p>
+<blockquote><p>APR and APR-Util<br>Make sure you have APR and APR-Util already installed on your system. If you don’t, or prefer to not use the system-provided versions, download the latest versions of both APR and APR-Util from Apache APR, unpack them into ./srclib/apr and ./srclib/apr-util (be sure the directory names do not have version numbers; for example, the APR distribution must be under ./srclib/apr/) and use ./configure’s –with-included-apr option. On some platforms, you may have to install the corresponding -dev packages to allow httpd to build against your installed copy of APR and APR-Util.</p>
+</blockquote>
+<h1 id="测试是否安装成功"><a href="#测试是否安装成功" class="headerlink" title="测试是否安装成功"></a>测试是否安装成功</h1><p>启动Apache：</p>
+<pre><code>$ sudo /usr/local/apache2/bin/httpd -k start
+</code></pre><p>打开浏览器，访问localhost，如果页面显示<code>It works!</code>，则安装Apache成功。</p>
+]]></content>
       <tags>
         <tag>Apache</tag>
         <tag>运维</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[vsfptd 搭建FTP服务器简明教程]]></title>
-    <url>%2F2014%2F10%2F15%2FTechnologies%2Fvsfptd%20%E6%90%AD%E5%BB%BAFTP%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B%2F</url>
-    <content type="text"><![CDATA[FTP服务器在当前工作、生活环境中，有时依然十分有用。在Linux服务器上搭建FTP服务器，首选 vsftptd (very secure FTP daemon) 应用。 下文以Centos 6.5为例，介绍如何快速搭建一个可用的FTP服务器。 安装 vsftpd# 安装 sudo yum -y install vsftpd # 启动 sudo service vsftpd start # 设置为开机启动 sudo chkconfig vsftpd on 创建FTP用户# 增加一个ftp用户组 sudo groupadd ftpgroup # 创建一个ftp用户，并配置目录 sudo useradd -g ftpgroup -d /ftp/ftpuser -M ftpuser # 设置用户密码 sudo passwd ftpuser # 创建相应目录 sudo mkdir /ftp sudo mkdir /ftp/ftpuser # 修改目录权限 sudo chmod 777 /ftp/ftpuser 配置 vsftpdCentos 6.5 安装完 vsftpd 之后，配置文件目录如下所示： 12345/etc/vsftpd/├── ftpusers # 禁止使用vsftpd的用户列表文件├── user_list # userlist_deny=YES/NO，禁止/允许用户使用vsftpd├── vsftpd.conf # 主配置文件└── vsftpd_conf_migrate.sh 主配置文件为 vsftpd.conf，通过阅读配置文件，可以配置参数以满足特殊需求，也可直接使用缺省值。出于安全性、实用性等方面的考虑，不建议使用缺省值。详细的参数配置教程可参考更专业的资料，下面仅简单介绍一些常用的设置。 vsftpd 配置说明注： 修改配置文件之前记得备份 # Allow anonymous FTP? (Beware - allowed by default if you comment this out). # anonymous_enable=YES anonymous_enable=NO # 不允许匿名用户 # Uncomment this to allow local users to log in. local_enable=YES # Uncomment this to enable any form of FTP write command. write_enable=YES # # If you want, you can arrange for uploaded anonymous files to be owned by # a different user. Note! Using &quot;root&quot; for uploaded files is not # recommended! #chown_uploads=YES #chown_username=whoever chown_uploads=NO # 禁止上传文件更改宿主 userlist_enable=YES # 配合userlist_deny=YES/NO，禁止/允许user_list文件中的用户使用vsftpd 重启 vsftpd重启 vsftpd 使配置之后的选项生效： sudo service vsftpd restart 参考文献 Ubuntu下vsftpd配置实例，超级简单，高度可用 我见过最好的vsftpd配置教程]]></content>
-      <tags>
-        <tag>ftp</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[通过网盘同步Sublime Text设置]]></title>
-    <url>%2F2014%2F09%2F29%2FTools%2F%E9%80%9A%E8%BF%87%E7%BD%91%E7%9B%98%E5%90%8C%E6%AD%A5Sublime-Text%E8%AE%BE%E7%BD%AE%2F</url>
-    <content type="text"><![CDATA[Sublime Text的配置信息和插件都存放在Packages目录下，只要通过网盘在不同电脑间同步该目录，便可以实现在不同电脑间使用同一套Sublime Text的配置。 具体步骤如下： 关闭Sublime Text 将Sublime Text的Packages目录（~/Library/Application Support/Sublime Text 3/Packages）移至网盘的同步目录（~/OneDrive/MyWorkbench/MyApps/SublimeText/Packages）。 执行命令：ln -s ~/OneDrive/MyWorkbench/MyApps/SublimeText/Packages ~/Library/Application Support/Sublime Text 3/Packages Done :)]]></content>
-      <tags>
-        <tag>SublimeText</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[Maven快速入门]]></title>
-    <url>%2F2014%2F09%2F13%2FTechnologies%2FMaven%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%2F</url>
-    <content type="text"><![CDATA[Maven 简介Maven是一个Java项目管理工具，可以简化项目构建、管理项目依赖、生成报告等。具体介绍参考官网what-is-maven Maven 安装教程Maven的安装非常简单，只要2个步骤： 下载Maven 解压至某个目录（eg：/usr/local/apache-maven/），并设置环境变量 各个平台具体安装教程参考官网Installation 注： Maven安装成功后，会在~/.m2/repository生成一个本地仓库，后续在使用 Maven 构建项目时，如果依赖的包在该仓库中不存在，则先下载相应的依赖包至该仓库。 Maven 使用教程Maven 基于项目对象模型（POM），具有标准的文件目录结构，通过文件pom.xml的配置来管理整个 Maven 项目。 目录结构Maven 项目目录结构可以按约定手工创建，也可通过 Maven 命令自动创建。最简单的目录结构如下所示：123456789101112131415my-app|-- pom.xml`-- src |-- main | `-- java | `-- com | `-- mycompany | `-- app | `-- App.java `-- test `-- java `-- com `-- mycompany `-- app `-- AppTest.java 创建 Maven 项目的命令如下所示： 12345mvn archetype:generate \ -DgroupId=com.mycompany.app \ -DartifactId=my-app \ -DarchetypeArtifactId=maven-archetype-quickstart \ -DinteractiveMode=false POM通过 Maven 命令创建项目时，会根据命令参数自动生成pom.xml文件。根据上述命令生成的pom.xml文件如下所示： 123456789101112131415161718192021&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt; &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt; &lt;groupId&gt;com.mycompany.app&lt;/groupId&gt; &lt;artifactId&gt;my-app&lt;/artifactId&gt; &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt; &lt;packaging&gt;jar&lt;/packaging&gt; &lt;name&gt;Maven Quick Start Archetype&lt;/name&gt; &lt;url&gt;http://maven.apache.org&lt;/url&gt; &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;junit&lt;/groupId&gt; &lt;artifactId&gt;junit&lt;/artifactId&gt; &lt;version&gt;4.8.2&lt;/version&gt; &lt;scope&gt;test&lt;/scope&gt; &lt;/dependency&gt; &lt;/dependencies&gt;&lt;/project&gt; pom.xml常用设置： project（必填） - This is the top-level element in all Maven pom.xml files. modelVersion（必填） - 所使用的POM版本号 groupId（必填）- 项目创建者的唯一标识，通常用逆置的域名（eg: io.github.dxh）。 artifactId（必填）- 项目的生成产品，命名通常为：-. version（必填）- 项目版本号，推荐使用语义化的版本号 packaging（可选） - 项目生成产品的包类型（eg: jar、war, etc.)，默认为jar。 生命周期Maven 构建项目整个生命周期由多个阶段构成： validate - 检查项目和必要的信息是否正确 compile - 编译 test - 利用单元测试框架测试编译后的代码 package - 打包，如打包成:jar integration-test - 与整个项目集成测试 verify - 验证包是否可用并且达到质量标准 install - 将包部署至本地库，可作为本地其它项目的依赖 deploy - 将最终产品部署至远程仓库，供别的开发人员和项目使用 除了上述阶段之外，还有2个比较常用的生命周期： clean - cleans up artifacts created by prior builds site - generates site documentation for this project 每个阶段对应一个 Maven 命令，并且命令是按顺序执行的。比如执行mvn package，则命令validate、compile、test将自动被有序执行。 结束语通过短暂的半天了解与使用之后，基本的体会是：对于小项目，可能还是直接使用JDK中自带的工具或者IDE的集成工具更为快速简单。对于大项目，特别是存在各种依赖的项目，使用 Maven 将会大大降低项目构建的复杂度。但是，目前初步有个担忧，对于超级大的项目，pom.xml的维护是不是成为一个问题？传说中，已经有一新的工具流行起来了，它叫Gradle.]]></content>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[REST]]></title>
-    <url>%2F2014%2F09%2F13%2FTechnologies%2FREST%2F</url>
-    <content type="text"><![CDATA[REST(Representational State Transfer)是一种软件架构风格，基于HTTP、URI、XML等技术与协议，为网络应用的设计与开发降低复杂性、提高伸缩性，已经普遍取代了基于SOAP和WSDL。]]></content>
-      <tags>
-        <tag>REST</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[语义化版本号格式]]></title>
-    <url>%2F2014%2F09%2F11%2FTechnologies%2F%E8%AF%AD%E4%B9%89%E5%8C%96%E7%89%88%E6%9C%AC%E5%8F%B7%E6%A0%BC%E5%BC%8F%2F</url>
-    <content type="text"><![CDATA[在软件管理的领域里存在着被称作“依赖地狱”的死亡之谷，系统规模越大，加入的套件越多，你就越有可能在未来的某一天发现自己已深陷绝望之中。 一个项目随着生命周期会不断的变更，在变更过程中，通常采用版本号作为标识。一个良好的版本号格式将为项目管理带来极大的好处。 所谓语义化的版本号格式，简单描述如下： 版本格式：主版本号.次版本号.修订号 版本号递增规则如下： 主版本号：当你做了不兼容的API 修改， 次版本号：当你做了向下兼容的功能性新增， 修订号：当你做了向下兼容的问题修正。 先行版本号及版本编译信息可以加到“主版本号.次版本号.修订号”的后面，作为延伸。 更为详细和全面的介绍请参考：http://semver.org/lang/zh-CN/]]></content>
-      <tags>
-        <tag>VCS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[Vagrant安装配置笔记]]></title>
-    <url>%2F2014%2F08%2F23%2FTechnologies%2Fvagrant%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%AC%94%E8%AE%B0%2F</url>
-    <content type="text"><![CDATA[在学习编程的过程中，往往需要配置相应的开发环境。印象中最为头疼的一件事是辛辛苦苦配置了一套开发环境，却由于电脑更换、系统重装等种种原因，导致需要全部重新配置一套。特别是几个小伙伴一起合作开发项目时，为了确保每个人的开发环境一致，需要为多台电脑进行配置。项目没开搞，开发环境就搞死人了。 不过，自从知道有Vagrant这玩意之后，以前让我头疼的这些事就一去不复返了。Vagrant是什么？简言之，它是一件基于虚拟机，实现开发环境一次配置，到处使用的神器，更为难得的是资源占用非常低，这让我那台老爷笔记本HP520也出现了第二春。废话不多说，下面简单记一下Vagrant的安装配置过程。细节可以参考官方文档 安装虚拟机Vagrant主要基于虚拟机实现一次配置，到处使用的功能。常见的虚拟机都支持，比如VMware、VituralBox等。选择一个自己喜欢的安装就行。 安装Vagrant根据官网[Download]页面，选择相应平台的Vagrant下载安装。 添加BoxVagrant中的Box概念可以简单理解为一个包，这个包可以是一个纯净的完整的操作系统，也可以是已经配置的开发环境的操作系统，当然也可以是仅仅是为了某些需求而精简的操作系统。 Box有很多，你自己也可以生成。刚开始使用，可以在网站vagrantcloud找一个适合你的, 比如我使用的是chef/centos-6.5。如果你的网络非常好（非常好是指网速够快，又不被GFW)。那么，你可以通过以下命令直接添加Box： 1$ vagrant box add chef/centos-6.5 不过，我的网速不好，所以我是先下载Box，然后在本地add。Box的下载地址即可以通过执行上面那条命令在终端显示，也可以Google出来。我下载到~/Downloads/virtualbox.box, 那么添加Box的命令是： 1$ vagrant box add chef/centos-6.5 ~/Downloads/virtualbox.box 初始化开发环境创建一个开发目录，比如~/myDevEnv，那么，执行以下命令实现开发环境的初始化： 12$ cd ~/myDevEnv$ vagrant init chef/centos-6.5 如果你的网络非常好，那么，添加Box和初始化开发环境可以简单的一条命令就可以了： 1$ vagrant init chef/centos-6.5 启动开发环境1$ vagrant up 登录开发环境1$ vagrant ssh 配置开发环境在初始化开发环境之后，会在目录下生成一个文件：Vagrantfile，该文件是Vagrant的配置文件，下面对几个配置选项做简单说明： config.vm.box = &quot;chef/centos-6.5&quot;: 简言之，这就是指你的Box的别名，如果你有多个Box，那么可以通过该选项指定使用哪一个Box。 config.vm.synced_folder &quot;~/Sites&quot;, &quot;/var/www/html&quot;:同步目录，第一个目录是主机目录，第二个目录是虚拟机目录。通过该选项，你可以在主机使用你喜欢的开发工具修改代码，而不需要通过ssh登录虚拟机使用vim修改代码。 config.vm.network :forwarded_port, guest: 80, host: 8080:端口转发，通过该选项，访问主机8080端口的请求都将指向虚拟机的80端口。 结束语暂时就写这些废话了，官网文档写得比较清晰易懂，可以尽情参考。下一篇记一下Vagrant搭建LAMP开发环境。]]></content>
+    <title>Vagrant安装配置笔记</title>
+    <url>/2014/08/23/Technologies/vagrant%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<p>在学习编程的过程中，往往需要配置相应的开发环境。印象中最为头疼的一件事是辛辛苦苦配置了一套开发环境，却由于电脑更换、系统重装等种种原因，导致需要全部重新配置一套。特别是几个小伙伴一起合作开发项目时，为了确保每个人的开发环境一致，需要为多台电脑进行配置。项目没开搞，开发环境就搞死人了。</p>
+<p>不过，自从知道有<code>Vagrant</code>这玩意之后，以前让我头疼的这些事就一去不复返了。<code>Vagrant</code>是什么？简言之，它是一件基于虚拟机，实现开发环境<code>一次配置，到处使用</code>的神器，更为难得的是资源占用非常低，这让我那台老爷笔记本<code>HP520</code>也出现了第二春。废话不多说，下面简单记一下<code>Vagrant</code>的安装配置过程。细节可以参考<a href="https://docs.vagrantup.com/v2/getting-started/index.html" target="_blank" rel="external">官方文档</a></p>
+<a id="more"></a>
+<h1 id="安装虚拟机"><a href="#安装虚拟机" class="headerlink" title="安装虚拟机"></a>安装虚拟机</h1><p>Vagrant主要基于虚拟机实现<code>一次配置，到处使用</code>的功能。常见的虚拟机都支持，比如VMware、VituralBox等。选择一个自己喜欢的安装就行。</p>
+<h1 id="安装Vagrant"><a href="#安装Vagrant" class="headerlink" title="安装Vagrant"></a>安装Vagrant</h1><p>根据官网[Download]页面，选择相应平台的Vagrant下载安装。</p>
+<h1 id="添加Box"><a href="#添加Box" class="headerlink" title="添加Box"></a>添加<code>Box</code></h1><p>Vagrant中的<code>Box</code>概念可以简单理解为一个包，这个包可以是一个纯净的完整的操作系统，也可以是已经配置的开发环境的操作系统，当然也可以是仅仅是为了某些需求而精简的操作系统。</p>
+<p><code>Box</code>有很多，你自己也可以生成。刚开始使用，可以在网站<a href="https://vagrantcloud.com/" target="_blank" rel="external">vagrantcloud</a>找一个适合你的, 比如我使用的是<code>chef/centos-6.5</code>。如果你的网络非常好（<code>非常好</code>是指网速够快，又不被GFW)。那么，你可以通过以下命令直接添加<code>Box</code>：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant box add chef/centos-6.5</span><br></pre></td></tr></table></figure>
+<p>不过，我的网速不好，所以我是先下载<code>Box</code>，然后在本地<code>add</code>。<code>Box</code>的下载地址即可以通过执行上面那条命令在终端显示，也可以Google出来。我下载到<code>~/Downloads/virtualbox.box</code>, 那么添加<code>Box</code>的命令是：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant box add chef/centos-6.5 ~/Downloads/virtualbox.box</span><br></pre></td></tr></table></figure>
+<h1 id="初始化开发环境"><a href="#初始化开发环境" class="headerlink" title="初始化开发环境"></a>初始化开发环境</h1><p>创建一个开发目录，比如<code>~/myDevEnv</code>，那么，执行以下命令实现开发环境的初始化：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~/myDevEnv</span><br><span class="line"><span class="meta">$</span> vagrant init chef/centos-6.5</span><br></pre></td></tr></table></figure>
+<p>如果你的网络非常好，那么，添加<code>Box</code>和初始化开发环境可以简单的一条命令就可以了：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant init chef/centos-6.5</span><br></pre></td></tr></table></figure>
+<h1 id="启动开发环境"><a href="#启动开发环境" class="headerlink" title="启动开发环境"></a>启动开发环境</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant up</span><br></pre></td></tr></table></figure>
+<h1 id="登录开发环境"><a href="#登录开发环境" class="headerlink" title="登录开发环境"></a>登录开发环境</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> vagrant ssh</span><br></pre></td></tr></table></figure>
+<h1 id="配置开发环境"><a href="#配置开发环境" class="headerlink" title="配置开发环境"></a>配置开发环境</h1><p>在初始化开发环境之后，会在目录下生成一个文件：<code>Vagrantfile</code>，该文件是<code>Vagrant</code>的配置文件，下面对几个配置选项做简单说明：</p>
+<ul>
+<li><code>config.vm.box = &quot;chef/centos-6.5&quot;</code>: 简言之，这就是指你的<code>Box</code>的别名，如果你有多个<code>Box</code>，那么可以通过该选项指定使用哪一个<code>Box</code>。</li>
+<li><code>config.vm.synced_folder  &quot;~/Sites&quot;, &quot;/var/www/html&quot;</code>:同步目录，第一个目录是主机目录，第二个目录是虚拟机目录。通过该选项，你可以在主机使用你喜欢的开发工具修改代码，而不需要通过ssh登录虚拟机使用vim修改代码。</li>
+<li><code>config.vm.network :forwarded_port, guest: 80, host: 8080</code>:端口转发，通过该选项，访问主机8080端口的请求都将指向虚拟机的80端口。</li>
+</ul>
+<h1 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h1><p>暂时就写这些废话了，官网文档写得比较清晰易懂，可以尽情参考。下一篇记一下Vagrant搭建LAMP开发环境。</p>
+]]></content>
       <tags>
         <tag>Vagrant</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Homebrew]]></title>
-    <url>%2F2014%2F02%2F15%2FTools%2FHomebrew%2F</url>
-    <content type="text"><![CDATA[简介Homebrew是Mac OS X下类似于Linux中apt-get、yum的一个软件包管理工具。通过Homebrew就可以在Mac OS X中非常方便地安装一些Apple没有提供的工具，如:wget等。 安装ruby -e &quot;$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)&quot; 常用命令12345678brew [info | home | options ] [FORMULA...]brew install FORMULA...brew uninstall FORMULA...brew search [foo]brew list [FORMULA...]brew updatebrew upgrade [FORMULA...]brew pin/unpin [FORMULA...]]]></content>
+    <title>vsfptd 搭建FTP服务器简明教程</title>
+    <url>/2014/10/15/Technologies/vsfptd%20%E6%90%AD%E5%BB%BAFTP%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<p>FTP服务器在当前工作、生活环境中，有时依然十分有用。在Linux服务器上搭建FTP服务器，首选 vsftptd (very secure FTP daemon) 应用。</p>
+<a id="more"></a>
+<p>下文以Centos 6.5为例，介绍如何快速搭建一个可用的FTP服务器。</p>
+<h1 id="安装-vsftpd"><a href="#安装-vsftpd" class="headerlink" title="安装 vsftpd"></a>安装 vsftpd</h1><pre><code># 安装
+sudo yum -y install vsftpd
+
+# 启动
+sudo service vsftpd start
+
+# 设置为开机启动
+sudo chkconfig vsftpd on
+</code></pre><h1 id="创建FTP用户"><a href="#创建FTP用户" class="headerlink" title="创建FTP用户"></a>创建FTP用户</h1><pre><code># 增加一个ftp用户组
+sudo groupadd ftpgroup
+
+# 创建一个ftp用户，并配置目录
+sudo useradd -g ftpgroup -d /ftp/ftpuser -M ftpuser
+
+# 设置用户密码
+sudo passwd ftpuser
+
+# 创建相应目录
+sudo mkdir /ftp
+sudo mkdir /ftp/ftpuser
+
+# 修改目录权限
+sudo chmod 777 /ftp/ftpuser
+</code></pre><h1 id="配置-vsftpd"><a href="#配置-vsftpd" class="headerlink" title="配置 vsftpd"></a>配置 vsftpd</h1><p>Centos 6.5 安装完 vsftpd 之后，配置文件目录如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/etc/vsftpd/</span><br><span class="line">├── ftpusers                # 禁止使用vsftpd的用户列表文件</span><br><span class="line">├── user_list               # userlist_deny=YES/NO，禁止/允许用户使用vsftpd</span><br><span class="line">├── vsftpd.conf             # 主配置文件</span><br><span class="line">└── vsftpd_conf_migrate.sh</span><br></pre></td></tr></table></figure>
+<p>主配置文件为 <code>vsftpd.conf</code>，通过阅读配置文件，可以配置参数以满足特殊需求，也可直接使用缺省值。出于安全性、实用性等方面的考虑，不建议使用缺省值。详细的参数配置教程可参考更专业的资料，下面仅简单介绍一些常用的设置。</p>
+<h2 id="vsftpd-配置说明"><a href="#vsftpd-配置说明" class="headerlink" title="vsftpd 配置说明"></a>vsftpd 配置说明</h2><p><strong><em>注：</em></strong> 修改配置文件之前记得备份</p>
+<pre><code># Allow anonymous FTP? (Beware - allowed by default if you comment this out).
+# anonymous_enable=YES
+anonymous_enable=NO # 不允许匿名用户
+
+# Uncomment this to allow local users to log in.
+local_enable=YES
+
+# Uncomment this to enable any form of FTP write command.
+write_enable=YES
+
+#
+# If you want, you can arrange for uploaded anonymous files to be owned by
+# a different user. Note! Using &quot;root&quot; for uploaded files is not
+# recommended!
+#chown_uploads=YES
+#chown_username=whoever
+chown_uploads=NO # 禁止上传文件更改宿主
+
+userlist_enable=YES # 配合userlist_deny=YES/NO，禁止/允许user_list文件中的用户使用vsftpd
+</code></pre><h1 id="重启-vsftpd"><a href="#重启-vsftpd" class="headerlink" title="重启 vsftpd"></a>重启 vsftpd</h1><p>重启 vsftpd 使配置之后的选项生效：</p>
+<pre><code>sudo service vsftpd restart
+</code></pre><h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<li><a href="http://www.cnblogs.com/taoweiji/p/3821924.html" target="_blank" rel="external">Ubuntu下vsftpd配置实例，超级简单，高度可用</a></li>
+<li><a href="http://segmentfault.com/blog/tony/1190000000438443" target="_blank" rel="external">我见过最好的vsftpd配置教程</a></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>ftp</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【GitTips】merge指定分支的指定文件</title>
+    <url>/2015/03/05/Technologies/%E3%80%90GitTips%E3%80%91merge%E6%8C%87%E5%AE%9A%E5%88%86%E6%94%AF%E7%9A%84%E6%8C%87%E5%AE%9A%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch</span><br><span class="line">* master</span><br><span class="line">  twitter_integration</span><br><span class="line">$ git checkout twitter_integration app/models/avatar.rbd b/migrate/20090223104419</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+        <tag>Tips</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>利用Maven插件高效去除SNAPSHOT</title>
+    <url>/2017/02/07/Technologies/%E5%88%A9%E7%94%A8Maven%E6%8F%92%E4%BB%B6%E9%AB%98%E6%95%88%E5%8E%BB%E9%99%A4SNAPSHOT/</url>
+    <content><![CDATA[<h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h1><p>公司质量保障团队近期在Push各技术团队在线上应用中禁止使用SNAPSHOT，因此各个技术团队均开始修改完善。不同人员对Maven学习了解程度不同，有些同事修改起来效率较低，因此我将自己所使用的方法和工具在公司内网BBS进行分享，供大家参考借鉴。</p>
+<a id="more"></a>
+<h1 id="2-SNAPSHOT出现场景"><a href="#2-SNAPSHOT出现场景" class="headerlink" title="2. SNAPSHOT出现场景"></a>2. SNAPSHOT出现场景</h1><ol>
+<li>对外提供了SNAPSHOT</li>
+<li>依赖三方SNAPSHOT</li>
+</ol>
+<h2 id="2-1-对外提供服务由SNAPSHOT改为RELEASE"><a href="#2-1-对外提供服务由SNAPSHOT改为RELEASE" class="headerlink" title="2.1. 对外提供服务由SNAPSHOT改为RELEASE"></a>2.1. 对外提供服务由SNAPSHOT改为RELEASE</h2><p>一般在开发测试阶段，需要经常变动代码，所以使用SNAPSHOT是合理的，但是线上对外提供的服务必须是稳定的版本，一般以RELEASE包提供。此处涉及修改版本号。我们的项目一般是以一个Project和多个Module的形式组织，Project与Module存在父子关系。如果手动一个个修改版本号，比较容易出错。Maven提供了插件：Versions，用于管理版本。</p>
+<p>设置新版本号<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mvn versions:set -DnewVersion=1.0.1-RELEASE</span><br></pre></td></tr></table></figure></p>
+<p>确认提交新版本号<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mvn versions:commit</span><br></pre></td></tr></table></figure></p>
+<p>撤消版本号变更<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mvn versions:revert</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-2-发现并去除SNAPSHOT依赖"><a href="#2-2-发现并去除SNAPSHOT依赖" class="headerlink" title="2.2. 发现并去除SNAPSHOT依赖"></a>2.2. 发现并去除SNAPSHOT依赖</h2><h3 id="2-2-1-发现SNAPSHOT依赖"><a href="#2-2-1-发现SNAPSHOT依赖" class="headerlink" title="2.2.1. 发现SNAPSHOT依赖"></a>2.2.1. 发现SNAPSHOT依赖</h3><p>一般我们的项目会有很多三方依赖，而他们自身亦可能有很多依赖，如果通过人工逐个去判断是否存在SNAPSHOT依赖，几乎是不可能的事。Maven提供了插件：dependency，用于管理依赖。为了发现SNAPSHOT依赖，可以通过以下两种方式：</p>
+<p>方式一：通过dependency:list</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mvn dependency:list | grep -i snapshot</span><br><span class="line"></span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO]    com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br></pre></td></tr></table></figure>
+<p>这种方式会筛选出当前项目所有的SNAPSHOT依赖，但是问题很明显，我们很难判断是哪里依赖了这些SNAPSHOT。因此，我倾向采用第二方式。</p>
+<p>方式二：通过dependency:tree</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mvn dependency:tree -Dincludes=:::*-SNAPSHOT</span><br><span class="line"></span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br><span class="line">[INFO] </span><br><span class="line">[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ pay_pcs_impl ---</span><br><span class="line">[INFO] com.xxx.service:pay_pcs_impl:jar:1.0.1-RELEASE</span><br><span class="line">[INFO] +- com.sample.service:pay_pcs_service:jar:1.0.1-RELEASE:compile</span><br><span class="line">[INFO] |  +- com.sample.service:gateway_fundout_api:jar:1.0.0-SNAPSHOT:compile</span><br><span class="line">[INFO] |  \- com.sample.service:pay-ledger-api:jar:1.0.1-SNAPSHOT:compile</span><br><span class="line">[INFO] \- com.sample:pay-common:jar:1.0.1.1:compile</span><br><span class="line">[INFO]  \- com.sample.sentry:sentry-client:jar:2.1.15:compile</span><br><span class="line">[INFO]    \- com.google.flatbuffers:flatbuffers-java:jar:1.2.0-SNAPSHOT:compile</span><br></pre></td></tr></table></figure>
+<p>通过dependency:tree的方式，可以清晰明了的看到依赖的层次关系，从而快速的定位到SNAPSHOT依赖点。如上述：pay_pcs_service –&gt; pay_common –&gt; sentry-client –&gt; flatbuffers-java。</p>
+<h3 id="2-2-2-去除SNAPSHOT依赖"><a href="#2-2-2-去除SNAPSHOT依赖" class="headerlink" title="2.2.2. 去除SNAPSHOT依赖"></a>2.2.2. 去除SNAPSHOT依赖</h3><p>通过2.2.1的方式发现SNAPSHOT依赖后，便可根据结果去除相应的SNAPSHOT依赖。去除的方式归根结底是变更依赖的版本，同样有多种方式。我主要采用两种方式。</p>
+<p>方式一：利用Maven Versions插件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mvn versions:use-releases</span><br><span class="line">mvn versions:use-next-releases</span><br><span class="line">mvn versions:use-latest-releases</span><br></pre></td></tr></table></figure>
+<p>该方式可批量的将SNAPSHOT替换成相应的RELEASE版本。</p>
+<p><strong><em>注：某些服务提供方发布版本不合规范，所以请注意结合git的变更等，判断所变更的RELEASE是否正确。比如我在使用过程中遇到某一个依赖，同一版本号，SNAPSHOT和RELEASE代码出入较大，导致编译失败。经排查改用其他版本号才正常。</em></strong></p>
+<p>方式二：人工逐个变更依赖的版本号<br>通过发现SNAPSHOT方式二发现的依赖，层次关系已经十分明确。在数量不多的情况下，保险起见，人工逐个核实确认新的RELEASE版本号。可以借助以下方法获取依赖是否有更新</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mvn versions:display-dependency-updates</span><br></pre></td></tr></table></figure>
+<h1 id="3-FAQ"><a href="#3-FAQ" class="headerlink" title="3. FAQ"></a>3. FAQ</h1><ol>
+<li>zsh:no matches found: -Dincludes=:::<em>-SNAPSHOT，该问题是由于zsh对通配符的解析，简单的解决方法是给参数加上引号：mvn dependency:tree -Dincludes=”:::</em>-SNAPSHOT”</li>
+</ol>
+<h1 id="4-参考文献"><a href="#4-参考文献" class="headerlink" title="4. 参考文献"></a>4. 参考文献</h1><ol>
+<li><a href="http://www.mojohaus.org/versions-maven-plugin/usage.html" target="_blank" rel="external">http://www.mojohaus.org/versions-maven-plugin/usage.html</a></li>
+<li><a href="https://maven.apache.org/plugins/maven-dependency-plugin/usage.html" target="_blank" rel="external">https://maven.apache.org/plugins/maven-dependency-plugin/usage.html</a></li>
+</ol>
+]]></content>
+      <tags>
+        <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【GitTips】修改远程仓库的URL</title>
+    <url>/2015/01/02/Technologies/%E3%80%90GitTips%E3%80%91%E4%BF%AE%E6%94%B9%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%9A%84URL/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git remote <span class="built_in">set</span>-url origin https://github.com/dxh/dxh.github.io.git</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+        <tag>Tips</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>语义化版本号格式</title>
+    <url>/2014/09/11/Technologies/%E8%AF%AD%E4%B9%89%E5%8C%96%E7%89%88%E6%9C%AC%E5%8F%B7%E6%A0%BC%E5%BC%8F/</url>
+    <content><![CDATA[<blockquote>
+<p>在软件管理的领域里存在着被称作“依赖地狱”的死亡之谷，系统规模越大，加入的套件越多，你就越有可能在未来的某一天发现自己已深陷绝望之中。</p>
+</blockquote>
+<a id="more"></a>
+<p>一个项目随着生命周期会不断的变更，在变更过程中，通常采用版本号作为标识。一个良好的版本号格式将为项目管理带来极大的好处。</p>
+<p>所谓语义化的版本号格式，简单描述如下：</p>
+<p><code>版本格式：主版本号.次版本号.修订号</code></p>
+<p>版本号递增规则如下：</p>
+<ul>
+<li>主版本号：当你做了不兼容的API 修改，</li>
+<li>次版本号：当你做了向下兼容的功能性新增，</li>
+<li>修订号：当你做了向下兼容的问题修正。</li>
+</ul>
+<p>先行版本号及版本编译信息可以加到“主版本号.次版本号.修订号”的后面，作为延伸。</p>
+<p>更为详细和全面的介绍请参考：<a href="http://semver.org/lang/zh-CN/" target="_blank" rel="external">http://semver.org/lang/zh-CN/</a></p>
+]]></content>
+      <tags>
+        <tag>VCS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Homebrew</title>
+    <url>/2014/02/15/Tools/Homebrew/</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><a href="http://brew.sh/index.html" target="_blank" rel="external">Homebrew</a>是Mac OS X下类似于Linux中apt-get、<br>yum的一个软件包管理工具。通过Homebrew就可以在Mac OS X中非常方便地安装一<br>些Apple没有提供的工具，如:wget等。</p>
+<a id="more"></a>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><pre><code>ruby -e &quot;$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)&quot;
+</code></pre><h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">brew [info | home | options ] [FORMULA...]</span><br><span class="line">brew install FORMULA...</span><br><span class="line">brew uninstall FORMULA...</span><br><span class="line">brew search [foo]</span><br><span class="line">brew list [FORMULA...]</span><br><span class="line">brew update</span><br><span class="line">brew upgrade [FORMULA...]</span><br><span class="line">brew pin/unpin [FORMULA...]</span><br></pre></td></tr></table></figure>
+]]></content>
       <tags>
         <tag>Homebrew</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[SublimeText]]></title>
-    <url>%2F2014%2F01%2F18%2FTools%2FSublimeText%2F</url>
-    <content type="text"><![CDATA[简介Sublime Text是一款优秀的文本编辑器，支持Windows、Mac OS X、Linux平台，通过配置文件和插件可以实现很多强大的功能。具体特性可以参考官网。相对Emacs、Vim等神级编辑器而言，Sublime Text门槛更低，对于没有时间与精力深入研究神级编辑器的童鞋来说，真乃居家旅行必备！其吸引我的特性主要为： 跨平台：由于生活和工作的需要，我经常需要同时使用Windows、Mac OS X和Linux三大平台，跨平台的Sublime Text给我带来了极大的便利。 可定制：可以通过配置文件进行个性化配置，如：颜色主题、缩进方式、编码等。让人惊喜的是其配置方式比Vim简单得多！多！多！ 插件：通过丰富的插件可以实现超乎想象的功能，如：语法检查、格式化、版本控制等。 快：Sublime Text使用时的那种流畅会带来非常愉悦的快感，你懂的～ Quick Start本章节以Mac OS X平台为例，简单介绍Sublime Text的使用方法，以此作为自己的笔记，并希望能够帮助初次接触Sublime Text的童鞋快速入门。Sublime Text主要使用技巧在于： 熟悉配置文件 熟悉插件 熟悉快捷键 配置文件与通常软件的配置不同，Sublime Text的配置并不是基于GUI界面，而是使用JSON格式的文本配置方式，初次接触的童鞋可能会不习惯，有一种无从下手的感觉。不过只要不被吓住，耐心地把玩几遍，便可依葫芦画瓢地进行配置了。 安装好Sublime Text后，通过点击Sublime Text –&gt; Preferences可以发现Sublime Text的配置文件主要可以分为两类： Default：该配置文件保存了Sublime Text可供配置的属性及其默认值，英文过得去的童鞋可以通过该文件快速地了解Sublime Text的特性及其配置方式。 User：用户如果需要进行个性化配置，通常不是直接修改Default中的默认配置，而是参考Default的配置方式，在User中进行配置。User中的值会覆盖Default中的值。比如设置行的结尾采用Unix方式，并且设置字体大小为16，配置方式如下： 1234&#123; &quot;default_line_ending&quot;: &quot;unix&quot;, &quot;font_size&quot;: 16&#125; 插件第一次对插件有概念是Firefox刚火起来的时候，真心佩服这种利用插件实现功能扩展的思路。Sublime Text也可通过插件实现功能扩展。类似Vim，Sublime Text可以通过手动下载安装插件包，但是这种管理插件的方式是一件非常头疼的事。Vim有Vundle，幸运的是Sublime Text有Package Control，利用Package Control可以方便地实现插件的管理，包括安装、卸载、更新等。Package Control更多特性可以参考官网。 安装Package Control只要一条命令即可，具体参考官方安装教程 Package Control安装完成后，Shift + Cmd + P打开Command Palette，输入package control便会罗列出Package Control的常用功能，如： install：安装插件。 打开Command Palette，输入install，回车，Package Control便会加载插件库。 搜索需要的插件名字，找到插件后，回车，稍等片刻，插件便可安装成功。 remove：卸载插件。 打开Command Palette，输入remove，回车，Package Control便会罗列已安装的插件库。 移动光标至要卸载的插件，回车，稍等片刻，插件便可卸载成功。 list：罗列已安装的插件。 upgrade：更新插件。会尝试更新所有已安装的插件。 其它功能用到再摸索。 注： Package Control官网罗列了新出的、流行的、推荐的插件，需要的童鞋根据需求自行取舍。插件安装完成后，可以通过Preferences –&gt; Package Settings，找到对应的插件的默认配置文件和快捷键，从而了解插件的使用方法。 快捷键熟悉快捷键可以极大地提高效率，个人认为，入门时只需了解一些基本的常用的快捷键即可，成精后再考虑耍帅。下表简单地罗列了一些常用快捷键。 快捷键(Mac OS X) 说明 Shift + Cmd + P 打开command palette Ctrl + ` 打开console Ctrl + G 跳转到指定行 Cmd + P 搜索文件 Cmd + R 搜索类的方法、文章的章节等 Cmd + D 选中单词 Cmd + L 选中行，继续按可继续选中下一行 Cmd + Shift + Enter 在当前行上面插入新行 Cmd + X 删除当前行 Cmd + / 注释/取消注释当前行 Cmd + K, Cmd + B 打开/关闭侧边栏 … 其它特更新 补充如果需要在Terminal中使用Sublime Text，可以使用ln命令，由于不同版本具体命令有区别，建议参考官方文档，如：Sublime Text 3的文档 熟悉一个工具最好的途径是： Just Do It ! 遇到问题最好的解决方法是： Just Google It !]]></content>
+    <title>【GitTips】撤消操作</title>
+    <url>/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<h1 id="撤消-add"><a href="#撤消-add" class="headerlink" title="撤消 add"></a>撤消 add</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git rm --cached &lt;file&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="撤消-commit"><a href="#撤消-commit" class="headerlink" title="撤消 commit"></a>撤消 commit</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git reset --hard &lt;commit id&gt; <span class="comment"># 将 HEAD 移至 &lt;commit id&gt;</span></span><br></pre></td></tr></table></figure>
+<p>注意，–hard 将目录中所有文件中的修改</p>
+<h1 id="撤消-push"><a href="#撤消-push" class="headerlink" title="撤消 push"></a>撤消 push</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git reset --hard &lt;commit id&gt; <span class="comment"># 撤消commit</span></span><br><span class="line">$ git push origin HEAD --force <span class="comment"># 强制提交到远程版本库，从而删除之前提交的数据</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+        <tag>Tips</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【GitTips】非SSH免密提交</title>
+    <url>/2015/01/12/Technologies/%E3%80%90GitTips%E3%80%91%E9%9D%9ESSH%E5%85%8D%E5%AF%86%E6%8F%90%E4%BA%A4/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git config credential.helper store</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+        <tag>Tips</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>我的 Blog 生成流程</title>
+    <url>/2018/12/07/Life/%E6%88%91%E7%9A%84-Blog-%E7%94%9F%E6%88%90%E6%B5%81%E7%A8%8B/</url>
+    <content><![CDATA[<p>兜兜转转用了不少的博客工具，WordPress, Farbox, Octopress，Hexo，Ghost，近期打算不折腾了，先等有足够的内容再说。</p>
+<a id="more"></a>
+<h1 id="使用Typora撰写博客文章"><a href="#使用Typora撰写博客文章" class="headerlink" title="使用Typora撰写博客文章"></a>使用Typora撰写博客文章</h1><ol>
+<li>Typora 借助 iPIC 可以自动上传图片至图床。</li>
+<li>为避免图床不可用，所有博客的图片均在本地目录<code>./Blog/blogImg/images</code>备份一份，并用Dropbox同步。</li>
+<li>Typora 可以自定义 CSS 样式，不同平台，使用不同的样式。其中参考：<a href="https://support.typora.io/Auto-Numbering/，为现有样式给" target="_blank" rel="external">https://support.typora.io/Auto-Numbering/，为现有样式给</a> Header 加上序号，方便阅读。</li>
+</ol>
+<h1 id="部署至Github-Pages"><a href="#部署至Github-Pages" class="headerlink" title="部署至Github Pages"></a>部署至Github Pages</h1><p>Typora 撰写好的文章使用 Hexo 部署至 Github Pages。</p>
+<h1 id="发布至微信公众号"><a href="#发布至微信公众号" class="headerlink" title="发布至微信公众号"></a>发布至微信公众号</h1><ol>
+<li>Typora 挑选合适的样式，复制到公众号编辑器。</li>
+<li>检查样式，并进行简单的修改，即可发布。</li>
+<li>微信公众号不支持外链，所以先发博客，然后在公众号的原文链接中，链到博客。</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>Best Practice</tag>
+        <tag>Tools</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Sublime Text 编辑 Evernote（印象笔记）</title>
+    <url>/2014/10/23/Tools/Sublime-Text-%E7%BC%96%E8%BE%91-Evernote%EF%BC%88%E5%8D%B0%E8%B1%A1%E7%AC%94%E8%AE%B0%EF%BC%89/</url>
+    <content><![CDATA[<p>跨平台的Evernote（印象笔记）十分好用，是我进行知识管理、笔记记录的主要工具，美中不足的是原生的编辑功能实在太弱。对于文章内容多样化、排版复杂的笔记体验较差。幸运的事有3件：</p>
+<ol>
+<li>Evernote（印象笔记）提供了API，供第三方应用管理笔记。</li>
+<li>这世界上有<code>markdown</code>这样舒服的标记语言。</li>
+<li>神器<code>Sublime Text</code></li>
+</ol>
+<a id="more"></a>
+<p>受益于上述三件幸运的事，使得我们可以十分方便的在<code>Sublime Text</code>中，利用<code>markdown</code>编辑修改<code>Evernote（印象笔记）</code>中的笔记。废话不多说，下面进入正题。</p>
+<p>首先你要习惯使用<code>Sublime Text</code>，如果还不习惯，那么我强烈推荐你花点时间了解一下，对它的评价我只用两个字：”神器”！具体可参考文章：<a href="http://dengxh.com/2014/01/18/SublimeText/" target="_blank" rel="external">Sublime Text</a>。</p>
+<p>打开<code>Sublime Text</code>之后，<code>cmd</code> + <code>shift</code> + <code>P</code>打开<code>Package Control</code>，输入<code>install</code>，跳出插件库，然后输入<code>Evernote</code>安装<code>Evernote</code>插件。该插件的介绍和详细的使用说明请参考：<a href="https://sublime.wbond.net/packages/Evernote" target="_blank" rel="external">插件介绍</a>。</p>
+<p>插件安装完成之后，第一次使用时需要进行授权认证。步骤如下：</p>
+<ol>
+<li>打开<code>Package Control</code>，输入<code>send to evernote</code>，在窗口底部会弹出一个小窗口，窗口中的内容为一个带<code>token</code>的链接。该<code>token</code>后面用到。</li>
+<li>将链接复制到浏览器并访问，登录授权后，会有一个<code>NoteStore URL</code>。印象笔记用户，直接用浏览器访问链接：<a href="https://app.yinxiang.com/api/DeveloperToken.action" target="_blank" rel="external">https://app.yinxiang.com/api/DeveloperToken.action</a></li>
+<li>打开<code>Sublime Text</code>，打开<code>Preferences</code> &gt; <code>Package Settings</code> &gt; <code>Evernote</code> &gt; <code>Settings User</code>，将步骤2和步骤3中的<code>token</code>和<code>NoteStore URL</code>复制为对应属性值。保存之后便可以开始使用了。</li>
+</ol>
+<p>按上述方法创建完成之后，便可以非常方便的使用<code>Evernote（印象笔记）</code>了，而且笔记对应的目录和tag都可以自动提示。详细的功能和使用方法还是参考：<a href="https://sublime.wbond.net/packages/Evernote" target="_blank" rel="external">插件介绍</a>。</p>
+]]></content>
       <tags>
         <tag>SublimeText</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>通过网盘同步Sublime Text设置</title>
+    <url>/2014/09/29/Tools/%E9%80%9A%E8%BF%87%E7%BD%91%E7%9B%98%E5%90%8C%E6%AD%A5Sublime-Text%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<p>Sublime Text的配置信息和插件都存放在<code>Packages</code>目录下，只要通过网盘在不同电脑间同步该目录，便可以实现在不同电脑间使用同一套Sublime Text的配置。</p>
+<a id="more"></a>
+<p>具体步骤如下：</p>
+<ol>
+<li>关闭Sublime Text</li>
+<li>将Sublime Text的<code>Packages</code>目录（<code>~/Library/Application Support/Sublime Text 3/Packages）</code>移至网盘的同步目录（<code>~/OneDrive/MyWorkbench/MyApps/SublimeText/Packages</code>）。</li>
+<li>执行命令：<code>ln -s ~/OneDrive/MyWorkbench/MyApps/SublimeText/Packages ~/Library/Application Support/Sublime Text 3/Packages</code></li>
+<li>Done :)</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>SublimeText</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SublimeText</title>
+    <url>/2014/01/18/Tools/SublimeText/</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Sublime Text是一款优秀的文本编辑器，支持Windows、Mac OS X、Linux平台，通过配置文件和插件可以实现很多强大的功能。具体特性可以参考<a href="http://www.sublimetext.com/" target="_blank" rel="external">官网</a>。相对Emacs、Vim等神级编辑器而言，Sublime Text门槛更低，对于没有时间与精力深入研究神级编辑器的童鞋来说，真乃居家旅行必备！其吸引我的特性主要为：</p>
+<ul>
+<li>跨平台：由于生活和工作的需要，我经常需要同时使用Windows、Mac OS X和Linux三大平台，跨平台的Sublime Text给我带来了极大的便利。</li>
+<li>可定制：可以通过配置文件进行个性化配置，如：颜色主题、缩进方式、编码等。让人惊喜的是其配置方式比Vim简单得多！多！多！</li>
+<li>插件：通过丰富的插件可以实现超乎想象的功能，如：语法检查、格式化、版本控制等。</li>
+<li>快：Sublime Text使用时的那种流畅会带来非常愉悦的快感，你懂的～</li>
+</ul>
+<a id="more"></a>
+<h1 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h1><p>本章节以Mac OS X平台为例，简单介绍Sublime Text的使用方法，以此作为自己的笔记，并希望能够帮助初次接触Sublime Text的童鞋快速入门。Sublime Text主要使用技巧在于：</p>
+<ol>
+<li>熟悉配置文件</li>
+<li>熟悉插件</li>
+<li>熟悉快捷键</li>
+</ol>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>与通常软件的配置不同，Sublime Text的配置并不是基于GUI界面，而是使用JSON格式的文本配置方式，初次接触的童鞋可能会不习惯，有一种无从下手的感觉。不过只要不被吓住，耐心地把玩几遍，便可依葫芦画瓢地进行配置了。</p>
+<p>安装好Sublime Text后，通过点击<code>Sublime Text</code> –&gt; <code>Preferences</code>可以发现Sublime Text的配置文件主要可以分为两类：</p>
+<ul>
+<li>Default：该配置文件保存了Sublime Text可供配置的属性及其默认值，英文过得去的童鞋可以通过该文件快速地了解Sublime Text的特性及其配置方式。</li>
+<li>User：用户如果需要进行个性化配置，通常不是直接修改Default中的默认配置，而是参考Default的配置方式，在User中进行配置。User中的值会覆盖Default中的值。比如设置行的结尾采用Unix方式，并且设置字体大小为16，配置方式如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;default_line_ending&quot;: &quot;unix&quot;,</span><br><span class="line">    &quot;font_size&quot;: 16</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p>第一次对插件有概念是Firefox刚火起来的时候，真心佩服这种利用插件实现功能扩展的思路。Sublime Text也可通过插件实现功能扩展。类似Vim，Sublime Text可以通过手动下载安装插件包，但是这种管理插件的方式是一件非常头疼的事。Vim有<code>Vundle</code>，幸运的是Sublime Text有<code>Package Control</code>，利用Package Control可以方便地实现插件的管理，包括安装、卸载、更新等。Package Control更多特性可以参考<a href="https://sublime.wbond.net/" target="_blank" rel="external">官网</a>。</p>
+<p>安装Package Control只要一条命令即可，具体参考<a href="https://sublime.wbond.net/installation" target="_blank" rel="external">官方安装教程</a></p>
+<p>Package Control安装完成后，<code>Shift + Cmd + P</code>打开Command Palette，输入<code>package control</code>便会罗列出Package Control的常用功能，如：</p>
+<ul>
+<li>install：安装插件。<ol>
+<li>打开Command Palette，输入<code>install</code>，回车，Package Control便会加载插件库。</li>
+<li>搜索需要的插件名字，找到插件后，回车，稍等片刻，插件便可安装成功。</li>
+</ol>
+</li>
+<li>remove：卸载插件。<ol>
+<li>打开Command Palette，输入<code>remove</code>，回车，Package Control便会罗列已安装的插件库。</li>
+<li>移动光标至要卸载的插件，回车，稍等片刻，插件便可卸载成功。</li>
+</ol>
+</li>
+<li>list：罗列已安装的插件。</li>
+<li>upgrade：更新插件。会尝试更新所有已安装的插件。</li>
+<li>其它功能用到再摸索。</li>
+</ul>
+<p><strong><em>注：</em></strong></p>
+<blockquote>
+<p>Package Control官网罗列了新出的、流行的、推荐的插件，需要的童鞋根据需求自行取舍。<br>插件安装完成后，可以通过<code>Preferences</code> –&gt; <code>Package Settings</code>，找到对应的插件的默认配置文件和快捷键，从而了解插件的使用方法。</p>
+</blockquote>
+<h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><p>熟悉快捷键可以极大地提高效率，个人认为，入门时只需了解一些基本的常用的快捷键即可，成精后再考虑耍帅。下表简单地罗列了一些常用快捷键。</p>
+<table>
+<thead>
+<tr>
+<th>快捷键(Mac OS X)</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shift + Cmd + P</td>
+<td>打开command palette</td>
+</tr>
+<tr>
+<td>Ctrl + `</td>
+<td>打开console</td>
+</tr>
+<tr>
+<td>Ctrl + G</td>
+<td>跳转到指定行</td>
+</tr>
+<tr>
+<td>Cmd + P</td>
+<td>搜索文件</td>
+</tr>
+<tr>
+<td>Cmd + R</td>
+<td>搜索类的方法、文章的章节等</td>
+</tr>
+<tr>
+<td>Cmd + D</td>
+<td>选中单词</td>
+</tr>
+<tr>
+<td>Cmd + L</td>
+<td>选中行，继续按可继续选中下一行</td>
+</tr>
+<tr>
+<td>Cmd + Shift + Enter</td>
+<td>在当前行上面插入新行</td>
+</tr>
+<tr>
+<td>Cmd + X</td>
+<td>删除当前行</td>
+</tr>
+<tr>
+<td>Cmd + /</td>
+<td>注释/取消注释当前行</td>
+</tr>
+<tr>
+<td>Cmd + K, Cmd + B</td>
+<td>打开/关闭侧边栏</td>
+</tr>
+<tr>
+<td>…</td>
+<td>其它特更新</td>
+</tr>
+</tbody>
+</table>
+<h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><p>如果需要在Terminal中使用Sublime Text，可以使用ln命令，由于不同版本具体命令有区别，建议参考官方文档，如：<a href="http://www.sublimetext.com/docs/3/osx_command_line.html" target="_blank" rel="external">Sublime Text 3的文档</a></p>
+<p>熟悉一个工具最好的途径是：</p>
+<blockquote>
+<p>Just Do It !</p>
+</blockquote>
+<p>遇到问题最好的解决方法是：</p>
+<blockquote>
+<p>Just Google It !</p>
+</blockquote>
+]]></content>
+      <tags>
+        <tag>SublimeText</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring 使用 Properties</title>
+    <url>/2018/12/25/Technologies/Spring-%E4%BD%BF%E7%94%A8-Properties/</url>
+    <content><![CDATA[<h1 id="Spring-使用-Properties"><a href="#Spring-使用-Properties" class="headerlink" title="Spring 使用 Properties"></a>Spring 使用 Properties</h1><h1 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h1><p>应用在开发、测试、生产等阶段的资源往往是不同的，如：某个 API 接口的 URL，可能存在以下三个 URL：</p>
+<ol>
+<li>开发环境：dev.api.xxx</li>
+<li>测试环境：test.api.xxx</li>
+<li>生产环境：proc.api.xxx</li>
+</ol>
+<p>如果每次在部署应用时，手动修改配置，在企业工作中显然不可行。幸运的是，我们有很多工具可以实现自动地的为不同环境加载不同的配置，一种常见的方法是：将配置按环境分别放在不同的 properties 文件（dev.properties, test.properties, proc.properties 等）每次在不同环境部署时，使用 Maven 打包时，加上环境变量参数将对应的配置文件拷贝至classpath，最终通过 Spring 加载并使用classpath 中的配置。</p>
+<p>本文主要讲解 Spring 如何使用 Properties，用于备忘。</p>
+<a id="more"></a>
+<h1 id="注册-Properties"><a href="#注册-Properties" class="headerlink" title="注册 Properties"></a>注册 Properties</h1><p>Spring 要能使用到 Properties，首先得将 Properties 进行注册，注册方式有两种：</p>
+<ol>
+<li>XML 方式</li>
+<li>Java Configuration 方式</li>
+</ol>
+<h2 id="通过-XML-注册"><a href="#通过-XML-注册" class="headerlink" title="通过 XML 注册"></a>通过 XML 注册</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">   <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">   <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></span></span><br><span class="line"><span class="tag">   <span class="attr">xsi:schemaLocation</span>=<span class="string">"</span></span></span><br><span class="line"><span class="tag"><span class="string">      http://www.springframework.org/schema/beans </span></span></span><br><span class="line"><span class="tag"><span class="string">      http://www.springframework.org/schema/beans/spring-beans-4.2.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">      http://www.springframework.org/schema/context </span></span></span><br><span class="line"><span class="tag"><span class="string">      http://www.springframework.org/schema/context/spring-context-4.2.xsd"</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">      <span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">location</span>=<span class="string">"classpath:foo.properties"</span> /&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上述 XML 配置指定使用 foo.properties，如果有多个 properties，可以多配置几个，也可以简单的将 foo.properties 改成 *.properties，按需选取即可。</p>
+<p>老码农应该比较习惯使用 XML 的方式。</p>
+<h2 id="通过-Java-Configuration注册"><a href="#通过-Java-Configuration注册" class="headerlink" title="通过 Java Configuration注册"></a>通过 Java Configuration注册</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@PropertySource</span>(<span class="string">"classpath:foo.properties"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PropertiesWithJavaConfig</span> </span>&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述效果与 XML 方式一致。</p>
+<h1 id="使用-Properties"><a href="#使用-Properties" class="headerlink" title="使用 Properties"></a>使用 Properties</h1><p>通过 XML 或者 Java Configuration 完成Properties 注册后，即可在 Spring 中开始使用它们。使用方式有两种：</p>
+<ol>
+<li>通过 @Value 注解使用</li>
+<li>通过  XML 使用</li>
+</ol>
+<h2 id="通过-Value-注解使用"><a href="#通过-Value-注解使用" class="headerlink" title="通过 @Value 注解使用"></a>通过 @Value 注解使用</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Value</span>( <span class="string">"$&#123;jdbc.url&#125;"</span> )</span><br><span class="line"><span class="keyword">private</span> String jdbcUrl;</span><br></pre></td></tr></table></figure>
+<h2 id="通过-XML-使用"><a href="#通过-XML-使用" class="headerlink" title="通过 XML 使用"></a>通过 XML 使用</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"dataSource"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"url"</span> <span class="attr">value</span>=<span class="string">"$&#123;jdbc.url&#125;"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>注：Properties 无论使用哪种方式注册，均可使用以上两个方式使用 Properties。</p>
+<h1 id="Properties-加载顺序"><a href="#Properties-加载顺序" class="headerlink" title="Properties 加载顺序"></a>Properties 加载顺序</h1><p>当有多个 Properties 文件，特别是不同的 Properties 文件内部存在相同的 properties 的 key 时，后加载的 properties 会覆盖掉先加载的 properties，所以理解并控制 Properties 加载顺序，才能避免踩坑。</p>
+<p>Properties 加载顺序一般也有 2 种方式</p>
+<ol>
+<li>按 properties 出现的先后顺序</li>
+<li>显示使用 order 指定顺序</li>
+</ol>
+<h2 id="按-properties-出现的先后顺序"><a href="#按-properties-出现的先后顺序" class="headerlink" title="按 properties 出现的先后顺序"></a>按 properties 出现的先后顺序</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"</span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/beans </span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/beans/spring-beans-4.2.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/context </span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/context/spring-context-4.2.xsd"</span>&gt;</span></span><br><span class="line">     </span><br><span class="line">        <span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">location</span>=<span class="string">"classpath:foo.properties"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">location</span>=<span class="string">"classpath:bar.properties"</span> /&gt;</span></span><br><span class="line">     </span><br><span class="line">    <span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这样的话，会先加载 <a href="http://foo.properties" target="_blank" rel="external">foo.properties</a>，再加载 bar.properties。</p>
+<h2 id="显示使用-order-指定顺序"><a href="#显示使用-order-指定顺序" class="headerlink" title="显示使用 order 指定顺序"></a>显示使用 order 指定顺序</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"</span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/beans </span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/beans/spring-beans-4.2.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/context </span></span></span><br><span class="line"><span class="tag"><span class="string">          http://www.springframework.org/schema/context/spring-context-4.2.xsd"</span>&gt;</span></span><br><span class="line">          </span><br><span class="line">        <span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">location</span>=<span class="string">"classpath:foo.properties"</span> </span></span><br><span class="line"><span class="tag">            <span class="attr">order</span>=<span class="string">"1"</span> <span class="attr">ignore-unresolvable</span>=<span class="string">"true"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">location</span>=<span class="string">"classpath:bar.properties"</span> </span></span><br><span class="line"><span class="tag">            <span class="attr">order</span>=<span class="string">"2"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>通过  order 属性可以显示指定加载顺序，需要注意的是除去最后一个加载的配置，其他均需添加 ignore-unresolvable=”true”，以防中间加载出现异常，导致后面的配置无法加载。</p>
+]]></content>
+      <tags>
+        <tag>Spring</tag>
+        <tag>Java</tag>
+        <tag>Technologies</tag>
       </tags>
   </entry>
 </search>
